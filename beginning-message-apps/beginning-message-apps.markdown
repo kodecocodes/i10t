@@ -152,8 +152,11 @@ In the main class body, override `viewDidLoad()` and call your new method:
 override func viewDidLoad() {
   super.viewDidLoad()
   loadStickers()
+  stickerBrowserView.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.7568627451, blue: 0.8196078431, alpha: 1)
 }
 ```
+
+In this method you also set a sweet pink color for the background. 
 
 The final thing that is required is to set up the data source methods for the sticker browser view. This should be very familiar if you've ever written a table view or collection view data source. The protocol `MSStickerBrowserViewDataSource` has two methods, implement them both by adding this extension:
 
@@ -179,6 +182,98 @@ Build and Run, choosing the Messages app to launch into. When you tap the "Apps"
 That's nice, but so far you've made something that looks exactly like a sticker pack application, only it was much more work. In the next stage you're going to add some additional UI and dynamic features! 
 
 ### Dynamic Stickers
+
+In this section you're going to introduce a special **Chocoholic** mode for those special times when only pictures of chocolate will do for ruining, sorry, "enhancing" your iMessage chats. 
+
+Chocoholic mode will update the available stickers before your sugar-crazed eyes.
+
+To start, open **MainInterface.storyboard**. Select the container view and use the resizing handle to drag the top of it down by about 70 points, to give yourself some space to work:
+
+![bordered width=60%](images/Chocoholic1.png)
+
+Select the top orange constraint and delete it. Drag in a switch and a label in the space you've created, and set the label's text to **Chocoholic Mode**. 
+
+Select the label and the switch, then use the **Stack** button to embed them in a horizontal stack view:
+
+![bordered width=60%](images/Chocoholic2.png)
+
+With the stack view selected, change the **Spacing** in the attributes inspector to **5**. Using the **Pin** menu, add constraints from the stack view to its top, leading and bottom neighbors:
+
+![bordered width=40%](images/Chocoholic3.png)
+
+Select the switch and set its value to **Off** in the attributes inspector. Open the Assistant Editor, and make sure it is displaying **MessagesViewController.swift**. Control-drag from the switch into the `MessagesViewController` class to create a new action, called **handleChocoholicChanged** with a sender type of **UISwitch**. 
+
+You're done with interface builder for now, so you can open **MessagesViewController.swift** in the main editor if you'd like some more room.
+
+Add a new protocol to the file called **Chocoholicable**:
+
+```swift
+protocol Chocoholicable {
+  func setChocoholic(_ chocoholic: Bool)
+}
+```
+
+Update the action method you just added:
+
+```swift
+@IBAction func handleChocoholicChanged(_ sender: UISwitch) {
+  for vc in childViewControllers {
+    if let vc = vc as? Chocoholicable {
+      vc.setChocoholic(sender.isOn)
+    }
+  }
+}
+```
+
+This will pass down the chocoholic mode to any child view controller that is `Chocoholicable`. Currently, none of them are, so switch to **CandyStickerBrowserViewController.swift** to make it so. 
+
+First, update the declaration of `loadStickers()`:
+
+```swift
+private func loadStickers(_ chocoholic: Bool = false) {
+```
+
+This allows you to pass in the chocoholic mode, with a default value of `false` so the existing call from `viewDidLoad()` is unaffected.
+
+Insert a `filter` before the existing `map` of the sticker names array. Replace the whole function body with this code:
+
+```swift
+stickers = stickerNames.filter( { name in
+  if chocoholic {
+    return name.contains("Chocolate")
+  } else {
+    return true
+  }
+}).map({ name in
+  let url = Bundle.main().urlForResource(name, withExtension: "png")!
+  return try! MSSticker(contentsOfFileURL: url, localizedDescription: name)
+})
+```
+
+This will filter the names to only show chocolate-containing stickers, if chocoholic mode is on. 
+
+Finally, make `CandyStickerBroswerViewController` conform to `Chocoholicable` by adding this extension:
+
+```swift
+extension CandyStickerBrowserViewController: Chocoholicable {
+  func setChocoholic(_ chocoholic: Bool) {
+    loadStickers(chocoholic)
+    stickerBrowserView.reloadData()
+  }
+}
+```
+
+Build and run, and fulfil all of your sticky, chocolatey needs:
+
+![iphone](images/Chocoholic4.png)
+
+
+
+
+
+
+
+
 
 
 ### Making your own sticker browser
