@@ -1,0 +1,29 @@
+{
+  "stickers" : [
+    {
+      "filename" : "rw-brian.sticker"
+    },
+    {
+      "filename" : "rw-christine.sticker"
+    },
+    {
+      "filename" : "rw-mic.sticker"
+    },
+    {
+      "filename" : "rw-ray.sticker"
+    },
+    {
+      "filename" : "rw-sam.sticker"
+    },
+    {
+      "filename" : "rw-vicki.sticker"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "grid-size" : "regular"
+  }
+}

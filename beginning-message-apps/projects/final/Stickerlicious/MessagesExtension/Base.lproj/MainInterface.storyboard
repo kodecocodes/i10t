@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11163.2" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ObA-dk-sSI">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11133"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Messages View Controller-->
+        <scene sceneID="7MM-of-jgj">
+            <objects>
+                <viewController id="ObA-dk-sSI" customClass="MessagesViewController" customModule="MessagesExtension" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qkL-Od-lgU"/>
+                        <viewControllerLayoutGuide type="bottom" id="n38-gi-rB5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="zMn-AG-sqS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8bZ-ph-oX8">
+                                <connections>
+                                    <segue destination="vvw-91-W5N" kind="embed" id="tXt-x9-2DY"/>
+                                </connections>
+                            </containerView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="mo2-m5-pIk">
+                                <subviews>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="zAp-QU-ejc">
+                                        <connections>
+                                            <action selector="handleChocoholicChanged:" destination="ObA-dk-sSI" eventType="valueChanged" id="ttr-W6-ZSi"/>
+                                        </connections>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chocoholic Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SSR-Gx-cpi">
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="n38-gi-rB5" firstAttribute="top" secondItem="8bZ-ph-oX8" secondAttribute="bottom" id="Kdq-Hs-Qas"/>
+                            <constraint firstItem="mo2-m5-pIk" firstAttribute="top" secondItem="qkL-Od-lgU" secondAttribute="bottom" constant="8" id="L9B-yk-eOB"/>
+                            <constraint firstItem="8bZ-ph-oX8" firstAttribute="leading" secondItem="zMn-AG-sqS" secondAttribute="leading" id="M9A-Nf-N8P"/>
+                            <constraint firstItem="mo2-m5-pIk" firstAttribute="leading" secondItem="zMn-AG-sqS" secondAttribute="leadingMargin" constant="10" id="g3U-re-GrD"/>
+                            <constraint firstAttribute="trailing" secondItem="8bZ-ph-oX8" secondAttribute="trailing" id="kNQ-6Z-5G1"/>
+                            <constraint firstItem="8bZ-ph-oX8" firstAttribute="top" secondItem="mo2-m5-pIk" secondAttribute="bottom" constant="8" id="s10-vy-kog"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="528"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="33.600000000000001" y="38.680659670164921"/>
+        </scene>
+        <!--Sticker Collection View Controller-->
+        <scene sceneID="VwH-h1-j0C">
+            <objects>
+                <collectionViewController id="vvw-91-W5N" customClass="StickerCollectionViewController" customModule="MessagesExtension" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="8Z9-x0-8NH">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="461"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Fuw-Qm-9Ei">
+                            <size key="itemSize" width="136" height="136"/>
+                            <size key="headerReferenceSize" width="50" height="25"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StickerCollectionViewCell" id="2y8-gr-4Q8" customClass="StickerCollectionViewCell" customModule="MessagesExtension" customModuleProvider="target">
+                                <frame key="frameInset" minY="25" width="136" height="136"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t8Q-Ng-a7V" customClass="MSStickerView"/>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="t8Q-Ng-a7V" firstAttribute="leading" secondItem="2y8-gr-4Q8" secondAttribute="leading" id="BIj-zL-jtg"/>
+                                    <constraint firstAttribute="trailing" secondItem="t8Q-Ng-a7V" secondAttribute="trailing" id="P7z-vH-iqP"/>
+                                    <constraint firstItem="t8Q-Ng-a7V" firstAttribute="top" secondItem="2y8-gr-4Q8" secondAttribute="top" id="dak-55-soH"/>
+                                    <constraint firstAttribute="bottom" secondItem="t8Q-Ng-a7V" secondAttribute="bottom" id="qFA-bb-5LB"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="stickerView" destination="t8Q-Ng-a7V" id="hMC-gQ-xCp"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SectionHeader" id="GjT-Yh-vW8" customClass="SectionHeader" customModule="MessagesExtension" customModuleProvider="target">
+                            <frame key="frameInset" width="320" height="25"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sed-Sh-hKj">
+                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="thj-MM-1qL">
+                                        <frame key="frameInset"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </view>
+                                    <blurEffect style="light"/>
+                                </visualEffectView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h2d-b4-pw2">
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="Sed-Sh-hKj" secondAttribute="bottom" id="04g-z3-jfu"/>
+                                <constraint firstItem="Sed-Sh-hKj" firstAttribute="leading" secondItem="GjT-Yh-vW8" secondAttribute="leading" id="MSv-HX-LDC"/>
+                                <constraint firstItem="Sed-Sh-hKj" firstAttribute="top" secondItem="GjT-Yh-vW8" secondAttribute="top" id="NcL-2W-Fs4"/>
+                                <constraint firstItem="h2d-b4-pw2" firstAttribute="centerY" secondItem="GjT-Yh-vW8" secondAttribute="centerY" id="Sl3-Kz-cZb"/>
+                                <constraint firstAttribute="trailing" secondItem="Sed-Sh-hKj" secondAttribute="trailing" id="gZm-7h-e51"/>
+                                <constraint firstItem="h2d-b4-pw2" firstAttribute="centerX" secondItem="GjT-Yh-vW8" secondAttribute="centerX" id="nmb-YV-0Kz"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="label" destination="h2d-b4-pw2" id="waV-L9-zlG"/>
+                            </connections>
+                        </collectionReusableView>
+                        <connections>
+                            <outlet property="dataSource" destination="vvw-91-W5N" id="Eor-rE-9ZF"/>
+                            <outlet property="delegate" destination="vvw-91-W5N" id="sE8-6O-eVt"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qbj-Ra-RbZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="734.39999999999998" y="5.8470764617691158"/>
+        </scene>
+    </scenes>
+</document>

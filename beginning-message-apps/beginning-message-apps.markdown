@@ -7,7 +7,11 @@ title: "Chapter 5: Beginning Message Apps"
 
 ## Introduction
 
-Overview of changes to iMessage, summary of chapter content
+iMessage has been given some "fun" new features in iOS 10, and has also been opened up to third party developers. You can make and sell applications and sticker packs, and unlike other extension points, Messages apps don't need to have a "standard" iOS app to go with them. 
+
+Message apps can interact directly with the ongoing conversation, which you'll learn more about in the next chapter. In this chapter you will learn about making your own sticker apps, which are a great introduction to the Messages framework. You'll start by building a sticker pack, then you'll make a Messages app which provides stickers using some built-in classes, and finally you'll make a fully custom sticker app using a collection view. 
+
+Are you ready to get sticky?
 
 ## Sticker Packs
 
@@ -56,7 +60,7 @@ Once you have recovered from the dizzying excitement of static sticker packs, yo
 
 ## Sticker applications
 
-What do sticker applications offer you above and beyond sticker packs? [TODO finish this part]The chance to customise the UI, 
+What do sticker applications offer you above and beyond sticker packs? You can add custom UI and control the stickers available at runtime, instead of relying on a static set of images. 
 
 You're going to make a mouth-watering sticker app called **Stickerlicious**, so you can send yummy treats to your friends via iMessage. You'll learn how to create stickers dynamically in code instead of having a static set of images, and how to filter and divide these stickers to help your users get to the stickers they want quickly. 
 
@@ -245,7 +249,7 @@ stickers = stickerNames.filter( { name in
     return true
   }
 }).map({ name in
-  let url = Bundle.main().urlForResource(name, withExtension: "png")!
+  let url = Bundle.main.urlForResource(name, withExtension: "png")!
   return try! MSSticker(contentsOfFileURL: url, localizedDescription: name)
 })
 ```
@@ -267,19 +271,214 @@ Build and run, and fulfil all of your sticky, chocolatey needs:
 
 ![iphone](images/Chocoholic4.png)
 
+### A fully custom sticker browser
 
+`MSStickerBrowserView` offers you very little scope for customization. To really take control of your sticker app, there is `MSStickerView`. This is the view that is used to power `MSStickerBrowserView`, and you can use it on its own as well.
 
+It gives you all of the sticker functionality - displaying and scaling the stickers, tapping to add to the message, drag and drop - with no extra code. All you need to do is put it on the screen and give it an `MSSticker`. 
 
+In this final part of the tutorial you will replace the `MSStickerBrowserViewController` subclass with a `UICollectionViewController` subclass which will allow you to divide the stickers up into labelled sections.
 
+In **MainInterface.storyboard**, select the **Candy Sticker Browser** scene and delete it. Drag in a **UICollectionViewController**, then control-drag from the container view to the collection view controller and choose the **Embed** segue. 
 
+Select the **Collection View** in the collection view controller, open the **Attributes Inspector** and check the **Accessories / Section Header** checkbox.
 
+Open the **Size Inspector** set the **Header Size > Height** to 25. Set the **Min Spacing** and **Section Insets** values to zero. 
 
+Drag a label into the section header, using the guides to position it in the center. With the **Align** button at the bottom of the storyboard, add constraints to pin it to the horizontal and vertical centers of the view: 
 
+![bordered width=40%](images/Collection1.png)
 
-### Making your own sticker browser
+Drag in a **Visual Effect View with Blur** from the object library onto the section header. Using the **Pin** button at the bottom of the storyboard, add constraints to pin the view to all sides of the section header, with zero spacing.
 
-(Subject to dropping if it looks like it will be too big) - implement a collection view with sections so you can have some decoration views or something like that - chocolate section etc. 
+Drag in a plain `UIView` to the collection view cell and, using the same technique, pin it to all edges of the cell. Select the view and, using the **Identity Inspector**, change the class to **MSStickerView**.
 
-MSStickerView to give the drag and drop and peeling functionality
+Now you need to create custom subclasses for the section header, collection view cells and view controller. 
 
+For the header, create a new file and choose **iOS > Source > Cocoa Touch Class**. Call the class **SectionHeader** and make it a subclass of **UICollectionReusableView**. 
+
+For the cell, create a new file and choose *iOS > Source > Cocoa Touch Class** again. Call the class **StickerCollectionViewCell** and make it a subclass of **UICollectionViewCell**. In the file that is generated, add the following import statement at the top:
+
+```swift
+import Messages
+```
+
+`MSStickerView` is part of the Messages framework, and you are going to make an outlet to one, so the cell needs to know what that class is. 
+
+The final new class to create is the view controller. Choose the same new file template, calling the class **StickerCollectionViewController** and making it a subclass of **UICollectionViewController**. Replace the template contents with this:
+
+```swift
+import UIKit
+import Messages
+
+class StickerCollectionViewController: UICollectionViewController {
+}
+```
+
+Switch back to **MainInterface.storyboard** to connect everything up. 
+
+First, choose the collection view controller and set the class to **StickerCollectionViewController** in the Identity Inspector. 
+
+Choose the section header and change the class to **SectionHeader**, and the reuse identifier (in the Attributes Inspector) to **SectionHeader**.
+
+Choose the cell and change the class to **StickerCollectionViewCell**, and the reuse identifier to **StickerCollectionViewCell**. 
+
+Open the assistant editor, making sure **StickerCollectionViewCell.swift** is displayed, and make a new outlet from the `MSStickerView` inside the cell to the collection view cell subclass. Call it **stickerView**. 
+
+Now make the assistant editor display **SectionHeader.swift** and make a new outlet from the label in the section header to the `SectionHeader` class file. Call it `label`. 
+
+That was a lot of work! Check the document outline in the storyboard to make sure you haven't missed anything:
+
+![bordered width=40%](images/Collection2.png)
+
+Close the assistant editor and switch to **StickerCollectionViewController.swift**. 
+
+The stickers are going to be grouped in this view controller, so instead of using an array, you'll use a dictionary. Add the following code above the class definition:
+
+```swift
+let stickerNameGroups: [String: [String]] = [
+  "Crunchy": ["CandyCane", "JawBreaker", "Lollipop"],
+  "Chewy": ["Caramel", "GummiBear", "SourCandy"],
+  "Chocolate": ["ChocolateBar", "ChocolateChip", "DarkChocolate"]
+]
+```
+
+Dictionaries aren't great data objects, because you need to remember keys and values. Define a new struct which will form the basis of your model:
+
+```swift
+struct StickerGroup {
+  let name: String
+  let members: [MSSticker]
+}
+```
+
+Inside the `StickerCollectionViewController` class, add a property to hold the model:
+
+```swift
+var stickerGroups = [StickerGroup]()
+```
+
+Just as you did with the sticker browser view controller subclass, you'll need a `loadStickers` method. Add it in an extension: 
+
+```swift
+extension StickerCollectionViewController {
+  // 1
+  private func loadStickers(_ chocoholic: Bool = false) {
+    // 2
+    stickerGroups = stickerNameGroups.filter({ (name, _) in
+      if chocoholic {
+        // 3
+        return name == "Chocolate"
+      } else {
+        return true
+      }
+    }).map { (name, stickerNames) in
+      // 4
+      let stickers: [MSSticker] = stickerNames.map { name in
+        let url = Bundle.main.urlForResource(name, withExtension: "png")!
+        return try! MSSticker(contentsOfFileURL: url, localizedDescription: name)
+      }
+      // 5
+      return StickerGroup(name: name, members: stickers)
+    }
+    // 6
+    stickerGroups.sort(isOrderedBefore: { $0.name < $1.name })
+  }
+}
+```
+
+It's quite similar to the previous `loadStickers` method. Here's a breakdown: 
+1. It takes a chocoholic mode with a default value
+2. Filtering on a dictionary takes a tuple of the key and value, for filtering we can ignore the value.
+3. The filtering takes place on the group name rather than a substring of the sticker name.
+4. There is an additional mapping step to turn the array of names from the dictionary into an array of stickers.
+5. Each dictionary entry is converted to a `StickerGroup` struct.
+6. Finally, the array of sticker groups is sorted by name, since dictionaries don't have a guaranteed ordering.
+
+Call your new method, and do some other setup, from `viewDidLoad()`:
+
+```swift
+override func viewDidLoad() {
+  super.viewDidLoad()
+  loadStickers()
+  if let layout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+    layout.sectionHeadersPinToVisibleBounds = true
+  }
+  collectionView?.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.7568627451, blue: 0.8196078431, alpha: 1)
+}
+```
+
+This uses the nice new feature of `UICollectionViewFlowLayout` which gives you sticky section headers :]
+
+You may have noticed that the sticker browser view you used before managed to fit three columns onto an iPhone 6 in portrait, despite the stickers being 136 points across and the iPhone 6 only being 375 points across. You're going to perform a similar trick and make sure you get at least three columns of stickers. Add the following extension:
+
+```swift
+// MARK: UICollectionViewDelegateFlowLayout
+extension StickerCollectionViewController {
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    let edge = min(collectionView.bounds.width / 3, 136)
+    return CGSize(width: edge, height: edge)
+  }
+}
+```
+
+This sets the cells to a square with an edge of 136 points, or a third of the screen width, whichever is lower.
+
+The collection view datasource methods are next. Add the following extension:
+
+```swift
+extension StickerCollectionViewController {
+  override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    return stickerGroups.count
+  }
+  
+  override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return stickerGroups[section].members.count
+  }
+}
+```
+
+The two "count" methods are simple, thanks to the `StickerGroup` struct you are using as a model object. 
+
+The cell configuration method is also straightforward. Add the following code to the extension you just created:
+
+```swift
+override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StickerCollectionViewCell", for: indexPath) as! StickerCollectionViewCell
+  
+  let sticker = stickerGroups[indexPath.section].members[indexPath.row]
+  cell.stickerView.sticker = sticker
+  
+  return cell
+}
+```
+
+This gets the correct sticker for the section and item, and passes it to the sticker view in the cell. That's all you need to do to get a working sticker view.
+
+The final method for the data source extension is to populate the section header:
+
+```swift
+override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+  guard kind == UICollectionElementKindSectionHeader else { fatalError() }
+  
+  let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as! SectionHeader
+  header.label.text = stickerGroups[indexPath.section].name
+  return header
+}
+```
+
+You're almost done. The last thing to add is to make the view controller `Chocoholicable`. Add the following extension, which will look almost identical to the one you used for the sticker browser view controller:
+
+```swift
+extension StickerCollectionViewController: Chocoholicable {
+  func setChocoholic(_ chocoholic: Bool) {
+    loadStickers(chocoholic)
+    collectionView?.reloadData()
+  }
+}
+```
+
+Build and run, and your candy is neatly separated into sections, so you know just what you're going to get. Perhaps Forrest Gump should have used a collection view?
+
+![iphone](images/Collection3.png)
 
