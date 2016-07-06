@@ -1,15 +1,11 @@
-## intermediate-message-apps
+```metadata
+author: "By Rich Turton"
+number: "6"
+title: "Chapter 6: Intermediate Message Apps"
+```
+# Chapter 6: Intermediate Message Apps
 
-Starter project should contain:
-
-- The game model without the initializers
-- All three game view controllers (these are not relevant to messages, really)
-- The storyboard with everything in it
-- Utilities.swift
-- Everything in Views
-- MessagesViewController as it comes from the Xcode template.
-
-# Introduction
+## Introduction
 
 Capabilities of custom messaging apps
 Overview of WenderPic, screenshots of final project, starter project tour
