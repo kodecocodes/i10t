@@ -482,3 +482,6 @@ Build and run, and your candy is neatly separated into sections, so you know jus
 
 ![iphone](images/Collection3.png)
 
+## Where to go from here? 
+
+**Chapter 6** takes you further into the Messages framework - you'll learn how to create custom messages and interact with the current conversation by creating a drawing and guessing game which you can play within Messages!
