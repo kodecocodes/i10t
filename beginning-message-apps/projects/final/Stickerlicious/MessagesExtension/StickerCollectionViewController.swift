@@ -10,8 +10,8 @@ import UIKit
 import Messages
 
 let stickerNameGroups: [String: [String]] = [
-  "Crunchy": ["CandyCane", "JawBreaker", "Lollipop"],
-  "Chewy": ["Caramel", "GummiBear", "SourCandy"],
+  "Crunchy":   ["CandyCane", "JawBreaker", "Lollipop"],
+  "Chewy":     ["Caramel", "GummiBear", "SourCandy"],
   "Chocolate": ["ChocolateBar", "ChocolateChip", "DarkChocolate"]
 ]
 
@@ -21,11 +21,12 @@ struct StickerGroup {
 }
 
 class StickerCollectionViewController: UICollectionViewController {
-  
   var stickerGroups = [StickerGroup]()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     loadStickers()
+    
     if let layout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
       layout.sectionHeadersPinToVisibleBounds = true
     }
@@ -36,11 +37,7 @@ class StickerCollectionViewController: UICollectionViewController {
 extension StickerCollectionViewController {
   private func loadStickers(_ chocoholic: Bool = false) {
     stickerGroups = stickerNameGroups.filter({ (name, _) in
-      if chocoholic {
-        return name == "Chocolate"
-      } else {
-        return true
-      }
+      return chocoholic ? name == "Chocolate" : true
     }).map { (name, stickerNames) in
       let stickers: [MSSticker] = stickerNames.map { name in
         let url = Bundle.main.urlForResource(name, withExtension: "png")!
@@ -88,6 +85,7 @@ extension StickerCollectionViewController {
   }
 }
 
+//MARK: Chocoholicable Extension
 extension StickerCollectionViewController: Chocoholicable {
   func setChocoholic(_ chocoholic: Bool) {
     loadStickers(chocoholic)

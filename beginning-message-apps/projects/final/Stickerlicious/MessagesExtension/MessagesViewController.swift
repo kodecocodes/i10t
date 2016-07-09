@@ -10,16 +10,16 @@ import UIKit
 import Messages
 
 class MessagesViewController: MSMessagesAppViewController {
-    
-@IBAction func handleChocoholicChanged(_ sender: UISwitch) {
-    for vc in childViewControllers {
-        if let vc = vc as? Chocoholicable {
-            vc.setChocoholic(sender.isOn)
-        }
-    }
-}
+  
+  @IBAction func handleChocoholicChanged(_ sender: UISwitch) {
+    childViewControllers.forEach({ vc in
+      guard let vc = vc as? Chocoholicable else { return }
+      vc.setChocoholic(sender.isOn)
+    })
+  }
+  
 }
 
 protocol Chocoholicable {
-    func setChocoholic(_ chocoholic: Bool)
+  func setChocoholic(_ chocoholic: Bool)
 }

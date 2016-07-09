@@ -77,7 +77,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t8Q-Ng-a7V" customClass="MSStickerView"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t8Q-Ng-a7V" customClass="MSStickerView">
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
                                     </subviews>
                                 </view>
                                 <constraints>
@@ -128,7 +130,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qbj-Ra-RbZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="734.39999999999998" y="5.8470764617691158"/>
+            <point key="canvasLocation" x="736" y="39"/>
         </scene>
     </scenes>
 </document>

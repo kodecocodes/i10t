@@ -21,20 +21,14 @@ class CandyStickerBrowserViewController: MSStickerBrowserViewController {
 }
 
 extension CandyStickerBrowserViewController {
-  
   private func loadStickers(_ chocoholic: Bool = false) {
     stickers = stickerNames.filter( { name in
-      if chocoholic {
-        return name.contains("Chocolate")
-      } else {
-        return true
-      }
+      return chocoholic ? name.contains("Chocolate") : true
     }).map({ name in
       let url = Bundle.main.urlForResource(name, withExtension: "png")!
       return try! MSSticker(contentsOfFileURL: url, localizedDescription: name)
     })
   }
-  
 }
 
 //MARK: MSStickerBrowserViewDataSource
@@ -48,6 +42,7 @@ extension CandyStickerBrowserViewController {
   }
 }
 
+//MARK: Chocoholicable Extension
 extension CandyStickerBrowserViewController: Chocoholicable {
   func setChocoholic(_ chocoholic: Bool) {
     loadStickers(chocoholic)
