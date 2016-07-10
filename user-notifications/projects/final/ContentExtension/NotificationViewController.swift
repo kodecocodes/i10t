@@ -28,20 +28,21 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
   
   @IBOutlet weak var imageView: UIImageView!
   
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any required interface initialization here.
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    // Do any required interface initialization here.
+  }
+  
+  func didReceive(_ notification: UNNotification) {
+    guard let attachment = notification.request.content.attachments.first
+      else { return }
     
-    func didReceive(_ notification: UNNotification) {
-      guard let attachment = notification.request.content.attachments.first
-        else { return }
-      
-      if attachment.url.startAccessingSecurityScopedResource() {
-        imageView.image = UIImage(contentsOfFile: attachment.url.path!)
-        attachment.url.stopAccessingSecurityScopedResource()
-      }
+    if attachment.url.startAccessingSecurityScopedResource() {
+      imageView.image = UIImage(contentsOfFile: attachment.url.path!)
+      attachment.url.stopAccessingSecurityScopedResource()
     }
+  }
+  
   func didReceive(_ response: UNNotificationResponse, completionHandler
     completion: (UNNotificationContentExtensionResponseOption) -> Void) {
     if response.actionIdentifier == "star" {
@@ -54,4 +55,5 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
       completion(.dismissAndForwardAction)
     }
   }
+  
 }

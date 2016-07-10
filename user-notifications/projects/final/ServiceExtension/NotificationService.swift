@@ -24,39 +24,40 @@ import UserNotifications
 import MobileCoreServices
 
 class NotificationService: UNNotificationServiceExtension {
-
-    var contentHandler: ((UNNotificationContent) -> Void)?
-    var bestAttemptContent: UNMutableNotificationContent?
-
-    override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler:(UNNotificationContent) -> Void) {
-        self.contentHandler = contentHandler
-        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
-        
-        if let bestAttemptContent = bestAttemptContent {
-          guard let attachmentString = bestAttemptContent
-            .userInfo["attachment-url"] as? String,
-            attachmentUrl = URL(string: attachmentString) else { return }
-          let session = URLSession(configuration:
-            URLSessionConfiguration.default)
-          let attachmentDownloadTask = session.downloadTask(with:
-            attachmentUrl, completionHandler: { (url, response, error) in
-              if let error = error {
-                print("Error downloading: \(error.localizedDescription)")
-              } else if let url = url {
-                let attachment = try! UNNotificationAttachment(identifier:
-                  attachmentString, url: url, options:
-                  [UNNotificationAttachmentOptionsTypeHintKey: kUTTypePNG])
-                bestAttemptContent.attachments = [attachment]
-              }
-              contentHandler(bestAttemptContent)
-          })
-          attachmentDownloadTask.resume()
-        }
-    }
+  
+  var contentHandler: ((UNNotificationContent) -> Void)?
+  var bestAttemptContent: UNMutableNotificationContent?
+  
+  override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler:(UNNotificationContent) -> Void) {
+    self.contentHandler = contentHandler
+    bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
     
-    override func serviceExtensionTimeWillExpire() {
-        if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
-            contentHandler(bestAttemptContent)
-        }
+    if let bestAttemptContent = bestAttemptContent {
+      guard let attachmentString = bestAttemptContent
+        .userInfo["attachment-url"] as? String,
+        attachmentURL = URL(string: attachmentString) else { return }
+      let session = URLSession(configuration:
+        URLSessionConfiguration.default)
+      let attachmentDownloadTask = session.downloadTask(with:
+        attachmentURL, completionHandler: { (url, response, error) in
+          if let error = error {
+            print("Error downloading: \(error.localizedDescription)")
+          } else if let url = url {
+            let attachment = try! UNNotificationAttachment(identifier:
+              attachmentString, url: url, options:
+              [UNNotificationAttachmentOptionsTypeHintKey: kUTTypePNG])
+            bestAttemptContent.attachments = [attachment]
+          }
+          contentHandler(bestAttemptContent)
+      })
+      attachmentDownloadTask.resume()
     }
+  }
+  
+  override func serviceExtensionTimeWillExpire() {
+    if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
+      contentHandler(bestAttemptContent)
+    }
+  }
+  
 }

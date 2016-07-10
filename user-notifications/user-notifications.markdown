@@ -2,16 +2,16 @@
 
 Remote push notifications were released way back in iOS 3, followed by local notifications in iOS 4. Looking through your most used apps, many of them likely leverage one or both of these types of User Notifications. They are integral to keeping users engaged in an app, up to date, and in near real time communication with others.
 
-For such an important feature, they haven't change all that much over the years. iOS 8 introduced the ability to implement custom actions in your application triggered by buttons in the notification. iOS 9 added text input as another custom action.
+For such an important feature, they haven't changed all that much over the years. iOS 8 introduced the ability to implement custom actions in your application triggered by buttons in the notification. iOS 9 added text input as another custom action.
 
-With iOS 10, Apple has made sweeping changes, really opening up notifications to developers: 
+With iOS 10, Apple has made sweeping changes, really opening up notifications to developers:
 
 - **Media attachments** can be added to notifications, including audio, video and images.
-- **Notification Content extensions** allow you to create custom interfaces for notifications. 
+- **Notification Content extensions** allow you to create custom interfaces for notifications.
 - **Managing notifications** is now possible with interfaces in the new user notification center.
 - **Notification Service app extensions** allow you to process remote notification payloads before they're delivered.
 
-In this chapter, you'll explore all of these features. For Notification Service app extensions, you'll need a device running iOS 10 and a basic understanding of configuring remote notifications. For the later, you may want to review *Push Notifications Tutorial: Getting Started* here - [raywenderlich.com/123862](http://raywenderlich.com/123862).
+In this chapter, you'll explore all of these features. For Notification Service app extensions, you'll need a device running iOS 10 and a basic understanding of configuring remote notifications. For later, you may want to review *Push Notifications Tutorial: Getting Started* here - [raywenderlich.com/123862](http://raywenderlich.com/123862).
 
 ## Getting Started
 
@@ -19,25 +19,25 @@ The sample app for this chapter is **cuddlePix**, which aims to spread cheer wit
 
 > **Note**: While cuddlePix employs only the most cuddly digital cacti, remember to use caution when cuddling a real cactus. Real world prototyping of cuddlePix indicated that some cacti can be quite painful.
 
-Open the starter project for this chapter, then build and run. You'll be greeted by an empty table view that will eventually house the notification status and configuration info. 
+Open the starter project for this chapter, then build and run. You'll be greeted by an empty table view that will eventually house the notification status and configuration info.
 
 Tap the **+** bar button, and you'll see an interface for scheduling multiple local notifications over the hour, or a single one in 5 seconds. Right now these don't do anything, but you'll set them up shortly.
 
 ![bordered width=90%](./images/cuddlePix-starter.png)
 
-Take a few minutes to explore key items in the project. 
+Take a few minutes to explore key items in the project.
 
-- **NotificationTableViewController.swift** contains the table view controller and displays a sectioned table using a datasource built from a struct and protocol found in **TableSection.swift**. 
+- **NotificationTableViewController.swift** contains the table view controller and displays a sectioned table using a datasource built from a struct and protocol found in **TableSection.swift**.
 - **ConfigurationViewController.swift** manages the view that schedules notifications, centered around a mostly stubbed out method `scheduleRandomNotification(inSeconds:completion:)` that will ultimately create and schedule notifications.
-- **Main.storyboard** defines the simple UI you've already seen in full while testing the app. 
-- **Utilities** contains some helpers you'll use during this tutorial. 
+- **Main.storyboard** defines the simple UI you've already seen in full while testing the app.
+- **Utilities** contains some helpers you'll use during this tutorial.
 - **Supporting Files** contains artwork attributions, the plist, and images including some of beautiful cactuses you'll display in your notifications.
 
 ## User Notifications Framework
 
 Gone are the days of handling notifications via your application delegate. Enter **UserNotifications.framework**, which does everything its predecessor did, while also enabling all of the new user notification functionality like attachments, Notification Service extensions, foreground notifications, and more.
 
-The core of the new framework is `UNUserNotificationCenter`, which is accessed via a singleton. It manages user authorization, defines notifications and associated actions, schedules local notifications and provides a management interface for existing notifications.
+The core of the new framework is `UNUserNotificationCenter`, which is accessed via a singleton. It manages user authorization, defines notifications and associated actions, schedules local notifications, and provides a management interface for existing notifications.
 
 Start by setting up authorization. Open **NotificationTableViewController.swift** and add the following to `viewDidLoad()`, just below the call to super:
 
@@ -67,7 +67,7 @@ Open **ConfigurationViewController.swift** and take a look at how `scheduleRando
 
 Right now `scheduleRandomNotification(inSeconds:completion:)` obtains the URL of a random image in the bundle and prints it, but it doesn't yet schedule a notification.
 
-To create a local notification, you need to provide some content and a trigger condition. Delete `print("Schedule notification with \(imageURL)")` and add the following in its place:
+To create a local notification, you need to provide some content and a trigger condition. In the `scheduleRandomNotification` function, delete `print("Schedule notification with \(imageURL)")` and add the following in its place:
 
 ```swift
 // 1
@@ -108,7 +108,7 @@ UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error)
 Here's the breakdown of what you've done:
 
 1. You create a `UNNotificationRequest` from the `content` and `trigger` you created above. You provide the required unique identifier to be used later when managing the request. In this case, you set it to the name of the randomly selected image.
-2. You call `add(_:withCompletionHandler)` on the shared user notification center to add your `request` to the notification queue. In the completion handler, you print an error if one exists and indicate failure with `completion(success:)` to inform the caller. On success, you call the `completion(success:)` closure indicating success, which ultimately notifies its delegate (the `NotificationTableViewController`) that a refresh of pending notifications is necessary. You'll learn more about what `NotificationTableViewController` is doing later in the chapter.
+2. You call `add(_:withCompletionHandler)` on the shared user notification center to add your `request` to the notification queue. In the completion handler, if an error exists you print it and indicate failure with `completion(success:)` to inform the caller. On success, you call the `completion(success:)` closure indicating success, which ultimately notifies its delegate (the `NotificationTableViewController`) that a refresh of pending notifications is necessary. You'll learn more about what `NotificationTableViewController` is doing later in the chapter.
 
 Build and run, tap the **+** bar item, tap **Cuddle me now!** then quickly background the application with **Command + Shift + H**. Five seconds after the notification was added, you'll see the notification banner complete with your custom content!
 
@@ -125,7 +125,7 @@ let attachment = try! UNNotificationAttachment(identifier:
   randomImageName, url: imageURL, options: .none)
 ```
 
-A `UNNotificationAttachment` is an image, video, or audio attachment that is presented with a notification. It requires an identifier, for which you've used the `randomImageName` string, as well as a URL pointing to a local resource of a supported type. This method throws if the media is not readable or not supported—because you've included these images in your bundle it's fairly safe to disable error propagation with a `try!`.
+A `UNNotificationAttachment` is an image, video, or audio attachment that is presented with a notification. It requires an identifier, for which you've used the `randomImageName` string, as well as a URL pointing to a local resource of a supported type. This method throws an error if the media is not readable or not supported—because you've included these images in your bundle it's fairly safe to disable error propagation with a `try!`.
 
 Next, replace `//TODO: Add attachment` with:
 
@@ -137,13 +137,13 @@ You're setting `attachments` to the single image attachment wrapped in an array.
 
 > **Note**: When the notification is scheduled, a security-scoped bookmark is created for the attachment to provide Notification Content extensions access to the file.
 
-Build and run, initiate a notification with **Cuddle me now!** then return to the home screen as you did before. You'll now be greeted with a notification containing a random cactus picture on the right side of the banner. Force tap or select and drag down on the banner, and you'll be treated to an expanded view of the huggable cactus. 
+Build and run, initiate a notification with **Cuddle me now!** then return to the home screen as you did before. You'll now be greeted with a notification containing a random cactus picture on the right side of the banner. Force tap or select and drag down on the banner, and you'll be treated to an expanded view of the huggable cactus.
 
 ![width=90%](./images/notification-attachment.png)
 
 ### Foreground Notifications
 
-The **UNUserNotificationCenterDelegate** protocol defines methods for handling incoming notifications and their actions. It enables another great enhancement to iOS 10 notifications—the ability to display system notification banners in the foreground. 
+The **UNUserNotificationCenterDelegate** protocol defines methods for handling incoming notifications and their actions. It enables another great enhancement to iOS 10 notifications—the ability to display system notification banners in the foreground.
 
 To do this, open **AppDelegate.swift** and add the following at the end of the file:
 
@@ -158,7 +158,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 }
 ```
 
-This extends `AppDelegate` to adopt the UNUserNotificationCenterDelegate protocol. The optional `userNotificationCenter(_:willPresent:withCompletionHandler:)` is called when a notification is received in the foreground, and provides the opportunity to act upon it. 
+This extends `AppDelegate` to adopt the `UNUserNotificationCenterDelegate` protocol. The optional `userNotificationCenter(_:willPresent:withCompletionHandler:)` is called when a notification is received in the foreground, and provides the opportunity to act upon it.
 
 In it, you call the `completionHandler()`, which determines if and how the alert should be presented. The `.alert` notification option indicates you want to present the alert, but no badge updates or sounds. You could also choose to suppress the alert here by passing an empty array.
 
@@ -170,7 +170,7 @@ UNUserNotificationCenter.current().delegate = self
 
 This sets your AppDelegate as the `UNUserNotificationCenterDelegate` so that user notification center will pass along this message when a foreground notification is received.
 
-Build and run, and schedule a notification as you've done before. This time, leave CuddlePix in the foreground and you'll see a system banner appear in app! 
+Build and run, and schedule a notification as you've done before. This time, leave CuddlePix in the foreground and you'll see a system banner appear in app!
 
 ![bordered width=40%](./images/in-app-banner.png)
 
@@ -186,7 +186,7 @@ The **UNUserNotificationCenter** provides accessor methods to read an app's user
 
 Finally, you have the ability to read and and set notification categories, which you'll learn about a little later in this chapter.
 
-### Notification Center Queries 
+### Notification Center Queries
 
 You'll kick this off by obtaining the notification settings and displaying them in cuddlePix's initial table view.
 
@@ -202,7 +202,7 @@ let dataSaveQueue = DispatchQueue(label:
 group.enter()
 // 3
 notificationCenter.getNotificationSettings { (settings) in
-  let settingsProvider = SettingTableSectionProvider(settings: 
+  let settingsProvider = SettingTableSectionProvider(settings:
     settings, name: "Notification Settings")
   // 4
   dataSaveQueue.async(execute: {
@@ -215,7 +215,7 @@ notificationCenter.getNotificationSettings { (settings) in
 This code queries for notification settings and updates the table datasource object involved in their display. Here are the details:
 
 1. You create `notificationCenter` to reference the shared notification center more concisely. Then you create a `DispatchQueue` that will be used to prevent concurrency issues when updating the table view data source.
-2. First you enter a dispatch group that will be used to ensure all data fetches complete before you refresh the table. Note the project already refreshes in a group.notify(callback:) closure for this reason. 
+2. First you enter a dispatch group that will be used to ensure all data fetches complete before you refresh the table. Note the project already refreshes in a group.notify(callback:) closure for this reason.
 3. You call `getNotificationSettings(callback:)` to fetch current notification settings from the notification center. The results are passed to the callback closure via `settings`, which you use to initialize a `SettingTableSectionProvider`. SettingTableSectionProvider was included in the starter and extracts interesting information from the provided UNNotificationSettings for presentation in a table view cell.
 4. Using the `dataSaveQueue`, you asynchronously update `tableSectionProviders`' settings section with the just created `settingsProvider`. The table management is all provided by the starter project, and setting the provider is all you need to do for the data to be provided to the table view. Finally, you leave `group` to release your hold on the dispatch group.
 
@@ -223,7 +223,7 @@ Build and run, and you'll now see a **Notification Settings** section in the tab
 
 ![bordered width=90%](./images/notification-settings.png)
 
-Knowing your users settings can help you know how to best present notifications. 
+Knowing your users settings can help you know how to best present notifications.
 
 It's just as easy to fetch information about pending and delivered notifications. Just below the closing bracket of the `getNotificationSettings(completionHandler:)` closure, add the following:
 
@@ -251,9 +251,9 @@ notificationCenter.getDeliveredNotifications { (notifications) in
 }
 ```
 
-You've implemented two additional fetches in a manner identical to the settings fetch, updating their respective `tableSectionProviders`. `getPendingNotificationRequests(completionHandler:)` fetches notifications that are pending—scheduled but not yet delivered. `getDeliveredNotifications(completionHandler:)` fetches those that have been delivered, but not yet deleted. 
+You've implemented two additional fetches in a manner identical to the settings fetch, updating their respective `tableSectionProviders`. `getPendingNotificationRequests(completionHandler:)` fetches notifications that are pending—scheduled but not yet delivered. `getDeliveredNotifications(completionHandler:)` fetches those that have been delivered, but not yet deleted.
 
-Now, build and run. Schedule a notification, and you'll see it appear under **Pending Notifications**. Once delivered, pull to refresh and you'll see it under **Delivered Notifications**. 
+Now, build and run. Schedule a notification, and you'll see it appear under **Pending Notifications**. Once delivered, pull to refresh and you'll see it under **Delivered Notifications**.
 
 Delivered notifications remain until they are deleted. Test this by expanding a notification when the banner appears then selecting **Dismiss**—then see if it exists in the table after a refresh. You can also delete a notification by pulling down notification center and clearing it from the **Missed** list.
 
@@ -266,15 +266,15 @@ NotificationCenter.default.post(name:
   userNotificationReceivedNotificationName, object: .none)
 ```
 
-`userNotificationReceivedNotificationName` is a system notification that cuddlePix uses to reload the status table. You post it here, because this method is triggered whenever a notification comes in, and thus notification status updates. 
+`userNotificationReceivedNotificationName` is a system notification that cuddlePix uses to reload the status table. You post it here, because this method is triggered whenever a notification comes in, and thus notification status updates.
 
-A very compelling application of this status awareness is to avoid sending repeat notifications if an identical one is still in delivered status. 
+A very compelling application of this status awareness is to avoid sending repeat notifications if an identical one is still in delivered status.
 
-### Modify Notifications 
+### Modify Notifications
 
 Being able to query notifications is even more exciting combined with the fact that you can update or delete them. Consider an app that reports sports scores. Rather than littering notification center with outdated score alerts, you could continually update the same notification, bumping it to the top of the notification list each time for visibility into the update.
 
-Updating a notification is straightforward. You create a new UNNotificationRequest with the same identifier as the existing notification, pass it your updated content, and add it to UNUserNotificationCenter. Once the trigger conditions are met, it will overwrite the existing notification with the matching identifier.
+Updating a notification is straightforward. You create a new `UNNotificationRequest` with the same identifier as the existing notification, pass it your updated content, and add it to `UNUserNotificationCenter`. Once the trigger conditions are met, it will overwrite the existing notification with the matching identifier.
 
 For cuddlePix, notifications are serious business. Consider a case where you scheduled 10 notifications, when you meant to do just 5. Too much of a good thing can get pretty prickly, so you're going to work on the ability to delete pending notifications.
 
@@ -287,7 +287,7 @@ Add the following to `tableView(_:commit:forRowAt:)`:
 guard let section =
   NotificationTableSection(rawValue: indexPath.section)
   where editingStyle == .delete && section == .pending else { return }
-  
+
 // 2
 guard let provider = tableSectionProviders[.pending]
   as? PendingNotificationsTableSectionProvider else { return }
@@ -317,9 +317,9 @@ Build and run, create a new notification, and swipe the cell in the **Pending No
 
 Another major change to notifications in iOS 10 is the introduction of Notification Content extensions. They allow you to provide a custom interface for the expanded version of your notifications. Interaction is limited—the notification view won't pass along gestures, but the extension can update the view in response to *actions*, which you'll learn about a little later.
 
-These extensions are built with the **UNNotificationContentExtension** protocol, which your extension view controller must adopt. The protocol defines optional methods that notify the extension when it's being presented, help it respond to actions, and assist in media playback.
+These extensions are built with the **UNNotificationContentExtension** protocol, which your extension view controller must adopt. The protocol defines optional methods that notify the extension when it's being presented, helps it respond to actions, and assists in media playback.
 
-The interface can contain anything you might place in a view, including playable media like video and audio. However, they run as a separate binary from your app, and don't have direct access to its resources. For this reason, any resources they require that aren't included in the extension bundle are passed via attachments of type **UNNotificationAttachment**. 
+The interface can contain anything you might place in a view, including playable media like video and audio. However, they run as a separate binary from your app, and don't have direct access to its resources. For this reason, any resources they require that aren't included in the extension bundle are passed via attachments of type **UNNotificationAttachment**.
 
 ### Creating an Extension with an Attachment
 
@@ -333,7 +333,7 @@ You've created a new target and project group, both named **ContentExtension**. 
 
 ![width=40% bordered](./images/content-extension-group.png)
 
-Open **MainInterface.storyboard** and take a look at what the template provided. You'll see a single view controller of type `NotificationViewController`—the controller created when you generated the extension. Inside is a single view with a *Hello World* label connected to an outlet in the controller. 
+Open **MainInterface.storyboard** and take a look at what the template provided. You'll see a single view controller of type `NotificationViewController`—the controller created when you generated the extension. Inside is a single view with a *Hello World* label connected to an outlet in the controller.
 
 For cuddlePix, your goal is to create something similar to the default expanded view, but just a tad more cuddly. A cactus picture with a hug emoji in the corner should do quite nicely.
 
@@ -365,7 +365,7 @@ Now, open **NotificationViewController.swift** in the Assistant Editor so that y
 First, delete this line:
 
 ```swift
-@IBOutlet var label: UILabel? 
+@IBOutlet var label: UILabel?
 ```
 
 That outlet was associated with the label you deleted from the storyboard template. You'll see an error now as you still reference it. Delete the following in `didReceive(_:)` to resolve that:
@@ -379,7 +379,7 @@ Next, control drag from the Image View in the storyboard to the spot where you j
 
 With the interface done, close the storyboard and open **NotificationViewController.swift** in the Standard editor.
 
-Remember that `didReceive(_:)` is called when a notification arrives, and is where you should do any view configuration. For this extension, that means populating the imageView with the cactus picture from the notification. Add the following to `didReceive(_:)`: 
+Remember that `didReceive(_:)` is called when a notification arrives, and is where you should do any view configuration. For this extension, that means populating the imageView with the cactus picture from the notification. Add the following to `didReceive(_:)`:
 
 ```swift
 // 1
@@ -394,30 +394,30 @@ if attachment.url.startAccessingSecurityScopedResource() {
 
 Here's what this does:
 
-1. The passed UNNotification (`notification`) contains a reference to the original UNNotificationRequest (`request`) that generated it. A request contains UNNotificationContent (`content`) that, among other things, contains an array of UNNotificationAttachments (`attachments`). In a guard, you grab the first of those attachments—you know you've only included one—and you place it in `attachment`.
+1. The passed `UNNotification` (`notification`) contains a reference to the original `UNNotificationRequest` (`request`) that generated it. A request contains `UNNotificationContent` (`content`) that, among other things, contains an array of `UNNotificationAttachments` (`attachments`). In a guard, you grab the first of those attachments—you know you've only included one—and you place it in `attachment`.
 2. Attachments in the user notification center live inside your app's sandbox, not the extension's, and thus they must be accessed via security-scoped URLs. `startAccessingSecurityScopedResource()` makes the file available to the extension when it successfully returns, and `stopAccessingSecurityScopedResource()` is required to indicate you're finished with the resource. In between, you load `imageView` using the file pointed to by this URL.
 
 The extension is all set. But when a notification triggers for cuddlePix, how is the the system supposed to know what, if any, extension to send it to?
 
 ![width=30%](./images/notification-gnomes.png)
 
-Gnomes are a good guess, but they're notoriously unreliable. Instead, user notification center relies on a key defined in the extension's plist to identify the types of notifications it should handle. 
+Gnomes are a good guess, but they're notoriously unreliable. Instead, user notification center relies on a key defined in the extension's plist to identify the types of notifications it should handle.
 
 Open **Info.plist** in the ContentExtension group and expand `NSExtension`, then `NSExtensionAttributes` to reveal **UNNotificationExtensionCategory**. This key takes a string (or array of strings) identifying the notifications it should handle. Enter **newCuddlePix** here, which you'll later provide in the content of your notification requests.
 
 ![width=80% bordered](./images/content-extension-plist.png)
 
 > **Note**: In the same plist dictionary, you'll see another required key—**UNNotificationExtensionInitialContentSizeRatio**. Because the system starts to present a notification before loading your extension, it needs something to base the initial size on. You provide a ratio of the notification's height to its width, and the system will animate any expansion or contraction once the extension view loads.
-> 
+>
 > cuddlePix's extension view frame is set to fill the full width of a notification, so in this case you leave it at the default ratio of 1.
 
-The operating system knows notifications using the *newCuddlePix* category should go to your extension, but you haven't yet set this category on your outgoing notifications. Open **ConfigurationViewController.swift** and find `scheduleRandomNotification(inSeconds:completion:)` where you generate UNNotificationRequests. Add the following line after `content` is declared:
+The operating system knows notifications using the *newCuddlePix* category should go to your extension, but you haven't yet set this category on your outgoing notifications. Open **ConfigurationViewController.swift** and find `scheduleRandomNotification(inSeconds:completion:)` where you generate `UNNotificationRequest`s. Add the following line after `content` is declared:
 
 ```swift
 content.categoryIdentifier = newCuddlePixCategoryName
 ```
 
-The UNNotificationRequest that gets created in this method will now use `newCuddlePixCategoryName` as a `categoryIdentifier` for its content. `newCuddlePixCategoryName` is a string constant defined in the starter that matches the one you placed in the extension plist—*newCuddlePix*. 
+The `UNNotificationRequest` that gets created in this method will now use `newCuddlePixCategoryName` as a `categoryIdentifier` for its content. `newCuddlePixCategoryName` is a string constant defined in the starter that matches the one you placed in the extension plist—*newCuddlePix*.
 
 When the system prepares to deliver a notification, it will check that notification's category identifier and try to find an extension registered to handle it. In this case, that will be the extension you just created.
 
@@ -432,8 +432,8 @@ In cuddlePix, generate a new notification with **Cuddle me now!**. When the bann
 ![iphone bordered](./images/content-extension-presented.png)
 
 > **Note**: You'll notice that the custom UI you designed is presented above the default banner content. In this case, it's appropriate, as your custom view didn't implement any of this text.
-> 
-> However, if you shifted the titles and messages to the extension, you could easily remove the system generated banner at the bottom. This is done by adding the `UNNotificationExtensionDefaultContentHidden` key to your extension plist with a value of true.
+>
+> However, if you shifted the titles and messages to the extension, you could easily remove the system generated banner at the bottom. This is done by adding the `UNNotificationExtensionDefaultContentHidden` key to your extension plist with a value of `true`.
 
 
 ### Notification Action Handling
@@ -446,7 +446,7 @@ Prior to iOS 10, custom actions were forwarded on to the application and handled
 
 Because Notification Content extensions can handle actions directly, that means the notification view can be updated with results. For instance, when an invite is accepted, you could display an updated calendar view right there in the notification.
 
-The driver of this is the new **UNNotificationCategory**, which uniquely defines a notification type and references actions the type can act upon. The actions are defined with **UNNotificationAction** objects that in turn uniquely define actions. When configured and added to the UNUserNotificationCenter, these objects help direct actionable notifications to the right handlers in your app or extensions.
+The driver of this is the new **UNNotificationCategory**, which uniquely defines a notification type and references actions the type can act upon. The actions are defined with **UNNotificationAction** objects that in turn uniquely define actions. When configured and added to the `UNUserNotificationCenter`, these objects help direct actionable notifications to the right handlers in your app or extensions.
 
 #### Defining the Action
 
@@ -477,8 +477,8 @@ private func configureUserNotifications() {
 Here's what this code does:
 
 1. A `UNNotificationAction` has two jobs—it provides data used in displaying an action to the user, and it uniquely identifies actions so that controllers can act upon them. It requires a title for the first job and a unique identifier string for the second. Here you've created a `starAction` and a `dismissAction` with recognizable identifiers and titles.
-2. You defined a `UNNotificationCategory` with the string constant set up for this notification (and used in your extension plist)—`newCuddlePixCategoryName`. You've passed an array containing your newly created UNNotificationActions to `actions` and `minimalActions`. The `actions` parameter requires all custom actions you want displayed in order of display while `minimalActions` needs to contain the two most important actions to be displayed when space is limited.
-3. You pass the new `category` to the UNUserNotificationCenter with `setNotificationCategories()`, which accepts an array of categories and registers cuddlePix as supporting them.
+2. You defined a `UNNotificationCategory` with the string constant set up for this notification (and used in your extension plist)—`newCuddlePixCategoryName`. You've passed an array containing your newly created `UNNotificationActions` to `actions` and `minimalActions`. The `actions` parameter requires all custom actions you want displayed in order of display while `minimalActions` needs to contain the two most important actions to be displayed when space is limited.
+3. You pass the new `category` to the `UNUserNotificationCenter` with `setNotificationCategories()`, which accepts an array of categories and registers cuddlePix as supporting them.
 
 > **Note**: You're probably shouting as you read this that the notification *already* shows a dismiss option when expanded. That *is* the default behavior for a Notification Content extension when no actions are provided. But, as soon as you use a custom action, only those you create will be shown—so you need to create your own dismiss action here.
 
@@ -490,19 +490,19 @@ configureUserNotifications()
 
 This ensures category registration happens as soon as the app is started.
 
-Now, build and run the **CuddlePix** scheme, followed by the **ContentExtension** scheme which you should choose to run with cuddlePix. Create a notification and expand it with force touch or a drag down when it arrives. 
+Now, build and run the **CuddlePix** scheme, followed by the **ContentExtension** scheme which you should choose to run with cuddlePix. Create a notification and expand it with force touch or a drag down when it arrives.
 
 You'll now see buttons for your new actions at the bottom of the notification.
 
 ![iphone bordered](./images/notification-actions.png)
 
-Try selecting **star my cuddle**, and the notification will simply dismiss, because you haven't yet implemented the action. 
+Try selecting **star my cuddle**, and the notification will simply dismiss, because you haven't yet implemented the action.
 
 #### Extension Response Handling and Forwarding
 
 Notification extensions get first crack at handling an action response. In fact, they determine whether or not to forward the request along to the app when they finish.
 
-Open **NotificationViewController.swift** and you'll see your controller already adheres to `UNNotificationContentExtension`, which provides an optional method for handling responses. Add the following to `NotificationViewController`:
+Inside ContentExtension, open **NotificationViewController.swift** and you'll see your controller already adheres to `UNNotificationContentExtension`, which provides an optional method for handling responses. Add the following to `NotificationViewController`:
 
 ```swift
 func didReceive(_ response: UNNotificationResponse,
@@ -526,13 +526,13 @@ func didReceive(_ response: UNNotificationResponse,
 
 `didReceive(_:completionHandler:)` is called with the action response and a completion closure. The closure must be called when you're done with the action, and it requires a parameter indicating what should happen next. Here is some detail on what you did:
 
-1. When setting up your UNNotificationActions, you gave the star action an identifier of *star*, which you check here to catch responses of this type. Inside, you have a `TODO` for implementing the star animation that you'll soon revisit. You let the animation continue for 2 seconds via `DispatchQueue.main.after` before calling the completion closure.
+1. When setting up your `UNNotificationActions`, you gave the star action an identifier of *star*, which you check here to catch responses of this type. Inside, you have a `TODO` for implementing the star animation that you'll soon revisit. You let the animation continue for 2 seconds via `DispatchQueue.main.after` before calling the completion closure.
 2. `completion` takes an enum value defined by `UNNotificationContentExtensionResponseOption`. In this case, you've used `dismissAndForwardAction`, which dismisses the notification and allows the app an opportunity to act on the response. (Alternative values include `doNotDismiss`, which keeps the notification on screen and `dismiss`, which doesn't pass the action along to the app after dismissal)
 3. For the dismiss action, the extension dismisses immediately and forwards the action along to the app to handle.
 
-Your current implementation of the star action leaves something to be desired—specifically, the stars! The starter project already contains everything you need for this animation, but it's not yet available to the Notification Content extension's target. 
+Your current implementation of the star action leaves something to be desired—specifically, the stars! The starter project already contains everything you need for this animation, but it's not yet available to the Notification Content extension's target.
 
-In the project navigator, expand the **Utiltiies** and then **Star Animatior** group and select both files inside. 
+In the project navigator, expand the **Utiltiies** and then **Star Animatior** group and select both files inside.
 ![width=40% bordered](./images/star-animator.png)
 
 Open the File inspector in the utilities pane of Xcode, and select **ContentExtension** under **Target Membership**.
@@ -544,9 +544,9 @@ Back in **NotificationViewController.swift**, replace `// TODO Show Stars` with:
 imageView.showStars()
 ```
 
-This uses a UIImageView extension defined in the **StarAnimator.swift** file you just added to the target. `showStars()` uses core animation to create a shower of stars over the ImageView.
+This uses a `UIImageView` extension defined in the **StarAnimator.swift** file you just added to the target. `showStars()` uses core animation to create a shower of stars over the ImageView.
 
-Build and run the extension and the app as you've done before. Create and expand a notificaiton, then select **star my cuddle** and you'll see an awesome star shower over your cactus before it dismisses. 
+Build and run the extension and the app as you've done before. Create and expand a notificaiton, then select **star my cuddle** and you'll see an awesome star shower over your cactus before it dismisses.
 
 ![iphone bordered](./images/star-shower.png)
 
@@ -566,7 +566,7 @@ func userNotificationCenter(_ center: UNUserNotificationCenter,
 
 `userNotificationCenter(_:didReceive:withCompletionHandler)` is called to let you know a notification action was selected. In it, you print out the `actionIdentifier` of the response, simply to confirm things are working as they should. You then call `completionHandler()` which accepts no arguments and is required to notify user notification center that you're done handling the action.
 
-Build and run the app and Notification Content extension, and trigger a notification. Expand the notification and select either response. Search the Debug Console and you should see responses like the below appear as soon as the notification dismisses (depending on the action chosen):
+Build and run the app and Notification Content extension, and trigger a notification. Expand the notification and select either response. Search the Debug Console and you should see responses like the ones below appear as soon as the notification dismisses (depending on the action chosen):
 
 ```html
 Response received for dismiss
@@ -575,10 +575,10 @@ Response received for star
 
 To recap, here is the flow of messages being passed around when you receive a notification in the foreground and respond to an action in a Notification Content extension:
 
-1. **userNotificationCenter(_:willPresent:withCompletionHandler:)** is called in the UNUserNotificationCenterDelegate (only in the foreground), and determines if the notification should present.
-2. **didReceive(_:)** is called in the the UNNotificationContentExtension and allows the opportunity to configure the custom notification's interface.
-3. **didReceive(_:completionHandler:)** is called in the UNNotificationContentExtension after the user selects a response action.
-4. **userNotificationCenter(_:didReceive:withCompletionHandler:)** is called in the UNUserNotificationCenterDelegate if the UNNotificationContentExtension passes it along via the `dismissAndForwardAction` response option.
+1. **userNotificationCenter(_:willPresent:withCompletionHandler:)** is called in the `UNUserNotificationCenterDelegate` (only in the foreground), and determines if the notification should present.
+2. **didReceive(_:)** is called in the the `UNNotificationContentExtension` and allows the opportunity to configure the custom notification's interface.
+3. **didReceive(_:completionHandler:)** is called in the `UNNotificationContentExtension` after the user selects a response action.
+4. **userNotificationCenter(_:didReceive:withCompletionHandler:)** is called in the `UNUserNotificationCenterDelegate` if the `UNNotificationContentExtension` passes it along via the `dismissAndForwardAction` response option.
 
 ## Notification Service App Extensions
 
@@ -586,17 +586,17 @@ Believe it or not, another major feature awaits in the form of Notification Serv
 
 cuddlePix doesn't really demand end to end encryption, so instead you're going to add an image attachment to incoming remote notifications. But first, you need to set up a development environment.
 
-Because the simulator cannot register for remote notifications, you'll need a device with iOS 10 to test. 
+Because the simulator cannot register for remote notifications, you'll need a device with iOS 10 to test.
 
-Start by configuring cuddlePix for push with your Apple Developer account. First select the **CuddlePix** target and **General** tab. In the **Signing** section, select your **Team** and then in **Identity** enter a unique **Bundle Identifier**.
+Start by configuring cuddlePix for push with your Apple Developer account. First select the **CuddlePix** target and **General** tab. In the **Signing** section, select your **Team** and then in **Bundle Identifier** enter a unique **Identifier**.
 
 ![width=80% bordered](./images/general-configuration.png)
 
-Now switch to the **Capabilities** tab and switch **Push Notifications** on for the CuddlePix target. cuddlePix is now set up to successfully receive tokens from the Apple Push Notification Service (APNS). 
+Now switch to the **Capabilities** tab and switch **Push Notifications** on for the CuddlePix target. cuddlePix is now set up to successfully receive tokens from the Apple Push Notification Service (APNS).
 
 ![width=80% bordered](./images/push-configuration.png)
 
-Select the **ContentExtension** target and change the *com.razeware.CuddlePix* prefix in its bundle identifier to match the unique identifier you used for the **CuddlePix** target (leaving .ContentExtension at the end of the identifier). Also set your **Team** as you did in the other target. Apple requires your extensions to have a prefix that matches the main app.
+Select the **ContentExtension** target and change the *com.razeware.CuddlePix* prefix in its bundle identifier to match the unique identifier you used for the **CuddlePix** target (leaving `.ContentExtension` at the end of the identifier). Also set your **Team** as you did in the other target. Apple requires your extensions to have a prefix that matches the main app.
 
 You'll also need a way to send test pushes, for which you'll use a popular open source tool called **NWPusher**. It sends push notifications directly to APNS. To start, follow the instructions in the **Installation** section of their GitHub readme to get the app running - [github.com/noodlewerk/NWPusher](https://github.com/noodlewerk/NWPusher).
 
@@ -610,7 +610,7 @@ Pusher of course requires a push token so it can tell APNS where to send the not
 application.registerForRemoteNotifications()
 ```
 
-When cuddlePix starts up, it will now register for notifications. Remember it will only be successful when run on a device. 
+When cuddlePix starts up, it will now register for notifications. Remember it will only be successful when run on a device.
 
 Add the following at the bottom of the AppDelegate, just below the final bracket:
 
@@ -622,7 +622,7 @@ extension AppDelegate {
       print("Registration for remote notifications failed")
       print(error.localizedDescription)
   }
-  
+
   // 2
   func application(_ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -631,7 +631,7 @@ extension AppDelegate {
 }
 ```
 
-This extension contains the UIApplicationDelegate methods for handling the response from APNS. They do the following:
+This extension contains the `UIApplicationDelegate` methods for handling the response from APNS. They do the following:
 
 1. `application(_:didFailToRegisterForRemoteNotificationsWithError:)` is called when registration fails. Here, you print the error message.
 2. `application(_:didRegisterForRemoteNotificationsWithDeviceToken:)` is called when registration is successful, and returns the `deviceToken`. You use `hexString`, a helper method included with the starter, to convert it to hex format and print it to the console.
@@ -661,7 +661,7 @@ Select **Push** in the lower right of Pusher and, if everything is configured pr
 
 The default notification banner is here, but if you expand it, the image view will be blank. You passed the category of `newCuddlePix`, identifying your Notification Content extension, but you didn't provide an attachment to load. That's just not possible from a remote payload, which is where Notification Service extensions come in.
 
-### Creating and Configuring a Notification Service Extension 
+### Creating and Configuring a Notification Service Extension
 
 The plan is to modify your payload to include the URL of an attachment that you'll download in the Notification Service extension and create an attachment. Update the JSON in the payload section in **Pusher** to match the following:
 
@@ -694,7 +694,7 @@ This will create a target called **ServiceExtension**. It will also add the foll
 
 ![width=40% bordered](./images/service-extension.png)
 
-Take a look at **NotificationService.swift**, which contains a class `NotificationService` that inherits from `UNNotificationServiceExtension`. UNNotificationServiceExtension is the central class for Notification Service extensions, and it contains two important methods the template code is overriding:
+Take a look at **NotificationService.swift**, which contains a class `NotificationService` that inherits from `UNNotificationServiceExtension`. `UNNotificationServiceExtension` is the central class for Notification Service extensions, and it contains two important methods the template code is overriding:
 
 1. **didReceive(_:withContentHandler)** is called when a notification is received and routed to the extension, and is given a limited amount of time to modify the notification contents. It accepts a `UNNotificationRequest`, from which it creates `bestAttemptContent`, a mutable copy of the notification content. The template unwraps this and appends `[modified]` to the end of the title then calls the contentHandler, passing the updated content.
 2. **serviceExtensionTimeWillExpire()** is called to provide a best attempt at updating notification content in cases where `didReceive(_:UNNotificationServiceExtension)` doesn't return quickly enough. The template contains a property `bestAttemptContent` that `didReceive(_:UNNotificationServiceExtension)` uses while updating content. Here, `serviceExtensionTimeWillExpire()` unwraps `bestAttemptContent` and sends it along to the `contentHandler`.
@@ -739,7 +739,7 @@ attachmentDownloadTask.resume()
 Here's what this does:
 
 1. This obtains the string value for `attachment-url` found in `userInfo` of the request content copy. A URL is created from this string and saved in `attachmentUrl`. If this guard isn't successful, it bails out early with a return.
-2. `session` is a `URLSession` that is used when creating a `downloadTask` to obtain the image at `attachmentUrl`. In the completion handler, an error is printed on failure. 
+2. `session` is a `URLSession` that is used when creating a `downloadTask` to obtain the image at `attachmentUrl`. In the completion handler, an error is printed on failure.
 3. On success, a `UNNotificationAttachment` is created using the `attachmentString` as a unique identifier and the local `url` as the content. `UNNotificationAttachmentOptionsTypeHintKey` provides a hint as to the file type—in this case `kUTTypePNG` is used as the file is known to be a PNG. The resulting attachment is set on `bestAttemptContent`.
 4. The `completionHandler` is called, passing over the modified notification content. This signifies the extension's work is done, and sends back the updated notification. This must be done whether or not the attempt was successful (when unsuccessful, the original request is sent back)
 5. Once the `downloadTask` is defined, it is kicked off with `resume()`. This leads to the `attachmentDownloadTask`'s `completionHandler` executing on completion, which in turn calls the `contentHandler` to complete processing.
@@ -754,7 +754,7 @@ A remote push was intercepted by a Notification Service extension, which downloa
 
 ## Where To Go From Here?
 
-In this chapter, you cuddled some cactuses while checking out everything new with notifications—and there was quite a lot! 
+In this chapter, you cuddled some cactuses while checking out everything new with notifications—and there was quite a lot!
 
 You learned how to create custom notification interfaces, respond to actions in Notification Content extensions and the app, query and modify existing notifications, and enhance remote notifications with Notification Service extensions. Hopefully you've already come up with some ideas on how to enhance your apps with these basic ideas, which should make notifications quite a bit more user friendly and useful.
 
