@@ -1,3 +1,10 @@
+```metadata
+author: "By Jeff Rames"
+number: "10"
+title: "Chapter 10: User Notifications"
+```
+# Chapter 10: User Notifications
+
 ## Introduction
 
 Remote push notifications were released way back in iOS 3, followed by local notifications in iOS 4. Looking through your most used apps, many of them likely leverage one or both of these types of User Notifications. They are integral to keeping users engaged in an app, up to date, and in near real time communication with others.
