@@ -28,7 +28,7 @@ let wordList = [ "nose", "dog", "camel", "fork", "pizza", "ray", "swift", "closu
 struct WenderPicGame {
   let word: String
   let currentDrawing: UIImage?
-  let guesses: [String]
+  var guesses: [String]
   let drawerId: UUID
   
   init(word: String, drawerId: UUID) {

@@ -40,7 +40,7 @@ class GuessViewController: UIViewController {
     if game.valid(guess: guess) {
       delegate?.handleGuessSubmission(forGame: game, guess: guess)
     } else {
-      // TODO: Pop this onto the UI
+      self.game?.guesses.append(guess)
       print("This has already been guessed! Try again!")
     }
   }

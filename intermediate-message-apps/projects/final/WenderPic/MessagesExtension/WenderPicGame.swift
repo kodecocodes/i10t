@@ -28,7 +28,7 @@ let wordList = [ "nose", "dog", "camel", "fork", "pizza", "ray", "swift", "closu
 struct WenderPicGame {
   let word: String
   let currentDrawing: UIImage?
-  let guesses: [String]
+  var guesses: [String]
   let drawerId: UUID
   
   init(word: String, drawerId: UUID) {
@@ -53,6 +53,62 @@ extension WenderPicGame {
   
   func updateDrawing(_ drawing: UIImage) -> WenderPicGame {
     return WenderPicGame(word: word, currentDrawing: drawing, guesses: guesses, drawerId: drawerId)
+  }
+}
+
+// MARK: Encoding / Decoding
+extension WenderPicGame {
+  
+  var queryItems: [URLQueryItem] {
+    var items = [URLQueryItem]()
+    
+    items.append(URLQueryItem(name: "word", value: word))
+    items.append(URLQueryItem(name: "guesses", value: guesses.joined(separator: "::-::")))
+    items.append(URLQueryItem(name: "drawerId", value: drawerId.uuidString))
+    
+    return items
+  }
+  init?(queryItems: [URLQueryItem], drawing: UIImage?) {
+    var word: String?
+    var guesses = [String]()
+    var drawerId: UUID?
+    
+    for item in queryItems {
+      guard let value = item.value else { continue }
+      
+      switch item.name {
+      case "word":
+        word = value
+      case "guesses":
+        guesses = value.components(separatedBy: "::-::")
+      case "drawerId":
+        drawerId = UUID(uuidString: value)
+      default:
+        continue
+      }
+    }
+    
+    guard let decodedWord = word, decodedDrawerId = drawerId else {
+      return nil
+    }
+    
+    self.word = decodedWord
+    self.guesses = guesses
+    self.currentDrawing = drawing
+    self.drawerId = decodedDrawerId
+  }
+  
+  init?(message: MSMessage?) {
+    //TODO: radar 27263740 file because the layout property is nil on any selected message as of beta 2. If this isn't resolved we'll have to encode the image as part of the URL instead. If resolved uncomment the line below and send the image as suggested.
+    guard let
+//    layout = message?.layout as? MSMessageTemplateLayout,
+    messageURL = message?.url,
+    urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
+    queryItems = urlComponents.queryItems
+    else {
+      return nil
+    }
+    self.init(queryItems: queryItems, drawing: nil)//layout.image)
   }
 }
 
