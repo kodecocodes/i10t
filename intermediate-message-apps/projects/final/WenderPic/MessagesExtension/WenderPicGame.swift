@@ -99,7 +99,7 @@ extension WenderPicGame {
   }
   
   init?(message: MSMessage?) {
-    //TODO: radar 27263740 file because the layout property is nil on any selected message as of beta 2. If this isn't resolved we'll have to encode the image as part of the URL instead. If resolved uncomment the line below and send the image as suggested.
+    //TODO: radar 27263740 file because the layout property is nil on any selected message as of beta 2. If this isn't resolved we'll have to encode the image as part of the URL instead (though when I tried this, the message refused to send). If resolved uncomment the line below and send the image as suggested.
     guard let
 //    layout = message?.layout as? MSMessageTemplateLayout,
     messageURL = message?.url,
