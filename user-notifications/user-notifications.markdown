@@ -348,6 +348,12 @@ To start, delete the existing label and change the view's background color to wh
 
 ![width=35% bordered](./images/imageview-constraints.png)
 
+In the Document Outline, select the height constraint under the Image View. Navigate to the Size inspector, and change the constraint relation to **Greater Than or Equal**.
+
+![width=60% bordered](./images/greater-than-autolayout.png)
+
+Do the same thing with the width constraint of the Image View. This will allow the Image View to grow based on the size of the presented notificaiton. 
+
 Select the Image View and go to the Attributes Inspector. In the View section, set the Content Mode to **Aspect Fill** to ensure as many pixels as possible are filled with beautiful cactus.
 
 ![width=35% bordered](./images/aspect-fill.png)
