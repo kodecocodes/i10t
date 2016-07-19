@@ -1,51 +1,50 @@
 ```metadata
 author: "By Rich Turton"
-number: "99"
+number: "5"
 title: "Chapter 5: Beginning Message Apps"
+section: 2
 ```
 # Chapter 5: Beginning Message Apps
 
-## Introduction
+iOS 10 brought some fun features to iMessage – and also opened up the app to third party developers. This means you can create and sell things to use in iMessage such as applications and sticker packs, and unlike other extension points, Messages apps don't need to have a "standard" iOS app to work.
 
-iMessage has been given some "fun" new features in iOS 10, and has also been opened up to third party developers. You can make and sell applications and sticker packs, and unlike other extension points, Messages apps don't need to have a "standard" iOS app to go with them.
+In this chapter, you'll learn how to make a sticker app, which is a great introduction to the Messages framework.
 
-Messages apps can interact directly with the ongoing conversation, which you'll learn more about in the next chapter. In this chapter you will learn about making your own sticker apps, which are a great introduction to the Messages framework.
+You'll build the sticker pack to start. Next, you'll make a Messages app to provide stickers using some built-in classes. Finally, you'll create a custom sticker app using a collection view.
 
-You'll start by building a sticker pack. Next, you'll make a Messages app which provides stickers using some built-in classes. And, finally, you'll make a fully custom sticker app using a collection view.
+Ready to get sticky? :]
 
-Are you ready to get sticky?
+## Getting started
 
-## Sticker Packs
+Sticker packs are the simplest possible iMessage application you can make. So simple, in fact, that you don't need to write any code!
 
-Sticker packs are the simplest possible iMessage application you can make. In fact, they are so simple, you don't even need to write any code!
-
-Create a new Xcode project and choose the **iOS > Application > Sticker Pack Application** template:
+Create a new Xcode project and choose the **iOS\Application\Sticker Pack Application** template:
 
 ![bordered width=60%](images/StickerPackTemplate.png)
 
-Call the project **RWPeeps**.
+Name the project **RWPeeps**.
 
-The project created is probably one of the simplest Xcode projects you've ever seen! It only contains one thing - a specialized asset catalog, called **Stickers.xcstickers**. Within the asset catalog is a place for the app icon, and a folder called **Sticker Pack**:
+The project will likely be one of the simplest Xcode projects you've ever seen! It only contains one thing – a specialized asset catalog named **Stickers.xcstickers**. Within the asset catalog is a place for the app icon and a folder named **Sticker Pack**:
 
 ![bordered width=80%](images/StickerPackProject.png)
 
-In the resources for this chapter is a `zip` file, **RWPeepsImages.zip**. Unzip this and drag the images into the **Sticker Pack** folder:
+The resources for this chapter contains a `zip` file: **RWPeepsImages.zip**. Unzip that file and drag the contained images into the **Sticker Pack** folder:
 
 ![bordered width=60%](images/StickersInPlace.png)
 
-And you're done!
+You're done! No, seriously – you're done.
 
-Build and run your "app", and you'll see a new option - Xcode offers you a choice of host applications to run. Select **Messages**, since that's what your stickers are for:
+Build and run your "app", and you'll see that Xcode now offers you a choice of host applications to run. Select **Messages**, since that's what your sticker pack is designed for:
 
 ![bordered width=60%](images/ChooseHostApp.png)
 
-The iOS simulator now contains a working Messages app, where you can view both sides of a conversation. This is so you can test and develop Messages apps with ease.
+The iOS simulator now contains a working Messages app, where you can view both sides of a conversation. This lets you test and develop Messages apps with ease.
 
-When the simulator launches and Messages opens up, you'll see an app button at the bottom of the screen:
+Once the simulator has launched and Messages opens, you'll see an app button at the bottom of the screen:
 
 ![bordered iphone](images/MessagesAppButton.png)
 
-Tap the button and wait a second or so (it seems to take some time for the simulator to launch your app) and you'll see your stickers ready to go! Tap one to send it, or tap and hold to "peel" it off and attach to another message:
+Tap the button and wait a second or so; it seems to take some time for the simulator to launch your app. You'll see your stickers are ready to go! Tap any sticker to send it, or tap and hold to "peel" it off and attach to another message:
 
 ![bordered iphone](images/StickersStuck.png)
 
@@ -53,49 +52,45 @@ You can use the back button in the navigation bar to switch to the other side of
 
 There are a few rules around sticker pack applications:
 
-- The sticker images must be `PNG`, `APNG`, `GIF` or `JPEG` format, and less than `500KB`
-- Messages app displays all the stickers in a pack at the same size
-- You can choose small (`100 x 100`), medium (`136 x 136`) or large (`206 x 206`) for your sticker pack's size.
-- The images should be supplied at **3x** resolution _only_.
+- The sticker images must be `PNG`, `APNG`, `GIF` or `JPEG` format, and less than `500KB` in size.
+- Messages will display all the stickers in a pack at the same size.
+- You can choose either small (`100x100`), medium (`136x136`) or large (`206x206`) for the size of your sticker pack.
+- You should supplied the images at **3x** resolution _only_.
 
 Once you have recovered from the dizzying excitement of static sticker packs, you're ready to move on to a sticker _application_!
 
-## Sticker applications
+## Creating a sticker application
 
-What do sticker applications offer you above and beyond sticker packs? You can add custom UI and control the stickers available at runtime, instead of relying on a static set of images.
+Sticker apps offer way more functionality beyond sticker packs; you can add custom UI and control the stickers available at runtime instead of relying on a static set of images.
 
-You're going to make a mouth-watering sticker app called **Stickerlicious**, so you can send yummy treats to your friends via iMessage. You'll learn how to create stickers dynamically in code instead of having a static set of images, and how to filter and divide these stickers to help your users get to the stickers they want quickly.
+You're going to make a mouth-watering sticker app called **Stickerlicious**, so you can send yummy treats to your friends via iMessage. You'll learn how to create stickers dynamically from code instead of using a static set of images, and you'll also learn how to filter and divide these stickers to help your users quickly find the stickers they're looking for.
 
-### Getting started
-
-Open Xcode and create a new project. Choose the **iOS > Application > Messages Application** template:
+Open Xcode and create a new project. Choose the **iOS\Application\Messages Application** template:
 
 ![bordered width=60%](images/MessageAppTemplate.png)
 
-Call the project **Stickerlicious** and make sure the language is **Swift**.
+Name the project **Stickerlicious** and make sure the language is **Swift**.
 
-This is another new application template. Here's a quick tour of what you get:
+This is another new application template. Here's a quick tour of what you get in the template:
 
-- An application target, called **Stickerlicious** - this is necessary because message applications are actually _extensions_ of standard applications, in the same way that Today extensions work. However, with Messages extensions, the parent app doesn't have to do anything and doesn't appear on the home screen. You can ignore the application.
-- A Messages extension, called **MessagesExtension**. This is what actually runs inside Messages, and is where you'll do all your work.
-- Of interest inside the Messages extension is a storyboard, an asset catalog, and **MessagesViewController.swift**, which is a subclass of `MSMessagesAppViewController`.
+- An application target, named **Stickerlicious** – this is necessary because message applications are actually _extensions_ of standard applications, much like Today extensions. However, with Messages extensions, the parent app doesn't have to do anything and doesn't appear on the home screen. You can safely ignore the application.
+- A Messages extension, named **MessagesExtension**. This is what actually runs inside Messages, and is where you'll do all your work.
+- Of additional interest inside the Messages extension are a storyboard, an asset catalog, and **MessagesViewController.swift**, which is a subclass of `MSMessagesAppViewController`.
 - **Messages.framework**, which contains all of the message-related classes you will need.
 
 Select the **Stickerlicious project** in the Project Navigator, then choose the **MessagesExtension** target. In the **General** tab, change the **Display Name** to **Stickerlicious**.
-
-### MSMessagesAppViewController
 
 All Messages apps live inside a `MSMessagesAppViewController` subclass. It contains several properties and methods of interest when building more complex message apps, but for a dynamic sticker pack, you can ignore all of them.
 
 Open **MessagesViewController.swift** and delete all of the template methods, leaving you with an empty class declaration.
 
-For a deep dive into `MSMessagesAppViewController`, see **Chapter 6 - Intermediate Message Apps**.
+> **Note**: For a deep dive into `MSMessagesAppViewController`, see Chapter 6, "Intermediate Message Apps".
 
-### Sticker Browser View Controller
+### The sticker browser view controller
 
 The Messages framework contains a pair of classes, `MSStickerBrowserView` and `MSStickerBrowserViewController`, which you can use to display your stickers. Think of them as a pair, like `UITableView` and `UITableViewController`, or `UICollectionView` and `UICollectionViewController`.
 
-The `MSMessagesAppViewController` has to be the root view controller of your Messages extension, so to add a sticker browser, you have to embed it as a child view controller.
+`MSMessagesAppViewController` has to be the root view controller of your Messages extension, so to add a sticker browser, you have to embed it as a child view controller.
 
 Open **MainInterface.storyboard** and delete the "Hello World" label from the **Messages View Controller** scene.
 
@@ -103,11 +98,11 @@ In the object library, find a **Container View** and drag it into the scene. Wit
 
 ![bordered width=40%](images/ContainerConstraints1.png)
 
-When the frames are updated the container view will fill the scene.
+When the frames are updated, the container view will fill the scene.
 
-Before you can assign a class to the embedded view controller, you need to create it. Make a new file and choose the **iOS > Source > Swift File** template. Call the file **CandyStickerBrowserViewController.swift** and make it a subclass of `MSStickerBrowserViewController`.
+Before you can assign a class to the embedded view controller, you need to create it. Make a new file and choose the **iOS\Source\Swift File** template. Name the file **CandyStickerBrowserViewController.swift** and make it a subclass of `MSStickerBrowserViewController`.
 
-Delete the contents of the file and replace with the following:
+Delete the contents of the file and replace them with the following:
 
 ```swift
 import Messages
@@ -117,15 +112,17 @@ class CandyStickerBrowserViewController: MSStickerBrowserViewController {
 }
 ```
 
-Switch back to **MainInterface.storyboard** and select the embedded view controller. In the identity inspector, change the class to `CandyStickerBrowserViewController`.
+Switch back to **MainInterface.storyboard** and select the embedded view controller. In the Identity Inspector, change the class to `CandyStickerBrowserViewController`.
 
-Return to **CandyStickerBrowserViewController.swift**. Add a property to hold the stickers you are going to display:
+Return to **CandyStickerBrowserViewController.swift**. Add the following property to hold the stickers you are going to display:
 
 ```swift
 var stickers = [MSSticker]()
 ```
 
-`MSSticker` is the model object representing a Messages Sticker. Above the class declaration, add a constant to hold an array of image names:
+`MSSticker` is the model object representing a Messages Sticker.
+
+Add the following constant above the class declaration to hold an array of image names:
 
 ```swift
 let stickerNames = ["CandyCane", "Caramel", "ChocolateBar",
@@ -133,11 +130,11 @@ let stickerNames = ["CandyCane", "Caramel", "ChocolateBar",
   "JawBreaker", "Lollipop", "SourCandy"]
 ```
 
-These names all correspond to images that are supplied for you in the starter materials to this chapter. Find **candy.zip**, unzip it and drag the folder into the **MessagesExtension** group in Xcode:
+These names all correspond to images that have been supplied for you in the starter materials for this chapter. Find **candy.zip**, unzip it and drag the folder into the **MessagesExtension** group in Xcode:
 
 ![bordered width=40%](images/CandyImageAdded.png)
 
-In **CandyStickerBrowserViewController.swift**, add the following extension below the class declaration:
+Add the following extension to **CandyStickerBrowserViewController.swift**, below the class declaration:
 
 ```swift
 extension CandyStickerBrowserViewController {
@@ -155,9 +152,9 @@ extension CandyStickerBrowserViewController {
 }
 ```
 
-This method creates an array of `MSSticker`s by converting the names supplied in `stickerNames` into URLs. In your own apps you could also create stickers from packaged resources, or files that you have downloaded.
+This method creates an array of `MSSticker` elements by converting the names supplied in `stickerNames` to URLs. In your own apps, you could create stickers from packaged resources, or files that you have downloaded.
 
-In the main class body, override `viewDidLoad()` and call your new method:
+In the main class body, override `viewDidLoad()` as follows and call your new method:
 
 ```swift
 override func viewDidLoad() {
@@ -171,7 +168,9 @@ override func viewDidLoad() {
 
 In this method you also set a sweet pink color for the background.
 
-The final thing required is to set up the data source methods for the sticker browser view. This should be familiar if you've ever written a table view or collection view data source. The protocol `MSStickerBrowserViewDataSource` has two methods, implement them both by adding this extension:
+The last step is to set up the data source methods for the sticker browser view. This should be a familiar task if you've ever written a table view or collection view data source.
+
+The protocol `MSStickerBrowserViewDataSource` has two methods; implement them both by adding the following extension:
 
 ```swift
 //MARK: MSStickerBrowserViewDataSource
@@ -188,39 +187,39 @@ extension CandyStickerBrowserViewController {
 }
 ```
 
-The methods are much simpler than table or collection view data sources - there's a number of stickers, and a sticker for a particular index.
+These methods are much simpler than table or collection view data sources; you have a number of stickers, and a sticker for a particular index.
 
-Build and run, choosing the Messages app to launch into. When you tap the "Apps" button you will need to scroll all the way to the right to find your new app. You'll then need to wait a little while for the simulator to launch it, then you'll see the following:
+Build and run, and choose to launch into the Messages app. Tap the **Apps** button and you'll need to scroll all the way to the right to find your new app. Wait a moment for the simulator to launch your app, and eventually you'll see the following:
 
-![bordered phone](images/Stickerlicious1.png)
+![bordered iphone](images/Stickerlicious1.png)
 
-That's nice, but so far you've made something that looks exactly like a sticker pack application, only it was much more work. In the next stage you're going to add some additional UI and dynamic features!
+That's nice, but so far you've only made something that looks _exactly_ like a sticker pack application – just one that took more work!
 
-### Dynamic Stickers
+Don't fret; in the next section you're going to add some additional UI and dynamic features to your app.
 
-In this section you're going to introduce a special **Chocoholic** mode for those special times when only pictures of chocolate will do for ruining, sorry, "enhancing" your iMessage chats.
+### Adding dynamic stickers
 
-Chocoholic mode will update the available stickers before your sugar-crazed eyes.
+You're about to introduce a special **Chocoholic** mode for those _special_ times when only pictures of chocolate will do for ruining – er, sorry – _enhancing_ your iMessage chats. Chocoholic mode will dynamically update the available stickers before your sugar-crazed eyes.
 
-To start, open **MainInterface.storyboard**. Select the container view and use the resizing handle to drag the top of it down by about 70 points, to give yourself some space to work:
+To start, open **MainInterface.storyboard**. Select the container view and use the resizing handle to drag down the top of the view by about 70 points to give yourself some room to work:
 
 ![bordered width=60%](images/Chocoholic1.png)
 
-Select the top orange constraint and delete it. Drag in a switch and a label in the space you've created, and set the label's text to **Chocoholic Mode**.
+Select the top orange constraint and delete it. Drag a switch and a label into the space you've created, and set the label's text to **Chocoholic Mode**.
 
 Select the label and the switch, then use the **Stack** button to embed them in a horizontal stack view:
 
 ![bordered width=60%](images/Chocoholic2.png)
 
-With the stack view selected, change the **Spacing** in the attributes inspector to **5**. Using the **Pin** menu, add constraints from the stack view to its top, leading and bottom neighbors:
+With the stack view selected, change the **Spacing** in the Attributes Inspector to **5**. Using the **Pin** menu, add constraints from the stack view to its top, leading and bottom neighbors:
 
 ![bordered width=40%](images/Chocoholic3.png)
 
-Select the switch and set its value to **Off** in the attributes inspector. Open the Assistant Editor, and make sure it is displaying **MessagesViewController.swift**. Control-drag from the switch into the `MessagesViewController` class to create a new action, called **handleChocoholicChanged** with a sender type of **UISwitch**.
+Select the switch and set its value to **Off** in the Attributes Inspector. Open the Assistant editor, and make sure it's displaying **MessagesViewController.swift**. Control-drag from the switch into the `MessagesViewController` class to create a new action, called **handleChocoholicChanged** with a sender type of **UISwitch**.
 
-You're done with interface builder for now, so you can open **MessagesViewController.swift** in the main editor if you'd like some more room.
+You're done with Interface Builder for now, so you can open **MessagesViewController.swift** in the main editor if you'd like some more elbow room.
 
-Add a new protocol to the file called **Chocoholicable**:
+Add the following new **Chocoholicable** protocol to the file:
 
 ```swift
 protocol Chocoholicable {
@@ -228,7 +227,7 @@ protocol Chocoholicable {
 }
 ```
 
-Update the action method you just added:
+Update the action method you just created above:
 
 ```swift
 @IBAction func handleChocoholicChanged(_ sender: UISwitch) {
@@ -239,7 +238,7 @@ Update the action method you just added:
 }
 ```
 
-This will pass down the chocoholic mode to any child view controller that is `Chocoholicable`. Currently, none of them are, so switch to **CandyStickerBrowserViewController.swift** to make it so.
+This will pass the chocoholic mode down to any child view controller that is `Chocoholicable`. There aren't any at present, so switch to **CandyStickerBrowserViewController.swift** to make it so.
 
 First, update the declaration of `loadStickers()`:
 
@@ -247,9 +246,9 @@ First, update the declaration of `loadStickers()`:
 private func loadStickers(_ chocoholic: Bool = false) {
 ```
 
-This allows you to pass in the chocoholic mode, with a default value of `false` so the existing call from `viewDidLoad()` is unaffected.
+This lets you pass in the chocoholic mode, with a default value of `false` so the existing call from `viewDidLoad()` remains unaffected.
 
-Insert a `filter` before the existing `map` of the sticker names array. Replace the whole function body with this code:
+Next, insert a `filter` before the existing `map` of the sticker names array, replacing the whole function body with this code:
 
 ```swift
 stickers = stickerNames.filter( { name in
@@ -262,9 +261,9 @@ stickers = stickerNames.filter( { name in
 })
 ```
 
-This will filter the names to only show chocolate-containing stickers, if chocoholic mode is on.
+This will filter the names to only show chocolate-containing stickers if chocoholic mode is on.
 
-Finally, make `CandyStickerBroswerViewController` conform to `Chocoholicable` by adding this extension:
+Finally, add the following extension to make `CandyStickerBroswerViewController` conform to `Chocoholicable`:
 
 ```swift
 extension CandyStickerBrowserViewController: Chocoholicable {
@@ -275,23 +274,23 @@ extension CandyStickerBrowserViewController: Chocoholicable {
 }
 ```
 
-Build and run, and fulfill all your sticky, chocolatey needs:
+Build and run; now you can fulfill all your sticky, chocolatey messaging needs:
 
 ![bordered iphone](images/Chocoholic4.png)
 
-### A fully custom sticker browser
+### Creating a custom sticker browser
 
-`MSStickerBrowserView` offers you little scope for customization. To really take control of your sticker app, there is `MSStickerView`. This is the view that is used to power `MSStickerBrowserView`, and you can use it on its own as well.
+`MSStickerBrowserView` offers you little scope for customization. To really take control of your sticker app, you'll work with `MSStickerView`. This is the view that powers `MSStickerBrowserView`, and you can use it on its own as well.
 
-It gives you all the sticker functionality - displaying and scaling the stickers, tapping to add to the message, drag and drop - with no extra code. All you need to do is put it on the screen and give it an `MSSticker`.
+It gives you all the sticker functionality – displaying and scaling the stickers, tapping to add to the message, drag and drop – with no extra code. All you need to do is put it on the screen and give it an `MSSticker`.
 
 In this final part of the chapter you will replace the `MSStickerBrowserViewController` subclass with a `UICollectionViewController` subclass which will allow you to divide the stickers up into labelled sections.
 
-In **MainInterface.storyboard**, select the **Candy Sticker Browser** scene and delete it. Drag in a **UICollectionViewController**, then control-drag from the container view to the collection view controller and choose the **Embed** segue.
+In **MainInterface.storyboard**, select the **Candy Sticker Browser** scene and delete it. Drag in a **UICollectionViewController**, then Control-drag from the container view to the collection view controller and choose the **Embed** segue.
 
-Select the **Collection View** in the collection view controller, open the **Attributes Inspector** and check the **Accessories / Section Header** checkbox.
+Select the **Collection View** in the collection view controller, open the Attributes Inspector and check the **Accessories\Section Header** checkbox.
 
-Open the **Size Inspector** set the **Header Size > Height** to 25. Set the **Min Spacing** and **Section Insets** values to zero.
+Open the Size Inspector, and set **Header Size\Height** to **25**. Set the **Min Spacing** and **Section Insets** values to **0**.
 
 Drag a label into the section header, using the guides to position it in the center. With the **Align** button at the bottom of the storyboard, add constraints to pin it to the horizontal and vertical centers of the view:
 
@@ -299,23 +298,27 @@ Drag a label into the section header, using the guides to position it in the cen
 
 Drag in a **Visual Effect View with Blur** from the object library onto the section header. Using the **Pin** button at the bottom of the storyboard, add constraints to pin the view to all sides of the section header, with zero spacing.
 
-Before continuing, make sure the **Label** is display _on top of_ the **Visual Effect View**. If not, open the document outline to the left of the **Interface Builder** and place it below the **Visual Effect View**.
+Before continuing, make sure the **Label** is displayed _on top of_ the **Visual Effect View**. If not, open the document outline on the left of Interface Builder and place it below the Visual Effect View.
 
-Drag in a plain `UIView` to the collection view cell and, using the same technique, pin it to all edges of the cell. Select the view and, using the **Identity Inspector**, change the class to **MSStickerView**.
+Drag in a plain `UIView` to the collection view cell and, using the same technique, pin it to all edges of the cell. Select the view, and using the Identity Inspector, change the class to **MSStickerView**.
 
 Now you need to create custom subclasses for the section header, collection view cells and view controller.
 
-For the header, create a new file and choose **iOS > Source > Cocoa Touch Class**. Call the class **SectionHeader** and make it a subclass of **UICollectionReusableView**.
+For the header, create a new file and choose **iOS\Source\Cocoa Touch Class**. Name the class **SectionHeader** and make it a subclass of **UICollectionReusableView**.
 
-For the cell, create a new file and choose *iOS > Source > Cocoa Touch Class** again. Call the class **StickerCollectionViewCell** and make it a subclass of **UICollectionViewCell**. In the file that is generated, add the following import statement at the top:
+For the cell, create a new file and choose **iOS\Source\Cocoa Touch Class** again. Name the class **StickerCollectionViewCell** and make it a subclass of **UICollectionViewCell**.
+
+Add the following `import` statement to the top of the generated file:
 
 ```swift
 import Messages
 ```
 
-`MSStickerView` is part of the Messages framework, and you are going to make an outlet to one, so the cell needs to know what that class is.
+`MSStickerView` is part of the Messages framework. Since you'll be making an outlet to one of these, the cell needs to know what that class is.
 
-The final new class to create is the view controller. Choose the same new file template, calling the class **StickerCollectionViewController** and making it a subclass of **UICollectionViewController**. Replace the template contents with this:
+The final new class to create is the view controller. Choose the same new file template, name the class **StickerCollectionViewController** and make it a subclass of **UICollectionViewController**.
+
+Replace the templated contents with the following:
 
 ```swift
 import UIKit
@@ -327,23 +330,23 @@ class StickerCollectionViewController: UICollectionViewController {
 
 Switch back to **MainInterface.storyboard** to connect everything up.
 
-First, choose the collection view controller and set the class to **StickerCollectionViewController** in the Identity Inspector.
+First, choose the collection view controller and use the Identity Inspector to set the class to **StickerCollectionViewController**.
 
-Choose the section header and change the class to **SectionHeader**, and the reuse identifier (in the Attributes Inspector) to **SectionHeader**.
+Choose the section header, change its class to **SectionHeader**, and use the Attributes Inspector to set the reuse identifier to **SectionHeader**.
 
-Choose the cell and change the class to **StickerCollectionViewCell**, and the reuse identifier to **StickerCollectionViewCell**.
+Choose the cell, change its class to **StickerCollectionViewCell**, and set the reuse identifier to **StickerCollectionViewCell**.
 
-Open the assistant editor, making sure **StickerCollectionViewCell.swift** is displayed, and make a new outlet from the `MSStickerView` inside the cell to the collection view cell subclass. Call it **stickerView**.
+Open the Assistant editor, make sure **StickerCollectionViewCell.swift** is displayed, and create a new outlet from the `MSStickerView` inside the cell to the collection view cell subclass. Name it **stickerView**.
 
-Now make the assistant editor display **SectionHeader.swift** and make a new outlet from the label in the section header to the `SectionHeader` class file. Call it `label`.
+Now switch the Assistant editor to **SectionHeader.swift** and create a new outlet from the label in the section header to the `SectionHeader` class file. Name it `label`.
 
-That was a lot of work! Check the document outline in the storyboard to make sure you haven't missed anything:
+Check the document outline in the storyboard to make sure you haven't missed anything:
 
 ![bordered width=40%](images/Collection2.png)
 
-Close the assistant editor and switch to **StickerCollectionViewController.swift**.
+Close the Assistant editor and switch to **StickerCollectionViewController.swift**.
 
-The stickers are going to be grouped in this view controller, so instead of using an array, you'll use a dictionary. Add the following code above the class declaration:
+The stickers will be grouped in this view controller using a dictionary instead of an array. Add the following code above the class declaration:
 
 ```swift
 let stickerNameGroups: [String: [String]] = [
@@ -353,7 +356,9 @@ let stickerNameGroups: [String: [String]] = [
 ]
 ```
 
-Dictionaries aren't great data objects, because you need to remember keys and values. Still above the class declaration, define a new struct which will form the basis of your model:
+Dictionaries aren't great data objects, because you need to remember keys and values. 
+
+Still above the class declaration, define the following new struct which will form the basis of your model:
 
 ```swift
 struct StickerGroup {
@@ -368,7 +373,7 @@ Inside the `StickerCollectionViewController` class, add a property to hold the m
 var stickerGroups = [StickerGroup]()
 ```
 
-Just as you did with the sticker browser view controller subclass, you'll need a `loadStickers` method. Add it in an extension:
+Just as you did with the sticker browser view controller subclass, you'll need to implement the `loadStickers` method. Add it in an extension as follows:
 
 ```swift
 extension StickerCollectionViewController {
@@ -395,15 +400,16 @@ extension StickerCollectionViewController {
 }
 ```
 
-It's quite similar to the previous `loadStickers` method. Here's a breakdown:
-1. It takes a chocoholic mode with a default value
-2. Filtering on a dictionary takes a tuple of the key and value. For filtering we can ignore the value, ergo the `_`.
-3. The filtering now takes place on the group name rather than a substring of the sticker name.
-4. There is an additional mapping step to turn the array of names from the dictionary into an array of stickers.
-5. Each dictionary entry is converted to a `StickerGroup` struct.
-6. Finally, the array of sticker groups is sorted by name, since dictionaries don't have a guaranteed ordering.
+This is quite similar to the previous `loadStickers` method. Here's a breakdown:
 
-Call your new method, and do some other setup, from `viewDidLoad()`:
+1. This takes a chocoholic mode with a default value.
+2. Filtering on a dictionary takes a tuple of the key and value. For filtering we can ignore the value; ergo, the presence of  "`_`".
+3. The filtering now takes place on the group name, rather than on a substring of the sticker name.
+4. There is an additional mapping step to turn the array of names from the dictionary into an array of stickers.
+5. You then convert each dictionary entry to a `StickerGroup` struct.
+6. Finally, you sory the array of sticker groups by name, since dictionaries don't have a guaranteed ordering.
+
+Modify `viewDidLoad()` as shown below to call your new method and set up a few things:
 
 ```swift
 override func viewDidLoad() {
@@ -419,9 +425,11 @@ override func viewDidLoad() {
 }
 ```
 
-This uses the nice new feature of `UICollectionViewFlowLayout` which gives you sticky section headers :]
+This uses the nice new feature of `UICollectionViewFlowLayout`, which gives you sticky section headers.
 
-You may have noticed that the sticker browser view you used before managed to fit three columns onto an iPhone 6 in portrait, despite the stickers being 136 points across and the iPhone 6 only being 375 points across. You're going to perform a similar trick and make sure you get at least three columns of stickers. Add the following extension:
+You may have noticed that the sticker browser view you used before managed to fit three columns onto an iPhone 6 in portrait, despite the stickers being 136 points across and the iPhone 6 only being 375 points across. You're going to perform a similar trick and make sure you get _at least_ three columns of stickers.
+
+Add the following extension:
 
 ```swift
 // MARK: UICollectionViewDelegateFlowLayout
@@ -435,7 +443,7 @@ extension StickerCollectionViewController {
 }
 ```
 
-This sets the cells to a square with an edge of 136 points, or a third of the screen width, whichever is lower.
+This sets the cells to a square shape with an edge of 136 points _or_ a third of the screen width, whichever is least.
 
 The collection view datasource methods are next. Add the following extension:
 
@@ -454,7 +462,7 @@ extension StickerCollectionViewController {
 }
 ```
 
-The two "count" methods are simple, thanks to the `StickerGroup` struct you are using as a model object.
+The two `.count` methods are simple, thanks to the `StickerGroup` struct you're using as a model object.
 
 The cell configuration method is also straightforward. Add the following code to the extension you just created:
 
@@ -473,9 +481,9 @@ override func collectionView(_ collectionView: UICollectionView,
 }
 ```
 
-This gets the correct sticker for the section and item, and passes it to the sticker view in the cell. That's all you need to do to get a working sticker view.
+This gets the correct sticker for the section and item and passes it to the sticker view in the cell. That's all you need to get a working sticker view.
 
-The final method for the data source extension is to populate the section header:
+Add the final method for the data source extension to populate the section header:
 
 ```swift
 override func collectionView(_ collectionView: UICollectionView,
@@ -504,10 +512,10 @@ extension StickerCollectionViewController: Chocoholicable {
 }
 ```
 
-Build and run, and your candy is neatly separated into sections, so you know just what you're going to get. Perhaps Forrest Gump should have used a collection view?
+Build and run; your candy neatly separates into sections, so you know just what you're going to get. Perhaps Forrest Gump should have used a collection view? :]
 
 ![bordered iphone](images/Collection3.png)
 
 ## Where to go from here?
 
-**Chapter 6** takes you further into the Messages framework - you'll learn how to create custom messages and interact with the current conversation by creating a drawing and guessing game which you can play within Messages!
+**Chapter 6** takes you further into the Messages framework, where you'll learn how to create custom messages and interact with the current conversation through a drawing and guessing game you can play right within Messages!
