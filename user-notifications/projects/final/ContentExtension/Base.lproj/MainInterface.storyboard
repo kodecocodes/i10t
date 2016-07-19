@@ -21,8 +21,8 @@
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="J64-ga-wBn">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="IWW-SK-VWz"/>
-                                    <constraint firstAttribute="height" constant="320" id="agu-W4-LKs"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="1FU-y4-do6"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="Icp-1f-Jyl"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🤗" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4cZ-Z9-wkL">

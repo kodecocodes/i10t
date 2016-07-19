@@ -352,8 +352,6 @@
 					};
 					221948A81D17E7B400E9E4F6 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = W6NM35GS3S;
-						DevelopmentTeamName = "Floodlight Software LLC";
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -672,6 +670,7 @@
 				12824D961D3197AC003608B6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		12824DA81D31B4C0003608B6 /* Build configuration list for PBXNativeTarget "ServiceExtension" */ = {
 			isa = XCConfigurationList;
@@ -680,6 +679,7 @@
 				12824DAA1D31B4C0003608B6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		221948A41D17E7B400E9E4F6 /* Build configuration list for PBXProject "CuddlePix" */ = {
 			isa = XCConfigurationList;

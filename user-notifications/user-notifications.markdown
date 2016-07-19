@@ -394,7 +394,10 @@ guard let attachment = notification.request.content.attachments.first
   else { return }
 // 2
 if attachment.url.startAccessingSecurityScopedResource() {
-  imageView.image = UIImage(contentsOfFile: attachment.url.path!)
+  let imageData = try? Data.init(contentsOf: attachment.url)
+  if let imageData = imageData {
+    imageView.image = UIImage(data: imageData)
+  }
   attachment.url.stopAccessingSecurityScopedResource()
 }
 ```
@@ -402,8 +405,7 @@ if attachment.url.startAccessingSecurityScopedResource() {
 Here's what this does:
 
 1. The passed `UNNotification` (`notification`) contains a reference to the original `UNNotificationRequest` (`request`) that generated it. A request contains `UNNotificationContent` (`content`) that, among other things, contains an array of `UNNotificationAttachments` (`attachments`). In a guard, you grab the first of those attachments—you know you've only included one—and you place it in `attachment`.
-2. Attachments in the user notification center live inside your app's sandbox, not the extension's, and thus they must be accessed via security-scoped URLs. `startAccessingSecurityScopedResource()` makes the file available to the extension when it successfully returns, and `stopAccessingSecurityScopedResource()` is required to indicate you're finished with the resource. In between, you load `imageView` using the file pointed to by this URL.
-
+2. Attachments in the user notification center live inside your app's sandbox, not the extension's, and thus they must be accessed via security-scoped URLs. `startAccessingSecurityScopedResource()` makes the file available to the extension when it successfully returns, and `stopAccessingSecurityScopedResource()` is required to indicate you're finished with the resource. In between, you load `imageView` using `Data` obtained from the file pointed to by this URL.
 The extension is all set. But when a notification triggers for cuddlePix, how is the the system supposed to know what, if any, extension to send it to?
 
 ![width=30%](./images/notification-gnomes.png)

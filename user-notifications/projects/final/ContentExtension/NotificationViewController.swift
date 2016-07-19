@@ -38,7 +38,10 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
       else { return }
     
     if attachment.url.startAccessingSecurityScopedResource() {
-      imageView.image = UIImage(contentsOfFile: attachment.url.path!)
+      let imageData = try? Data.init(contentsOf: attachment.url)
+      if let imageData = imageData {
+        imageView.image = UIImage(data: imageData)
+      }
       attachment.url.stopAccessingSecurityScopedResource()
     }
   }
