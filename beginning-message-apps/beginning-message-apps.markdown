@@ -20,15 +20,15 @@ Sticker packs are the simplest possible iMessage application you can make. So si
 
 Create a new Xcode project and choose the **iOS\Application\Sticker Pack Application** template:
 
-![bordered width=60%](images/StickerPackTemplate.png)
+![bordered width=60%](images/StickerPackTemplate2.png)
 
-Name the project **RWPeeps**.
+Name the project **RWPeeps**, click **Next**, and then **Create**.
 
 The project will likely be one of the simplest Xcode projects you've ever seen! It only contains one thing – a specialized asset catalog named **Stickers.xcstickers**. Within the asset catalog is a place for the app icon and a folder named **Sticker Pack**:
 
 ![bordered width=80%](images/StickerPackProject.png)
 
-The resources for this chapter contains a `zip` file: **RWPeepsImages.zip**. Unzip that file and drag the contained images into the **Sticker Pack** folder:
+The resources for this chapter contains a folder called **RWPeepsImages**. Drag images from that folder into the **Sticker Pack** folder:
 
 ![bordered width=60%](images/StickersInPlace.png)
 
@@ -61,15 +61,15 @@ Once you have recovered from the dizzying excitement of static sticker packs, yo
 
 ## Creating a sticker application
 
-Sticker apps offer way more functionality beyond sticker packs; you can add custom UI and control the stickers available at runtime instead of relying on a static set of images.
+Sticker apps offer way more functionality beyond sticker packs; instead of relying on a static set of images, you can add custom UI and control the stickers available at runtime.
 
-You're going to make a mouth-watering sticker app called **Stickerlicious**, so you can send yummy treats to your friends via iMessage. You'll learn how to create stickers dynamically from code instead of using a static set of images, and you'll also learn how to filter and divide these stickers to help your users quickly find the stickers they're looking for.
+Next you're going to make a mouth-watering sticker app called **Stickerlicious**, so you can send yummy treats to your friends via iMessage. You'll learn how to create stickers dynamically from code, and you'll also learn how to filter and divide these stickers to help your users quickly find the stickers they're looking for.
 
-Open Xcode and create a new project. Choose the **iOS\Application\Messages Application** template:
+Close your **RWPeeps** project if you still have it open, and create a new project in Xcode. Choose the **iOS\Application\iMessage Application** template:
 
-![bordered width=60%](images/MessageAppTemplate.png)
+![bordered width=60%](images/MessageAppTemplate2.png)
 
-Name the project **Stickerlicious** and make sure the language is **Swift**.
+Name the project **Stickerlicious** and make sure the language is **Swift**. Click **Next**, and then **Create**.
 
 This is another new application template. Here's a quick tour of what you get in the template:
 
@@ -78,13 +78,13 @@ This is another new application template. Here's a quick tour of what you get in
 - Of additional interest inside the Messages extension are a storyboard, an asset catalog, and **MessagesViewController.swift**, which is a subclass of `MSMessagesAppViewController`.
 - **Messages.framework**, which contains all of the message-related classes you will need.
 
-Select the **Stickerlicious project** in the Project Navigator, then choose the **MessagesExtension** target. In the **General** tab, change the **Display Name** to **Stickerlicious**.
+Select the **Stickerlicious project** in the Project Navigator, then choose the **MessagesExtension** target. In the **General** tab, verify the **Display Name** is **Stickerlicious**.
 
-All Messages apps live inside a `MSMessagesAppViewController` subclass. It contains several properties and methods of interest when building more complex message apps, but for a dynamic sticker pack, you can ignore all of them.
+All Messages apps live inside a `MSMessagesAppViewController` subclass. `MSMessagesAppViewController` contains several properties and methods of interest when building more complex message apps, but for a dynamic sticker pack, you can ignore all of them.
 
-Open **MessagesViewController.swift** and delete all of the template methods, leaving you with an empty class declaration.
+> **Note**: For a more information on `MSMessagesAppViewController`, see Chapter 6, "Intermediate Message Apps".
 
-> **Note**: For a deep dive into `MSMessagesAppViewController`, see Chapter 6, "Intermediate Message Apps".
+For now, open **MessagesViewController.swift** and delete all of the template methods, leaving you with an empty class declaration.
 
 ### The sticker browser view controller
 
@@ -100,7 +100,7 @@ In the object library, find a **Container View** and drag it into the scene. Wit
 
 When the frames are updated, the container view will fill the scene.
 
-Before you can assign a class to the embedded view controller, you need to create it. Make a new file and choose the **iOS\Source\Swift File** template. Name the file **CandyStickerBrowserViewController.swift** and make it a subclass of `MSStickerBrowserViewController`.
+Before you can assign a class to the embedded view controller, you need to create it. Make a new file and choose the **iOS\Source\Swift File** template. Name the file **CandyStickerBrowserViewController.swift**.
 
 Delete the contents of the file and replace them with the following:
 
@@ -130,7 +130,7 @@ let stickerNames = ["CandyCane", "Caramel", "ChocolateBar",
   "JawBreaker", "Lollipop", "SourCandy"]
 ```
 
-These names all correspond to images that have been supplied for you in the starter materials for this chapter. Find **candy.zip**, unzip it and drag the folder into the **MessagesExtension** group in Xcode:
+These names all correspond to images that have been supplied for you in the starter materials for this chapter. Find the **candy** folder and drag it into the **MessagesExtension** group in Xcode:
 
 ![bordered width=40%](images/CandyImageAdded.png)
 
@@ -248,7 +248,7 @@ private func loadStickers(_ chocoholic: Bool = false) {
 
 This lets you pass in the chocoholic mode, with a default value of `false` so the existing call from `viewDidLoad()` remains unaffected.
 
-Next, insert a `filter` before the existing `map` of the sticker names array, replacing the whole function body with this code:
+Next, replace the whole function body with this code:
 
 ```swift
 stickers = stickerNames.filter( { name in
@@ -308,7 +308,7 @@ For the header, create a new file and choose **iOS\Source\Cocoa Touch Class**. N
 
 For the cell, create a new file and choose **iOS\Source\Cocoa Touch Class** again. Name the class **StickerCollectionViewCell** and make it a subclass of **UICollectionViewCell**.
 
-Add the following `import` statement to the top of the generated file:
+Add the following `import` statement to the top of **StickerCollectionViewCell.swift**:
 
 ```swift
 import Messages
@@ -316,7 +316,7 @@ import Messages
 
 `MSStickerView` is part of the Messages framework. Since you'll be making an outlet to one of these, the cell needs to know what that class is.
 
-The final new class to create is the view controller. Choose the same new file template, name the class **StickerCollectionViewController** and make it a subclass of **UICollectionViewController**.
+The final new class to create is the view controller. Create a new file and choose **iOS\Source\Cocoa Touch Class** again, name the class **StickerCollectionViewController** and make it a subclass of **UICollectionViewController**.
 
 Replace the templated contents with the following:
 
@@ -332,7 +332,7 @@ Switch back to **MainInterface.storyboard** to connect everything up.
 
 First, choose the collection view controller and use the Identity Inspector to set the class to **StickerCollectionViewController**.
 
-Choose the section header, change its class to **SectionHeader**, and use the Attributes Inspector to set the reuse identifier to **SectionHeader**.
+Choose the section header (labeled Collection Reusable View in the Document Outline), change its class to **SectionHeader**, and use the Attributes Inspector to set the reuse identifier to **SectionHeader**.
 
 Choose the cell, change its class to **StickerCollectionViewCell**, and set the reuse identifier to **StickerCollectionViewCell**.
 
@@ -358,7 +358,7 @@ let stickerNameGroups: [String: [String]] = [
 
 Dictionaries aren't great data objects, because you need to remember keys and values. 
 
-Still above the class declaration, define the following new struct which will form the basis of your model:
+To help with this, still above the class declaration, define the following new struct which will form the basis of your model:
 
 ```swift
 struct StickerGroup {
@@ -518,4 +518,6 @@ Build and run; your candy neatly separates into sections, so you know just what 
 
 ## Where to go from here?
 
-**Chapter 6** takes you further into the Messages framework, where you'll learn how to create custom messages and interact with the current conversation through a drawing and guessing game you can play right within Messages!
+Congratulations! At this point, you know how to make a basic sticker pack ("Look ma, no code!") and how to create a custom user interface for your stickers.
+
+There's much more you can do with Messages beyond sticker packs. In the next chapter, you'll learn how to create custom messages. Specifically, you'll create a cool drawing and guessing game you can play right within Messages!
