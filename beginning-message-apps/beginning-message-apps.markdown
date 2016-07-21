@@ -78,11 +78,9 @@ This is another new application template. Here's a quick tour of what you get in
 - Of additional interest inside the Messages extension are a storyboard, an asset catalog, and **MessagesViewController.swift**, which is a subclass of `MSMessagesAppViewController`.
 - **Messages.framework**, which contains all of the message-related classes you will need.
 
-Select the **Stickerlicious project** in the Project Navigator, then choose the **MessagesExtension** target. In the **General** tab, verify the **Display Name** is **Stickerlicious**.
-
 All Messages apps live inside a `MSMessagesAppViewController` subclass. `MSMessagesAppViewController` contains several properties and methods of interest when building more complex message apps, but for a dynamic sticker pack, you can ignore all of them.
 
-> **Note**: For a more information on `MSMessagesAppViewController`, see Chapter 6, "Intermediate Message Apps".
+> **Note**: For more information on `MSMessagesAppViewController`, see Chapter 6, "Intermediate Message Apps".
 
 For now, open **MessagesViewController.swift** and delete all of the template methods, leaving you with an empty class declaration.
 
@@ -189,7 +187,7 @@ extension CandyStickerBrowserViewController {
 
 These methods are much simpler than table or collection view data sources; you have a number of stickers, and a sticker for a particular index.
 
-Build and run, and choose to launch into the Messages app. Tap the **Apps** button and you'll need to scroll all the way to the right to find your new app. Wait a moment for the simulator to launch your app, and eventually you'll see the following:
+Build and run on the iPhone 6S simulator, and choose to launch into the Messages app. Tap the **Apps** button and you'll need to scroll all the way to the right to find your new app. Wait a moment for the simulator to launch your app, and eventually you'll see the following:
 
 ![bordered iphone](images/Stickerlicious1.png)
 
