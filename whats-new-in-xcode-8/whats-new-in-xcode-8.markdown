@@ -47,6 +47,14 @@
 * Improving Memory Usage [Instruction]
 
   Uncover and look at need to reuse UILabels in the tableview cells
+  
+##Static Analyzer Enhancements [Reference]
+(this will get dumped if length is an issue)
+About a paragraph about each of these.  I'll put in some screenshots, but won't tie this into Coloji.
+
+* Localizability
+* Instance Cleanup
+* Nullability
 
 ##Where to Go From Here?
 * WWDC Videos
