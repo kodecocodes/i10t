@@ -26,7 +26,7 @@ class ViewController: UIViewController {
   // Properties
   var imageMoveAnimator: UIViewPropertyAnimator?
   var imageDragStartPosition: CGPoint?
-
+  
   // IBOutlets
   @IBOutlet weak var progressSlider: UISlider!
   @IBOutlet weak var stateSegment: UISegmentedControl!
@@ -38,19 +38,45 @@ class ViewController: UIViewController {
   
   // IBActions
   @IBAction func handleProgressSliderChanged(_ sender: UISlider) {
-    // Coming soon
+    imageMoveAnimator?.fractionComplete = CGFloat(sender.value)
   }
-
+  
   @IBAction func handleAnimateButtonTapped(_ sender: UIButton) {
     animateAnimalToRandomLocation()
   }
     
   @IBAction func handleStopButtonTapped(_ sender: UIButton) {
-    // Coming soon...
+    guard let imageMoveAnimator = imageMoveAnimator else {
+      return
+    }
+    switch imageMoveAnimator.state {
+    case .active:
+      imageMoveAnimator.stopAnimation(false)
+    case .inactive:
+      break
+    case .stopped:
+      imageMoveAnimator.finishAnimation(at: .current)
+    }
   }
   
   @IBAction func handleTapOnImage(_ sender: UITapGestureRecognizer) {
-    // Coming Soon
+    guard let imageMoveAnimator = imageMoveAnimator else {
+      return
+    }
+    progressSlider.isHidden = true
+    switch imageMoveAnimator.state {
+    case .active:
+      if imageMoveAnimator.isRunning {
+        imageMoveAnimator.pauseAnimation()
+        progressSlider.isHidden = false
+        progressSlider.value = Float(imageMoveAnimator.fractionComplete)
+      } else {
+        imageMoveAnimator.startAnimation()
+      }
+    default:
+      break
+    }
+    stopButton.isHidden = progressSlider.isHidden
   }
   
   @IBAction func handleDragImage(_ sender: UIPanGestureRecognizer) {
@@ -61,8 +87,15 @@ class ViewController: UIViewController {
       imageContainer.center = sender.location(in: view)
     case .ended:
       if let imageDragStartPosition = imageDragStartPosition {
-        animateAnimalTo(location: imageDragStartPosition)
-        // TODO
+        //1
+        let animationVelocity = sender.velocity(in: view)
+        //2
+        let animationDistance = imageContainer.center.distance(toPoint: imageDragStartPosition)
+        //3
+        let normalisedVelocity = animationVelocity.normalise(weight: animationDistance)
+        //4
+        let initialVelocity = normalisedVelocity.toVector
+        animateAnimalTo(location: imageDragStartPosition, initialVelocity: initialVelocity)
       }
       imageDragStartPosition = .none
     default:
@@ -73,11 +106,26 @@ class ViewController: UIViewController {
 
 
 extension ViewController {
-  private func animateAnimalTo(location: CGPoint) {
-    // TODO
-    UIView.animate(withDuration: 3) { 
+  private func animateAnimalTo(location: CGPoint,
+                               initialVelocity: CGVector = .zero) {
+    
+    removeAnimatorObservers(animator: imageMoveAnimator)
+    let mass: CGFloat = 1.0
+    let stiffness: CGFloat = 10.0
+    let criticalDamping = 2 * sqrt(mass * stiffness)
+    let damping = criticalDamping * 0.5
+    let parameters = UISpringTimingParameters(
+      mass: mass,
+      stiffness: stiffness,
+      damping: damping,
+      initialVelocity: initialVelocity)
+    imageMoveAnimator = UIViewPropertyAnimator(duration: 10, timingParameters: parameters)
+    imageMoveAnimator?.addAnimations {
       self.imageContainer.center = location
     }
+    
+    addAnimatorObservers(animator: imageMoveAnimator)
+    imageMoveAnimator?.startAnimation()
   }
   
   private func animateAnimalToRandomLocation() {
