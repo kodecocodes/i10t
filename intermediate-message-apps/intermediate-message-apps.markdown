@@ -13,7 +13,7 @@ Ready to channel your inner Picasso?
 
 ## Getting started
 
-Open the **WenderPic** starter project provided with the materials for this chapter. Be sure to use this version, rather than the final project from the previous chapter, as there have been a few changes since then.
+Open the **WenderPic** starter project provided with the materials for this chapter. There's quite a lot already present in the project, but none of it really has to do with Messages. That's where you come in.
 
 Here's a quick tour of the project:
 
@@ -44,7 +44,7 @@ The idea of the `MSMessagesAppViewController` is to act as the root of the rest 
 
 ## Adding the first child view controller
 
-You'll add all of the game view controllers mentioned above as children of MessagesViewController.swift. Adding a child view controller involves quite a lot of boilerplate, so you'll add a utility function to avoid duplicating yourself thrice.
+You'll add all of the game view controllers mentioned above as children of `MessagesViewController`. Adding a child view controller involves quite a lot of boilerplate, so you'll add a utility function to avoid duplicating yourself thrice.
 
 Open **MessagesViewController.swift** and add the following extension:
 
