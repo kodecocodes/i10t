@@ -62,7 +62,7 @@ extension NotificationTableViewController {
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     guard let notificationTableSection = NotificationTableSection(rawValue: section),
-      sectionProvider = tableSectionProviders[notificationTableSection] else { return 0 }
+      let sectionProvider = tableSectionProviders[notificationTableSection] else { return 0 }
     
     return sectionProvider.numberOfCells
   }
@@ -71,8 +71,8 @@ extension NotificationTableViewController {
     var cell = tableView.dequeueReusableCell(withIdentifier: "standardCell", for: indexPath)
     
     guard let tableSection = NotificationTableSection(rawValue: indexPath.section),
-      sectionProvider = tableSectionProviders[tableSection],
-      cellProvider = sectionProvider.cellProvider(at: indexPath.row)
+      let sectionProvider = tableSectionProviders[tableSection],
+      let cellProvider = sectionProvider.cellProvider(at: indexPath.row)
       else { return cell }
     
     cell = cellProvider.prepare(cell: cell)
@@ -82,7 +82,7 @@ extension NotificationTableViewController {
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     guard let notificationTableSection = NotificationTableSection(rawValue: section),
-      sectionProvider = tableSectionProviders[notificationTableSection]
+      let sectionProvider = tableSectionProviders[notificationTableSection]
       else { return .none }
     
     return sectionProvider.name
@@ -97,20 +97,25 @@ extension NotificationTableViewController {
   }
   
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-    guard let section = NotificationTableSection(rawValue: indexPath.section)
-      where editingStyle == .delete && section == .pending else { return }
     
+    guard let section =
+      NotificationTableSection(rawValue: indexPath.section)
+      , editingStyle == .delete && section == .pending else { return }
+    
+    // 2
     guard let provider = tableSectionProviders[.pending]
       as? PendingNotificationsTableSectionProvider else { return }
     
     let request = provider.requests[indexPath.row]
     
+    // 3
     UNUserNotificationCenter.current()
       .removePendingNotificationRequests(withIdentifiers:
         [request.identifier])
     loadNotificationData(callback: {
       self.tableView.deleteRows(at: [indexPath], with: .automatic)
     })
+    
   }
 }
 
@@ -122,12 +127,19 @@ extension NotificationTableViewController {
   
   private func loadNotificationData(callback: (() -> ())? = .none) {
     let group = DispatchGroup()
-    let notificationCenter = UNUserNotificationCenter.current()
-    let dataSaveQueue = DispatchQueue(label: "com.raywenderlich.CuddlePix.dataSave")
     
+    // 1
+    let notificationCenter = UNUserNotificationCenter.current()
+    let dataSaveQueue = DispatchQueue(label:
+      "com.raywenderlich.CuddlePix.dataSave")
+    
+    // 2
     group.enter()
+    // 3
     notificationCenter.getNotificationSettings { (settings) in
-      let settingsProvider = SettingTableSectionProvider(settings: settings,name: "Notification Settings")
+      let settingsProvider = SettingTableSectionProvider(settings:
+        settings, name: "Notification Settings")
+      // 4
       dataSaveQueue.async(execute: {
         self.tableSectionProviders[.settings] = settingsProvider
         group.leave()
@@ -150,7 +162,8 @@ extension NotificationTableViewController {
         DeliveredNotificationsTableSectionProvider(notifications:
           notifications, name: "Delivered Notifications")
       dataSaveQueue.async(execute: {
-        self.tableSectionProviders[.delivered] = deliveredNotificationsProvider
+        self.tableSectionProviders[.delivered]
+          = deliveredNotificationsProvider
         group.leave()
       })
     }

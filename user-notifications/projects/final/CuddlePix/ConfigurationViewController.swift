@@ -36,7 +36,7 @@ class ConfigurationViewController: UIViewController {
   
   @IBAction func handleScheduleTapped(_ sender: UIButton) {
     guard let selectedString = cuddlePixCount.titleForSegment(at: cuddlePixCount.selectedSegmentIndex),
-      selectedNumber = Int(selectedString) else {
+      let selectedNumber = Int(selectedString) else {
         delegate?.configurationCompleted(newNotifications: false)
         return
     }
@@ -69,7 +69,7 @@ extension ConfigurationViewController {
     for _ in 0..<number {
       let randomTimeInterval = TimeInterval(arc4random_uniform(3600))
       group.enter()
-      scheduleRandomNotification(inSeconds: randomTimeInterval, completion: {_ in
+      scheduleRandomNotification(inSeconds: randomTimeInterval, completion: {_ in 
         group.leave()
       })
     }
@@ -89,18 +89,25 @@ extension ConfigurationViewController {
     let attachment = try! UNNotificationAttachment(identifier:
       randomImageName, url: imageURL, options: .none)
     
+    // 1
     let content = UNMutableNotificationContent()
     content.categoryIdentifier = newCuddlePixCategoryName
     content.title = "New cuddlePix!"
     content.subtitle = "What a treat"
-    content.body = "Cheer yourself up with a hug 🤗 "
+    content.body = "Cheer yourself up with a hug 🤗"
     content.attachments = [attachment]
     
-    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: inSeconds, repeats: false)
+    // 2
+    let trigger = UNTimeIntervalNotificationTrigger(
+      timeInterval: inSeconds, repeats: false)
     
-    let request = UNNotificationRequest(identifier: randomImageName, content: content, trigger: trigger)
-    UNUserNotificationCenter.current().add(request, withCompletionHandler:{ (error) in
-      if let error =  error {
+    // 1
+    let request = UNNotificationRequest(
+      identifier: randomImageName, content: content, trigger: trigger)
+    
+    // 2
+    UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error) in
+      if let error = error {
         print(error)
         completion(success: false)
       } else {

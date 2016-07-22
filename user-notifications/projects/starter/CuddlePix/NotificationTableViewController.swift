@@ -52,7 +52,7 @@ extension NotificationTableViewController {
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     guard let notificationTableSection = NotificationTableSection(rawValue: section),
-      sectionProvider = tableSectionProviders[notificationTableSection] else { return 0 }
+      let sectionProvider = tableSectionProviders[notificationTableSection] else { return 0 }
     
     return sectionProvider.numberOfCells
   }
@@ -61,8 +61,8 @@ extension NotificationTableViewController {
     var cell = tableView.dequeueReusableCell(withIdentifier: "standardCell", for: indexPath)
     
     guard let tableSection = NotificationTableSection(rawValue: indexPath.section),
-      sectionProvider = tableSectionProviders[tableSection],
-      cellProvider = sectionProvider.cellProvider(at: indexPath.row)
+      let sectionProvider = tableSectionProviders[tableSection],
+      let cellProvider = sectionProvider.cellProvider(at: indexPath.row)
       else { return cell }
     
     cell = cellProvider.prepare(cell: cell)
@@ -72,7 +72,7 @@ extension NotificationTableViewController {
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     guard let notificationTableSection = NotificationTableSection(rawValue: section),
-      sectionProvider = tableSectionProviders[notificationTableSection]
+      let sectionProvider = tableSectionProviders[notificationTableSection]
       else { return .none }
     
     return sectionProvider.name

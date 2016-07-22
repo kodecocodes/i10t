@@ -29,7 +29,7 @@ let newCuddlePixCategoryName = "newCuddlePix"
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
-  
+
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     UNUserNotificationCenter.current().delegate = self
     configureUserNotifications()
@@ -38,17 +38,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
   
   private func configureUserNotifications() {
-    let starAction = UNNotificationAction(identifier: "star", title: "🌟 star my cuddle 🌟 ", options: [])
-    let dismissAction = UNNotificationAction(identifier: "dismiss", title: "Dismiss", options: [])
-    
-    let category = UNNotificationCategory(identifier: newCuddlePixCategoryName,
-                                          actions: [starAction, dismissAction],
-                                          minimalActions: [starAction, dismissAction],
-                                          intentIdentifiers: [],
-                                          options: [])
-    
-    UNUserNotificationCenter.current().setNotificationCategories([category])
+    // 1
+    let starAction = UNNotificationAction(identifier:
+      "star", title: "🌟 star my cuddle 🌟 ", options: [])
+    let dismissAction = UNNotificationAction(identifier:
+      "dismiss", title: "Dismiss", options: [])
+    // 2
+    let category =
+      UNNotificationCategory(identifier: newCuddlePixCategoryName,
+                       actions: [starAction, dismissAction],
+                       intentIdentifiers: [],
+                       options: [])
+    // 3
+    UNUserNotificationCenter.current()
+      .setNotificationCategories([category])
   }
+  
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
@@ -63,18 +68,22 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
   
   func userNotificationCenter(_ center: UNUserNotificationCenter,
                               didReceive response: UNNotificationResponse,
-                              withCompletionHandler completionHandler: () -> Void) {
+                              withCompletionHandler
+    completionHandler: () -> Void) {
     print("Response received for \(response.actionIdentifier)")
     completionHandler()
   }
 }
 
 extension AppDelegate {
+  // 1
   func application(_ application: UIApplication,
                    didFailToRegisterForRemoteNotificationsWithError error: NSError) {
     print("Registration for remote notifications failed")
     print(error.localizedDescription)
   }
+  
+  // 2
   func application(_ application: UIApplication,
                    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
     print("Registered with device token: \(deviceToken.hexString)")

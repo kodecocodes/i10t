@@ -36,7 +36,7 @@ class ConfigurationViewController: UIViewController {
   
   @IBAction func handleScheduleTapped(_ sender: UIButton) {
     guard let selectedString = cuddlePixCount.titleForSegment(at: cuddlePixCount.selectedSegmentIndex),
-      selectedNumber = Int(selectedString) else {
+      let selectedNumber = Int(selectedString) else {
         delegate?.configurationCompleted(newNotifications: false)
         return
     }
