@@ -37,8 +37,9 @@ class DrawingViewController: UIViewController {
   
   @IBAction func handleDoneButtonTapped(_ sender: UIButton) {
     if let drawing = canvas.image {
-      game = game?.updateDrawing(drawing)
+      game?.currentDrawing = drawing
     }
+    game?.gameState = .challenge
     delegate?.handleDrawingComplete(game: game)
   }
   

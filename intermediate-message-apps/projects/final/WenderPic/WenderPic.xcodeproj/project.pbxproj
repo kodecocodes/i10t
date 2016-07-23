@@ -21,6 +21,7 @@
 		2255FEAE1D153E090062B1C9 /* SummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2255FEAD1D153E090062B1C9 /* SummaryViewController.swift */; };
 		2255FEB01D153E140062B1C9 /* GuessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2255FEAF1D153E140062B1C9 /* GuessViewController.swift */; };
 		2255FEB31D154E7A0062B1C9 /* WenderPicGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2255FEB21D154E7A0062B1C9 /* WenderPicGame.swift */; };
+		79E9672B1D42C00900A1059B /* DrawingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E9672A1D42C00900A1059B /* DrawingStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,13 +59,14 @@
 		220BFA621D149CE600450574 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		220BFA641D149CE600450574 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		221949011D19292E00E9E4F6 /* ImageAttributions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ImageAttributions.txt; sourceTree = "<group>"; };
-		2255FEA31D14A5760062B1C9 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
+		2255FEA31D14A5760062B1C9 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; tabWidth = 2; };
 		2255FEA61D14A5B50062B1C9 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		2255FEA81D1525380062B1C9 /* ProgressCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressCircle.swift; sourceTree = "<group>"; };
 		2255FEAB1D1531BE0062B1C9 /* DrawingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingViewController.swift; sourceTree = "<group>"; };
 		2255FEAD1D153E090062B1C9 /* SummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryViewController.swift; sourceTree = "<group>"; };
-		2255FEAF1D153E140062B1C9 /* GuessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuessViewController.swift; sourceTree = "<group>"; };
+		2255FEAF1D153E140062B1C9 /* GuessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = GuessViewController.swift; sourceTree = "<group>"; tabWidth = 2; };
 		2255FEB21D154E7A0062B1C9 /* WenderPicGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = WenderPicGame.swift; sourceTree = "<group>"; tabWidth = 2; };
+		79E9672A1D42C00900A1059B /* DrawingStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = DrawingStore.swift; sourceTree = "<group>"; tabWidth = 2; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				2255FEA61D14A5B50062B1C9 /* Utilities.swift */,
+				79E9672A1D42C00900A1059B /* DrawingStore.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 				2255FEB01D153E140062B1C9 /* GuessViewController.swift in Sources */,
 				2255FEA91D1525380062B1C9 /* ProgressCircle.swift in Sources */,
 				2255FEA41D14A5760062B1C9 /* Canvas.swift in Sources */,
+				79E9672B1D42C00900A1059B /* DrawingStore.swift in Sources */,
 				2255FEAC1D1531BE0062B1C9 /* DrawingViewController.swift in Sources */,
 				2255FEAE1D153E090062B1C9 /* SummaryViewController.swift in Sources */,
 			);
