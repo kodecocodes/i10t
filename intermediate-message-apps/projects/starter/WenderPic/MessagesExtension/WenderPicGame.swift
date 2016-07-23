@@ -25,34 +25,25 @@ import Messages
 
 let wordList = [ "nose", "dog", "camel", "fork", "pizza", "ray", "swift", "closure", "android", "gigabyte", "debugger", "tennis", "chocolate", "emoji", "toilet"]
 
+enum GameState: String {
+    case challenge
+    case guess
+}
+
 struct WenderPicGame {
   let word: String
-  let currentDrawing: UIImage?
+  var currentDrawing: UIImage?
   var guesses: [String]
   let drawerId: UUID
+  let gameId: UUID
+  var gameState = GameState.challenge
   
-  init(word: String, drawerId: UUID) {
+  private init(word: String, drawerId: UUID) {
     self.word = word
     self.drawerId = drawerId
     self.currentDrawing = .none
     self.guesses = [String]()
-  }
-  
-  private init(word: String, currentDrawing: UIImage?, guesses: [String], drawerId: UUID) {
-    self.word = word
-    self.currentDrawing = currentDrawing
-    self.guesses = guesses
-    self.drawerId = drawerId
-  }
-}
-
-extension WenderPicGame {
-  func newGuess(_ guess: String) -> WenderPicGame {
-    return WenderPicGame(word: word, currentDrawing: currentDrawing, guesses: guesses + [guess], drawerId: drawerId)
-  }
-  
-  func updateDrawing(_ drawing: UIImage) -> WenderPicGame {
-    return WenderPicGame(word: word, currentDrawing: drawing, guesses: guesses, drawerId: drawerId)
+    self.gameId = UUID()
   }
 }
 

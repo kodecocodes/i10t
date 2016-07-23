@@ -34,10 +34,11 @@ class GuessViewController: UIViewController {
   var delegate: GuessViewControllerDelegate?
   
   @IBAction func handleGuessSubmission(_ sender: UIButton) {
-    guard let game = game else { return }
+    guard var game = game else { return }
     guard let guess = guessTextField.text else { return }
     
     if game.valid(guess: guess) {
+      game.gameState = .guess
       delegate?.handleGuessSubmission(forGame: game, guess: guess)
     } else {
       self.game?.guesses.append(guess)

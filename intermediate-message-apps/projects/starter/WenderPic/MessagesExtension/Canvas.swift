@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Razeware LLC
+ * Copyright (c) 2016 Razeware LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,11 @@ import UIKit
 @IBDesignable
 public class Canvas : UIView {
   
-  var image: UIImage?
+  var image: UIImage? {
+    didSet {
+      layer.contents = image?.cgImage
+    }
+  }
   
   var delegate: CanvasDelegate?
   
@@ -44,8 +48,10 @@ extension Canvas {
     guard enabled else { return }
     if let touch = touches.first {
       if traitCollection.forceTouchCapability == .available {
+        // In the simulator, force touch-enabled device without a force touch trackpad gives a force of 0.
+        let force = touch.force > 0 ? touch.force : 1
         addLine(fromPoint: touch.previousLocation(in: self),
-                toPoint: touch.location(in: self), withForce: touch.force)
+                toPoint: touch.location(in: self), withForce: force)
       } else {
         addLine(fromPoint: touch.previousLocation(in: self), toPoint: touch.location(in: self))
       }
@@ -73,8 +79,6 @@ extension Canvas {
     }
     
     image = UIGraphicsGetImageFromCurrentImageContext()
-    
-    layer.contents = image?.cgImage
     
     UIGraphicsEndImageContext()
     
