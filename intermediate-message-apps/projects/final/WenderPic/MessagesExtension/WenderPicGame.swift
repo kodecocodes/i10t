@@ -25,34 +25,25 @@ import Messages
 
 let wordList = [ "nose", "dog", "camel", "fork", "pizza", "ray", "swift", "closure", "android", "gigabyte", "debugger", "tennis", "chocolate", "emoji", "toilet"]
 
+enum GameState: String {
+  case challenge
+  case guess
+}
+
 struct WenderPicGame {
   let word: String
-  let currentDrawing: UIImage?
+  var currentDrawing: UIImage?
   var guesses: [String]
   let drawerId: UUID
+  let gameId: UUID
+  var gameState = GameState.challenge
   
-  init(word: String, drawerId: UUID) {
+  private init(word: String, drawerId: UUID) {
     self.word = word
     self.drawerId = drawerId
     self.currentDrawing = .none
     self.guesses = [String]()
-  }
-  
-  private init(word: String, currentDrawing: UIImage?, guesses: [String], drawerId: UUID) {
-    self.word = word
-    self.currentDrawing = currentDrawing
-    self.guesses = guesses
-    self.drawerId = drawerId
-  }
-}
-
-extension WenderPicGame {
-  func newGuess(_ guess: String) -> WenderPicGame {
-    return WenderPicGame(word: word, currentDrawing: currentDrawing, guesses: guesses + [guess], drawerId: drawerId)
-  }
-  
-  func updateDrawing(_ drawing: UIImage) -> WenderPicGame {
-    return WenderPicGame(word: word, currentDrawing: drawing, guesses: guesses, drawerId: drawerId)
+    self.gameId = UUID()
   }
 }
 
@@ -65,13 +56,15 @@ extension WenderPicGame {
     items.append(URLQueryItem(name: "word", value: word))
     items.append(URLQueryItem(name: "guesses", value: guesses.joined(separator: "::-::")))
     items.append(URLQueryItem(name: "drawerId", value: drawerId.uuidString))
-    
+    items.append(URLQueryItem(name: "gameState", value: gameState.rawValue))
+    items.append(URLQueryItem(name: "gameId", value: gameId.uuidString))
     return items
   }
-  init?(queryItems: [URLQueryItem], drawing: UIImage?) {
+  init?(queryItems: [URLQueryItem]) {
     var word: String?
     var guesses = [String]()
     var drawerId: UUID?
+    var gameId: UUID?
     
     for item in queryItems {
       guard let value = item.value else { continue }
@@ -83,32 +76,39 @@ extension WenderPicGame {
         guesses = value.components(separatedBy: "::-::")
       case "drawerId":
         drawerId = UUID(uuidString: value)
+      case "gameState":
+        self.gameState = GameState(rawValue: value)!
+      case "gameId":
+        gameId = UUID(uuidString: value)
       default:
         continue
       }
     }
     
-    guard let decodedWord = word, decodedDrawerId = drawerId else {
+    guard
+      let decodedWord = word,
+      let decodedDrawerId = drawerId,
+      let decodedGameId = gameId
+    else {
       return nil
     }
     
     self.word = decodedWord
     self.guesses = guesses
-    self.currentDrawing = drawing
+    self.currentDrawing = DrawingStore.image(forUUID: decodedGameId)
     self.drawerId = decodedDrawerId
+    self.gameId = decodedGameId
   }
   
   init?(message: MSMessage?) {
-    //TODO: radar 27263740 file because the layout property is nil on any selected message as of beta 2. If this isn't resolved we'll have to encode the image as part of the URL instead (though when I tried this, the message refused to send). If resolved uncomment the line below and send the image as suggested.
-    guard let
-//    layout = message?.layout as? MSMessageTemplateLayout,
-    messageURL = message?.url,
-    urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
-    queryItems = urlComponents.queryItems
+    guard
+      let messageURL = message?.url,
+      let urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
+      let queryItems = urlComponents.queryItems
     else {
       return nil
     }
-    self.init(queryItems: queryItems, drawing: nil)//layout.image)
+    self.init(queryItems: queryItems)
   }
 }
 

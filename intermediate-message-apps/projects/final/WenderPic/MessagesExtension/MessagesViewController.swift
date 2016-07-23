@@ -100,9 +100,10 @@ extension MessagesViewController {
       controller = instantiateSummaryViewController(game: nil)
     case .expanded:
       if let game = WenderPicGame(message: conversation.selectedMessage) {
-        if game.drawerId == conversation.localParticipantIdentifier {
+        switch game.gameState {
+        case .guess:
           controller = instantiateDrawingViewController(game: game)
-        } else {
+        case .challenge:
           controller = instantiateGuessViewController(game: game)
         }
       } else {
@@ -154,7 +155,7 @@ extension MessagesViewController {
     NSLayoutConstraint.activate([
       controller.view.leftAnchor.constraint(equalTo: view.leftAnchor),
       controller.view.rightAnchor.constraint(equalTo: view.rightAnchor),
-      controller.view.topAnchor.constraint(equalTo: view.topAnchor),
+      controller.view.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
       controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
       ])
     
@@ -185,12 +186,16 @@ extension MessagesViewController {
 extension MessagesViewController: DrawingViewControllerDelegate {
   func handleDrawingComplete(game: WenderPicGame?) {
     defer { dismiss() }
-    guard let
-      conversation = activeConversation,
-      game = game
+    guard
+      let conversation = activeConversation,
+      let game = game
     else { return }
     
     let message = composeMessage(with: game, caption: "Guess my WenderPic!", session: conversation.selectedMessage?.session!)
+    
+    if let drawing = game.currentDrawing {
+      DrawingStore.store(image: drawing, forUUID: game.gameId)
+    }
     
     conversation.insert(message) { (error) in
       if let error = error {
@@ -211,15 +216,14 @@ extension MessagesViewController: GuessViewControllerDelegate {
     defer { dismiss() }
     guard let conversation = activeConversation else { return }
     
-    let message: MSMessage
+    let prefix = game.check(guess: guess) ? "👍" : "👎"
+    let guesser = "$\(conversation.localParticipantIdentifier)"
     
-    if(game.check(guess: guess)) {
-      // Correct answer
-      message = composeMessage(with: game, caption: "👍 \(guess)", session: conversation.selectedMessage?.session)
-    } else {
-      // incorrect answer
-      message = composeMessage(with: game, caption: "👎 \(guess)", session: conversation.selectedMessage?.session)
-    }
+    let caption = "\(prefix) \(guesser) guessed \(guess)"
+    
+    let message = composeMessage(with: game,
+      caption: caption,
+      session: conversation.selectedMessage?.session)
     
     conversation.insert(message) { (error) in
       if let error = error {

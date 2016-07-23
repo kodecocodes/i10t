@@ -68,7 +68,7 @@ extension MessagesViewController {
     NSLayoutConstraint.activate([
       controller.view.leftAnchor.constraint(equalTo: view.leftAnchor),
       controller.view.rightAnchor.constraint(equalTo: view.rightAnchor),
-      controller.view.topAnchor.constraint(equalTo: view.topAnchor),
+      controller.view.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
       controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
       ])
 
@@ -208,8 +208,6 @@ You create a new `WenderPicGame` using a UUID which represents the person doing 
 
 Build and run, and tap the new game button, then let your artistic side go wild!
 
-> **Note:** If you are using the Simulator to run the app and don't have a Force Touch trackpad, _do not_ run it on a 6S or higher, but instead on a 6 or lower. If you do run it on a 6S or higher, you won't be able to see what you're drawing. :]
-
 ![iphone bordered](images/Drawing1.png)
 
 When you've run out of ink, hit the **Done** button...and nothing happens. You need to pack up your image in a message and send it to your friend. You'll solve this in the next part.
@@ -284,16 +282,13 @@ The `DrawingViewController`, like the `SummaryViewController`, has a delegate wh
 extension MessagesViewController: DrawingViewControllerDelegate {
   func handleDrawingComplete(game: WenderPicGame?) {
     defer { dismiss() }
-    guard let
-      conversation = activeConversation,
-      game = game
+    guard
+      let conversation = activeConversation,
+      let game = game
     else { return }
-
-    let message = composeMessage(
-      with: game,
-      caption: "Guess my WenderPic!",
-      session: conversation.selectedMessage?.session!)
-
+    
+    let message = composeMessage(with: game, caption: "Guess my WenderPic!", session: conversation.selectedMessage?.session!)
+        
     conversation.insert(message) { (error) in
       if let error = error {
         print(error)
@@ -336,21 +331,23 @@ Open **WenderPicGame.swift** and add the following extension:
 extension WenderPicGame {
   var queryItems: [URLQueryItem] {
     var items = [URLQueryItem]()
-
+    
     items.append(URLQueryItem(name: "word", value: word))
-    items.append(URLQueryItem(name: "guesses", value:
+    items.append(URLQueryItem(name: "guesses", value: 
       guesses.joined(separator: "::-::")))
-    items.append(URLQueryItem(name: "drawerId", value:
+    items.append(URLQueryItem(name: "drawerId", value: 
       drawerId.uuidString))
-
+    items.append(URLQueryItem(name: "gameState", value: 
+      gameState.rawValue))
+    items.append(URLQueryItem(name: "gameId", value: 
+      gameId.uuidString))
     return items
   }
 }
 ```
 
-This puts all the important bits from the game into an array of query items: the word that the drawing is supposed to be, the person who drew it, and any guesses that have been made. You haven't made any guesses yet, but you will shortly.
+This puts all the important bits from the game into an array of query items: the word that the drawing is supposed to be, the person who drew it, any guesses that have been made, the current state of the game and the game's unique ID. You haven't made any guesses yet, but you will shortly.
 
-You don't need to worry about the image that's been drawn, since that is available via the layout object attached to the incoming message.
 
 Switch to **MessagesViewController.swift** and find the `composeMessage(with: caption: session:)`. Add the following code before the `return` statement:
 
@@ -366,19 +363,32 @@ You might not think that you can create a valid URL just by using query componen
 ?word=dog&drawerId=D5E356A9-0B6A-4441-AB6C-08D24DB255B2
 ```
 
-Now that you're sending some custom content with your message, it's time to receive it at the other end of the conversation. Remember that at the moment, when the user receives and taps a message, they simply see the drawing controller reappear. Instead, your app _should_ attempt to recreate the game from the selected message and decide what to do based on that attempt.
+> **Note:** The image that's been drawn can't be sent as part of the URL - it's too big. It can't be retreived from the layout object at the receiving end either, because that's only available to the sender of the message. For your own apps you'd have to implement some form of web storage to make the image available to both sides. Because that's outside the scope of this tutorial, you're going to cheat slightly and store the drawn image in user defaults. You'll use the `gameId` property to do this. For the simulated conversation, the user defaults object is shared between both sides of the conversation - this trick won't work on devices!
 
-First, you need to create a custom initializer for `WenderPicGame` that accepts some query items and an image. Switch to **WenderPicGame.swift** and add the following inside the encoding / decoding extension:
+Find `handleDrawingComplete(game:)` and add the following after the line where you create the message:
 
 ```swift
-init?(queryItems: [URLQueryItem], drawing: UIImage?) {
+if let drawing = game.currentDrawing {
+  DrawingStore.store(image: drawing, forUUID: game.gameId)
+}
+``` 
+
+`DrawingStore` is the wrapper for user defaults mentioned in the note - in your own app you'd have a call to a web service here to store the image. 
+
+Now that you're sending some custom content with your message, it's time to receive it at the other end of the conversation. Remember that at the moment, when the user receives and taps a message, they simply see the drawing controller reappear. Instead, your app _should_ attempt to recreate the game from the selected message and decide what to do based on that attempt.
+
+First, you need to create a custom initializer for `WenderPicGame` that accepts some query items. Switch to **WenderPicGame.swift** and add the following inside the encoding / decoding extension:
+
+```swift
+init?(queryItems: [URLQueryItem]) {
   var word: String?
   var guesses = [String]()
   var drawerId: UUID?
-
+  var gameId: UUID?
+  
   for item in queryItems {
     guard let value = item.value else { continue }
-
+    
     switch item.name {
     case "word":
       word = value
@@ -386,42 +396,47 @@ init?(queryItems: [URLQueryItem], drawing: UIImage?) {
       guesses = value.components(separatedBy: "::-::")
     case "drawerId":
       drawerId = UUID(uuidString: value)
+    case "gameState":
+      self.gameState = GameState(rawValue: value)!
+    case "gameId":
+      gameId = UUID(uuidString: value)
     default:
       continue
     }
   }
-
-  guard let decodedWord = word, decodedDrawerId = drawerId else {
-    return nil
-  }
-
-  self.word = decodedWord
-  self.guesses = guesses
-  self.currentDrawing = drawing
-  self.drawerId = decodedDrawerId
-}
-```
-
-This failable initializer will return a valid game if the two mandatory properties – `word` and the `drawerId` – can be extracted from the query items.
-
-For convenience, add the below initializer that takes a `MSMessage`, extracts the query items and image from it, and passes it to the previously defined initializer:
-
-```swift
-init?(message: MSMessage?) {
-  guard let
-    layout = message?.layout as? MSMessageTemplateLayout,
-    messageURL = message?.url,
-    urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
-    queryItems = urlComponents.queryItems
+  
+  guard
+    let decodedWord = word,
+    let decodedDrawerId = drawerId,
+    let decodedGameId = gameId
   else {
     return nil
   }
-
-  self.init(queryItems: queryItems, drawing: layout.image)
+  
+  self.word = decodedWord
+  self.guesses = guesses
+  self.currentDrawing = DrawingStore.image(forUUID: decodedGameId)
+  self.drawerId = decodedDrawerId
+  self.gameId = decodedGameId
 }
 ```
 
-**//TODO: In beta 2, the layout is not present. If this is the way things are in the final version, we'll need to change the way the image is transmitted.**
+This failable initializer will return a valid game if the mandatory properties – `word`, `drawerId` and `gameId` – can be extracted from the query items. It attempts to get an image from the `DrawingStore` - remember that this is just using user defaults, and wouldn't work for a normal application. 
+
+For convenience, add the below initializer that takes a `MSMessage`, extracts the query items from it, and passes it to the previously defined initializer:
+
+```swift
+init?(message: MSMessage?) {
+  guard
+    let messageURL = message?.url,
+    let urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
+    let queryItems = urlComponents.queryItems
+  else {
+    return nil
+  }
+  self.init(queryItems: queryItems)
+}
+```
 
 Now you have the ability to reconstruct a game from a message. If the user receives a drawing from their friend, they would want to see the `GuessViewController` when they tap it.
 
@@ -468,19 +483,20 @@ extension MessagesViewController: GuessViewControllerDelegate {
   func handleGuessSubmission(forGame game: WenderPicGame, guess: String) {
     defer { dismiss() }
     guard let conversation = activeConversation else { return }
-
-    let message: MSMessage
-
-    if game.check(guess: guess) {
-      // Correct answer
-      message = composeMessage(with: game, caption: "👍 \(guess)",
-        session: conversation.selectedMessage?.session)
-    } else {
-      // incorrect answer
-      message = composeMessage(with: game, caption: "👎 \(guess)",
-        session: conversation.selectedMessage?.session)
-    }
-
+    
+    //1
+    let prefix = game.check(guess: guess) ? "👍" : "👎"
+    //2
+    let guesser = "$\(conversation.localParticipantIdentifier)"
+    
+    //3
+    let caption = "\(prefix) \(guesser) guessed \(guess)"
+    
+    //4
+    let message = composeMessage(with: game,
+      caption: caption,
+      session: conversation.selectedMessage?.session)
+    
     conversation.insert(message) { (error) in
       if let error = error {
         print(error)
@@ -490,7 +506,14 @@ extension MessagesViewController: GuessViewControllerDelegate {
 }
 ```
 
-This function handles guesses by checking whether the guess is correct, and creates a reply with an appropriate caption.
+Here's the play-by-play:
+
+1. `check(guess:)` sees if the guess is right, so we get a thumbs up or down to add to the message
+2. If you use any of the message participant UUIDs in a message like this, prefixed with `$`, then they get auto-expanded into the contact's name. This allows you to personalise your custom messages without affecting the user's privacy.
+3. You stitch everything together into the caption for the message
+4. You create and send the message using the same convenience method as before.
+
+> **Note:** In the current iOS 10 Beta (3), the local participant identifier is the same for all sides of the conversation on a simulator, so the UUID might not convert to the correct text. 
 
 Change `instantiateGuessViewController(game:)` to set the delegate property:
 
@@ -506,27 +529,28 @@ Build and run again, bang out a sketch, switch sides, make a guess, and you'll s
 
 You'll have noticed that you get a very limited supply of ink in this game. This means it's unlikely your opponent would guess your first attempt – unless you're Henri Matisse.
 
-In the case of an incorrect guess, it would be a good idea to add some more ink to give your opponent another chance. This is where the `drawerId` of the game comes in. At present, if you can recreate a game from the message, you show the `GuessViewController`. You're going to change this so that an incorrect guess lets the artist draw more.
+In the case of an incorrect guess, it would be a good idea to add some more ink to give your opponent another chance. At present, if you can recreate a game from the message, you show the `GuessViewController`. You're going to change this so that an incorrect guess lets the artist draw more.
 
 Open **MessagesViewController.swift** and find `presentViewController(forConversation withPresentationStyle:)`. Change the code where a game has been created from the message to match the following:
 
-**// TODO: This bit also doesn't work in beta 2 - the local participant identifer is the same for both sides of the conversation in the simulator :[. You can work around it by using conversation.remoteParticipantIdentifiers.first! instead, but I didn't want to commit that to the repo.**
-
 ```swift
 if let game = WenderPicGame(message: conversation.selectedMessage) {
-  if game.drawerId == conversation.localParticipantIdentifier {
+  switch game.gameState {
+  case .guess:
     controller = instantiateDrawingViewController(game: game)
-  } else {
-    controller = instantiateGuessViewController(gasme: game)
+  case .challenge:
+    controller = instantiateGuessViewController(game: game)
   }
 } else {
 ```
 
-This will show the `DrawingViewController` if the game was originally started by the current user.
+> **Note:** Comparing the `drawerId` with the `localParticipantIdentifer` would be another option here, but as noted before this is currently not working correctly in the simulator. 
+
+This will show the `DrawingViewController` if the game is a guess, or the guess controller if the game is a challenge. The game state is updated by each view controller when the player submits a drawing or guess. 
 
 Build and run, send a drawing, make a guess, switch back to the original conversation and tap on the guess – and now you're able to further refine your pièce de resistance:
 
-**TODO: screenshot of more drawing... waiting for beta fixes?**
+![iphone bordered](images/Redrawing.png)
 
 Congratulations! You've successfully built a collaborative messaging app, which lets you pass custom information back and forward between two participants.
 
