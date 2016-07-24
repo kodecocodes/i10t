@@ -30,30 +30,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     return true
   }
-    
-    var interactionController: DropDownInteractionController?
+  
+  var interactionController: DropDownInteractionController?
   
 }
 
 extension AppDelegate: UIViewControllerTransitioningDelegate {
-    
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        interactionController = DropDownInteractionController(viewController: presented)
-        return nil
+  
+  func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    interactionController = DropDownInteractionController(viewController: presented)
+    return nil
+  }
+  
+  func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    return DropDownDismissAnimator()
+  }
+  
+  func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    guard let interactionController = interactionController else {
+      return nil
     }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DropDownDismissAnimator()
+    if interactionController.isInteractive {
+      interactionController.wantsInteractiveStart = true
+      return interactionController
     }
-    
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard let interactionController = interactionController else {
-            return nil
-        }
-        if interactionController.isInteractive {
-            return interactionController
-        }
-        return nil
-    }
+    return nil
+  }
 }
 

@@ -23,41 +23,54 @@
 import UIKit
 
 class DropDownInteractionController: UIPercentDrivenInteractiveTransition {
-    var isInteractive = false
-    private weak var viewController: UIViewController?
-    private let dismissGesture = UIPanGestureRecognizer()
+  var isInteractive = false
+  var hasStarted = false
+  
+  private weak var viewController: UIViewController?
+  private let dismissGesture = UIPanGestureRecognizer()
+  
+  required init(viewController: UIViewController) {
+    self.viewController = viewController
+    super.init()
+    dismissGesture.addTarget(self, action: #selector(handle(pan:)))
+    viewController.view.addGestureRecognizer(dismissGesture)
+  }
+  
+  var interruptedPercent: CGFloat = 0
+  
+  func handle(pan: UIPanGestureRecognizer) {
     
-    required init(viewController: UIViewController) {
-        self.viewController = viewController
-        super.init()
-        dismissGesture.addTarget(self, action: #selector(handle(pan:)))
-        viewController.view.addGestureRecognizer(dismissGesture)
-    }
+    let translation = pan.translation(in: pan.view).y
+    let percent = (translation / pan.view!.bounds.height) + interruptedPercent
+    let xVelocity = pan.velocity(in: pan.view).y
     
-    func handle(pan: UIPanGestureRecognizer) {
-        
-        let translation = pan.translation(in: pan.view).y
-        let percent = translation / pan.view!.bounds.height
-        let xVelocity = pan.velocity(in: pan.view).y
-        
-        switch pan.state {
-        case .possible:
-            break
-        case .began:
-            isInteractive = true
-            viewController?.dismiss(animated: true, completion: nil)
-        case .changed:
-            update(min(percent, 1.0))
-        case .ended:
-            isInteractive = false
-            if percent > 0.5 || xVelocity > 0 {
-                finish()
-            } else {
-                cancel()
-            }
-        case .cancelled, .failed:
-            isInteractive = false
-            cancel()
-        }
+    switch pan.state {
+    case .possible:
+      break
+    case .began:
+      if !hasStarted {
+        hasStarted = true
+        isInteractive = true
+        interruptedPercent = 0
+        viewController?.dismiss(animated: true, completion: nil)
+      } else {
+        pause()
+        interruptedPercent = percentComplete
+      }
+    case .changed:
+      update(min(percent, 1.0))
+    case .ended:
+      isInteractive = false
+      if percent > 0.5 || xVelocity > 0 {
+        finish()
+      } else {
+        hasStarted = false
+        cancel()
+      }
+    case .cancelled, .failed:
+      isInteractive = false
+      hasStarted = false
+      cancel()
     }
+  }
 }

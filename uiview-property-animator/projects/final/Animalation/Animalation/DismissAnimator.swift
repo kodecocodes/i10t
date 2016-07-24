@@ -26,29 +26,41 @@ class DropDownDismissAnimator : NSObject {
 }
 
 extension DropDownDismissAnimator : UIViewControllerAnimatedTransitioning {
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 3
+  func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    return 3
+  }
+  
+  func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    performAnimations(using: transitionContext)
+  }
+  
+  func performAnimations(using transitionContext: UIViewControllerContextTransitioning) {
+    guard
+      let fromVC = transitionContext.viewController(forKey: UITransitionContextFromViewControllerKey),
+      let toVC = transitionContext.viewController(forKey: UITransitionContextToViewControllerKey)
+      else {
+        return
+    }
+    let containerView = transitionContext.containerView()
+    containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+    let finalFrame = containerView.bounds.offsetBy(dx: 0, dy: containerView.bounds.height)
+    
+    UIView.animate(
+      withDuration: transitionDuration(using: transitionContext),
+      animations: {
+        fromVC.view.frame = finalFrame
+      },
+      completion: { _ in
+        transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
+      }
+    )
+  }
+  
+  func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
+    let animator = UIViewPropertyAnimator(duration: transitionDuration(using: transitionContext), curve: .easeInOut) {
+      self.performAnimations(using: transitionContext)
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard
-            let fromVC = transitionContext.viewController(forKey: UITransitionContextFromViewControllerKey),
-            let toVC = transitionContext.viewController(forKey: UITransitionContextToViewControllerKey)
-            else {
-                return
-        }
-        let containerView = transitionContext.containerView()
-        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
-        let finalFrame = containerView.bounds.offsetBy(dx: 0, dy: containerView.bounds.height)
-        
-        UIView.animate(
-            withDuration: transitionDuration(using: transitionContext),
-            animations: {
-                fromVC.view.frame = finalFrame
-            },
-            completion: { _ in
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
-            }
-        )
-    }
+    return animator
+  }
 }
