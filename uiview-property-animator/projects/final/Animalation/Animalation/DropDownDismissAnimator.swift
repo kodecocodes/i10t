@@ -22,10 +22,10 @@
 
 import UIKit
 
-class DropDownDismissAnimator : NSObject {
-}
-
-extension DropDownDismissAnimator : UIViewControllerAnimatedTransitioning {
+class DropDownDismissAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+  
+  var animationCleanup: (() -> ())?
+  
   func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
     return 3
   }
@@ -62,5 +62,9 @@ extension DropDownDismissAnimator : UIViewControllerAnimatedTransitioning {
     }
     
     return animator
+  }
+  
+  func animationEnded(_ transitionCompleted: Bool) {
+    animationCleanup?()
   }
 }

@@ -21,7 +21,7 @@ The fine control over animation timing alone would make a property animator an i
 
 ## Getting started
 
-Open the **Animalation** project in the starter materials for this chapter. This is a demonstration app which you'll modify to add extra animation capabilities. There's a single view controller, and some utility files. Build and run the project:
+Open the **Animalation** project in the starter materials for this chapter. This is a demonstration app which you'll modify to add extra animation capabilities. There are two view controllers, some animated transition support files, and some utility files. Build and run the project:
 
 ![ipad](images/Animalation1.png)
 
@@ -519,8 +519,85 @@ This code restores the alpha and the image as they were before the animation sta
 
 Build and run again, reverse the animation and behold! No more disappearing animals! 
 
+## View Controller Transitions
+
+Property animators, or to be specific, objects that conform to `UIViewImplicitlyAnimating`, can also be plugged in to your interactive view controller transitions. Previously, you could start an interactive transition, track a gesture, and then hand it off to finish or be cancelled by the system - but after that point, the user had no control. When you add property animators to the mix you can switch multiple times between interactive and non-interactive modes, making your users feel really connected to what's happening on the screen. 
+
+Setting up and building interactive transitions is a complex topic outside the scope of this tutorial. See [https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions](https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions) for an overview. The project already contains an interactive transition, you're going to amend this to make it use property animators and become interruptible.
+
+First, take a look at the existing transition. Open **Main.storyboard**, find the **Animals** button on the bottom right of the main view controller and make it visible by unchecking the **Hidden** box. Build and run the project and tap the button:
+
+![ipad bordered](images/Animals1.png)
+
+To dismiss the controller interactively, pull down:
+
+![ipad bordered](images/Animals2.png)
+
+Once you've let go, the animation will either return to the top, or complete. If you try and grab the screen as it's disappearing (the transition is super slow to help you with this!), nothing will happen. 
+
+To make an interactive transition super duper interruptibly interactive, there's a new method to implement on your `UIViewControllerAnimatedTransitioning` object. Open **DropDownDismissAnimator.swift**. This is a standard transition animator object. Add the following new method:
+
+```swift
+func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
+  let animator = UIViewPropertyAnimator(duration: transitionDuration(using: transitionContext), curve: .easeInOut) {
+    self.performAnimations(using: transitionContext)
+  }
+  return animator
+}
+``` 
+
+This creates a new property animator that simply calls the same animation method, UIView animations and all, that is currently used by the transition. 
+
+The project is using a subclass of `UIPercentDrivenInteractiveTransition`for the interaction controller for this transition. Percent driven transitions have a new method, `pause()`, which tells the transition context to switch from non-interactive to interactive mode. 
+
+You want this to happen when the user starts another pan gesture. Open **DropDownInteractionController.swift** , which is the interaction controller. This class uses a pan gesture to update the progress of the transition, and when the gesture ends, sets it back to non-interactive mode with either `finish()` or `cancel()` depending on the position of the view. 
+
+Add two new properties, underneath `isInteractive`:
+
+```swift
+var hasStarted = false
+var interruptedPercent: CGFloat = 0
+```
+
+You will use `hasStarted` to decide if a new pan gesture is the start of a new dismissal, or an attempt to interrupt an ongoing dismissal. If you do interrupt an ongoing dismissal, `interruptedPercent` will be used to make sure the pan gesture's translation takes the current position of the view into account. 
+
+Inside `handle(pan:)`, amend the calculation of `percent`:
+
+```swift
+let percent = (translation / pan.view!.bounds.height) + interruptedPercent
+```
+
+You're adding the interrupted percent on here, because if the dismissal was already 50% through when the user touches the screen, that needs to be reflected in the position of the view. 
+
+Inside the same method, replace the `.began` case in the switch statement with the following code:
+
+```swift
+case .began:
+  if !hasStarted {
+    hasStarted = true
+    isInteractive = true
+    interruptedPercent = 0
+    viewController?.dismiss(animated: true, completion: nil)
+  } else {
+    pause()
+    interruptedPercent = percentComplete
+  }
+```
+
+If this isn't the first gesture in the dismissal, the transition is paused and the current percentage is taken from it. The transition must be paused **before** you read the percentage, otherwise you'll get an inaccurate figure. 
+
+Finally, switch over to **AppDelegate.swift** and add the following line to the `animationCleanup` closure created in `animationController(forDismissed:)`:
+
+```swift
+interactionController?.hasStarted = false
+```
+
+This ensures that the interaction controller is properly reset when the animations are complete. 
+
+Build and run the project, show the animals view, then have fun interrupting yourself and wobbling the view up and down! 
+ 
 ## Where To Go From Here?
 
-Congratulations! You've had a good exploration of the new powers available to you now that you can use property animators! Go forth and fill your apps with interruptible, interactive animations! 
+Congratulations! You've had a good exploration of the new powers available to you now that you can use property animators! Go forth and fill your apps with interruptible, interactive animations, including an extra level of awesome in your view controller transitions. 
 
-There's a lot more detail on property animators in our excellent book, **iOS Animations By Tutorials**! Check it out!
+There's a lot more detail on property animators in our excellent book, **iOS Animations By Tutorials**! Check it out! The WWDC video, 2016 session 216, available at [https://developer.apple.com/videos/play/wwdc2016/216/](https://developer.apple.com/videos/play/wwdc2016/216/) is also full of useful information. 

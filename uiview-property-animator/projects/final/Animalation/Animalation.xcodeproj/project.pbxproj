@@ -16,7 +16,7 @@
 		222541901D2D1C5300245389 /* ViewController+Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2225418F1D2D1C5300245389 /* ViewController+Observers.swift */; };
 		222541921D2D2B9400245389 /* CGPoint+Trig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222541911D2D2B9400245389 /* CGPoint+Trig.swift */; };
 		79E9672D1D45470300A1059B /* AnimalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E9672C1D45470300A1059B /* AnimalsViewController.swift */; };
-		79E9672F1D45498200A1059B /* DismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E9672E1D45498200A1059B /* DismissAnimator.swift */; };
+		79E9672F1D45498200A1059B /* DropDownDismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E9672E1D45498200A1059B /* DropDownDismissAnimator.swift */; };
 		79E967311D454AC600A1059B /* DropDownInteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E967301D454AC600A1059B /* DropDownInteractionController.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,7 +32,7 @@
 		2225418F1D2D1C5300245389 /* ViewController+Observers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+Observers.swift"; sourceTree = "<group>"; };
 		222541911D2D2B9400245389 /* CGPoint+Trig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Trig.swift"; sourceTree = "<group>"; };
 		79E9672C1D45470300A1059B /* AnimalsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimalsViewController.swift; sourceTree = "<group>"; };
-		79E9672E1D45498200A1059B /* DismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = DismissAnimator.swift; sourceTree = "<group>"; tabWidth = 2; };
+		79E9672E1D45498200A1059B /* DropDownDismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = DropDownDismissAnimator.swift; sourceTree = "<group>"; tabWidth = 2; };
 		79E967301D454AC600A1059B /* DropDownInteractionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = DropDownInteractionController.swift; sourceTree = "<group>"; tabWidth = 2; };
 /* End PBXFileReference section */
 
@@ -66,7 +66,8 @@
 		222541751D2D0D3500245389 /* Animalation */ = {
 			isa = PBXGroup;
 			children = (
-				2225418B1D2D1B7100245389 /* Controllers */,
+				79E967321D45794300A1059B /* Transitions */,
+				2225418B1D2D1B7100245389 /* View Controllers */,
 				222541881D2D1B5400245389 /* Extensions */,
 				2225418A1D2D1B6900245389 /* Guff */,
 				222541891D2D1B6400245389 /* UI */,
@@ -103,15 +104,22 @@
 			name = Guff;
 			sourceTree = "<group>";
 		};
-		2225418B1D2D1B7100245389 /* Controllers */ = {
+		2225418B1D2D1B7100245389 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				222541781D2D0D3500245389 /* ViewController.swift */,
 				79E9672C1D45470300A1059B /* AnimalsViewController.swift */,
-				79E9672E1D45498200A1059B /* DismissAnimator.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		79E967321D45794300A1059B /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				79E9672E1D45498200A1059B /* DropDownDismissAnimator.swift */,
 				79E967301D454AC600A1059B /* DropDownInteractionController.swift */,
 			);
-			name = Controllers;
+			name = Transitions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,7 +202,7 @@
 				222541771D2D0D3500245389 /* AppDelegate.swift in Sources */,
 				222541901D2D1C5300245389 /* ViewController+Observers.swift in Sources */,
 				2225418D1D2D1BA300245389 /* UIView+Animations.swift in Sources */,
-				79E9672F1D45498200A1059B /* DismissAnimator.swift in Sources */,
+				79E9672F1D45498200A1059B /* DropDownDismissAnimator.swift in Sources */,
 				79E967311D454AC600A1059B /* DropDownInteractionController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

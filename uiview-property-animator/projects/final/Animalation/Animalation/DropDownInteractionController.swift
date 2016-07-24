@@ -25,6 +25,7 @@ import UIKit
 class DropDownInteractionController: UIPercentDrivenInteractiveTransition {
   var isInteractive = false
   var hasStarted = false
+  var interruptedPercent: CGFloat = 0
   
   private weak var viewController: UIViewController?
   private let dismissGesture = UIPanGestureRecognizer()
@@ -36,13 +37,10 @@ class DropDownInteractionController: UIPercentDrivenInteractiveTransition {
     viewController.view.addGestureRecognizer(dismissGesture)
   }
   
-  var interruptedPercent: CGFloat = 0
-  
   func handle(pan: UIPanGestureRecognizer) {
     
     let translation = pan.translation(in: pan.view).y
     let percent = (translation / pan.view!.bounds.height) + interruptedPercent
-    let xVelocity = pan.velocity(in: pan.view).y
     
     switch pan.state {
     case .possible:
@@ -60,16 +58,12 @@ class DropDownInteractionController: UIPercentDrivenInteractiveTransition {
     case .changed:
       update(min(percent, 1.0))
     case .ended:
-      isInteractive = false
-      if percent > 0.5 || xVelocity > 0 {
+      if percent > 0.5 {
         finish()
       } else {
-        hasStarted = false
         cancel()
       }
     case .cancelled, .failed:
-      isInteractive = false
-      hasStarted = false
       cancel()
     }
   }

@@ -43,7 +43,13 @@ extension AppDelegate: UIViewControllerTransitioningDelegate {
   }
   
   func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    return DropDownDismissAnimator()
+    let animationController = DropDownDismissAnimator()
+    animationController.animationCleanup = {
+      [weak interactionController] in
+      interactionController?.isInteractive = false
+      interactionController?.hasStarted = false
+    }
+    return animationController
   }
   
   func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
@@ -51,7 +57,6 @@ extension AppDelegate: UIViewControllerTransitioningDelegate {
       return nil
     }
     if interactionController.isInteractive {
-      interactionController.wantsInteractiveStart = true
       return interactionController
     }
     return nil
