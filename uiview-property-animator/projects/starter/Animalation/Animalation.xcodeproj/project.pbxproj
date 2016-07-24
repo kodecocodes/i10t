@@ -15,6 +15,9 @@
 		2225418D1D2D1BA300245389 /* UIView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2225418C1D2D1BA300245389 /* UIView+Animations.swift */; };
 		222541901D2D1C5300245389 /* ViewController+Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2225418F1D2D1C5300245389 /* ViewController+Observers.swift */; };
 		222541921D2D2B9400245389 /* CGPoint+Trig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222541911D2D2B9400245389 /* CGPoint+Trig.swift */; };
+		79E967361D457A1F00A1059B /* DropDownDismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E967331D457A1F00A1059B /* DropDownDismissAnimator.swift */; };
+		79E967371D457A1F00A1059B /* DropDownInteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E967341D457A1F00A1059B /* DropDownInteractionController.swift */; };
+		79E967381D457A1F00A1059B /* AnimalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E967351D457A1F00A1059B /* AnimalsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +31,9 @@
 		2225418C1D2D1BA300245389 /* UIView+Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Animations.swift"; sourceTree = "<group>"; };
 		2225418F1D2D1C5300245389 /* ViewController+Observers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+Observers.swift"; sourceTree = "<group>"; };
 		222541911D2D2B9400245389 /* CGPoint+Trig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Trig.swift"; sourceTree = "<group>"; };
+		79E967331D457A1F00A1059B /* DropDownDismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDownDismissAnimator.swift; sourceTree = "<group>"; };
+		79E967341D457A1F00A1059B /* DropDownInteractionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDownInteractionController.swift; sourceTree = "<group>"; };
+		79E967351D457A1F00A1059B /* AnimalsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimalsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +66,8 @@
 		222541751D2D0D3500245389 /* Animalation */ = {
 			isa = PBXGroup;
 			children = (
-				2225418B1D2D1B7100245389 /* Controllers */,
+				79E967391D457A2900A1059B /* Transitions */,
+				2225418B1D2D1B7100245389 /* View Controllers */,
 				222541881D2D1B5400245389 /* Extensions */,
 				2225418A1D2D1B6900245389 /* Guff */,
 				222541891D2D1B6400245389 /* UI */,
@@ -97,12 +104,22 @@
 			name = Guff;
 			sourceTree = "<group>";
 		};
-		2225418B1D2D1B7100245389 /* Controllers */ = {
+		2225418B1D2D1B7100245389 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				79E967351D457A1F00A1059B /* AnimalsViewController.swift */,
 				222541781D2D0D3500245389 /* ViewController.swift */,
 			);
-			name = Controllers;
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		79E967391D457A2900A1059B /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				79E967331D457A1F00A1059B /* DropDownDismissAnimator.swift */,
+				79E967341D457A1F00A1059B /* DropDownInteractionController.swift */,
+			);
+			name = Transitions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -179,7 +196,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79E967361D457A1F00A1059B /* DropDownDismissAnimator.swift in Sources */,
 				222541921D2D2B9400245389 /* CGPoint+Trig.swift in Sources */,
+				79E967381D457A1F00A1059B /* AnimalsViewController.swift in Sources */,
+				79E967371D457A1F00A1059B /* DropDownInteractionController.swift in Sources */,
 				222541791D2D0D3500245389 /* ViewController.swift in Sources */,
 				222541771D2D0D3500245389 /* AppDelegate.swift in Sources */,
 				222541901D2D1C5300245389 /* ViewController+Observers.swift in Sources */,
@@ -341,6 +361,7 @@
 				222541871D2D0D3500245389 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
