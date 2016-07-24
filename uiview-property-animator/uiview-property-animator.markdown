@@ -523,7 +523,7 @@ Build and run again, reverse the animation and behold! No more disappearing anim
 
 Property animators, or to be specific, objects that conform to `UIViewImplicitlyAnimating`, can also be plugged in to your interactive view controller transitions. Previously, you could start an interactive transition, track a gesture, and then hand it off to finish or be cancelled by the system - but after that point, the user had no control. When you add property animators to the mix you can switch multiple times between interactive and non-interactive modes, making your users feel really connected to what's happening on the screen. 
 
-Setting up and building interactive transitions is a complex topic outside the scope of this tutorial. See [https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions](https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions) for an overview. The project already contains an interactive transition, you're going to amend this to make it use property animators and become interruptible.
+Setting up and building interactive transitions is a complex topic outside the scope of this tutorial. See [https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions](https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions) or our iOS Animations By Tutorials book for an overview. The project already contains an interactive transition, you're going to amend this to make it use property animators and become interruptible.
 
 First, take a look at the existing transition. Open **Main.storyboard**, find the **Animals** button on the bottom right of the main view controller and make it visible by unchecking the **Hidden** box. Build and run the project and tap the button:
 
