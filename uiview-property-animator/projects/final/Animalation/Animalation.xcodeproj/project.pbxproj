@@ -15,6 +15,9 @@
 		2225418D1D2D1BA300245389 /* UIView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2225418C1D2D1BA300245389 /* UIView+Animations.swift */; };
 		222541901D2D1C5300245389 /* ViewController+Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2225418F1D2D1C5300245389 /* ViewController+Observers.swift */; };
 		222541921D2D2B9400245389 /* CGPoint+Trig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222541911D2D2B9400245389 /* CGPoint+Trig.swift */; };
+		79E9672D1D45470300A1059B /* AnimalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E9672C1D45470300A1059B /* AnimalsViewController.swift */; };
+		79E9672F1D45498200A1059B /* DismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E9672E1D45498200A1059B /* DismissAnimator.swift */; };
+		79E967311D454AC600A1059B /* DropDownInteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E967301D454AC600A1059B /* DropDownInteractionController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +31,9 @@
 		2225418C1D2D1BA300245389 /* UIView+Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Animations.swift"; sourceTree = "<group>"; };
 		2225418F1D2D1C5300245389 /* ViewController+Observers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+Observers.swift"; sourceTree = "<group>"; };
 		222541911D2D2B9400245389 /* CGPoint+Trig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Trig.swift"; sourceTree = "<group>"; };
+		79E9672C1D45470300A1059B /* AnimalsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimalsViewController.swift; sourceTree = "<group>"; };
+		79E9672E1D45498200A1059B /* DismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissAnimator.swift; sourceTree = "<group>"; };
+		79E967301D454AC600A1059B /* DropDownInteractionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDownInteractionController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +107,9 @@
 			isa = PBXGroup;
 			children = (
 				222541781D2D0D3500245389 /* ViewController.swift */,
+				79E9672C1D45470300A1059B /* AnimalsViewController.swift */,
+				79E9672E1D45498200A1059B /* DismissAnimator.swift */,
+				79E967301D454AC600A1059B /* DropDownInteractionController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -181,9 +190,12 @@
 			files = (
 				222541921D2D2B9400245389 /* CGPoint+Trig.swift in Sources */,
 				222541791D2D0D3500245389 /* ViewController.swift in Sources */,
+				79E9672D1D45470300A1059B /* AnimalsViewController.swift in Sources */,
 				222541771D2D0D3500245389 /* AppDelegate.swift in Sources */,
 				222541901D2D1C5300245389 /* ViewController+Observers.swift in Sources */,
 				2225418D1D2D1BA300245389 /* UIView+Animations.swift in Sources */,
+				79E9672F1D45498200A1059B /* DismissAnimator.swift in Sources */,
+				79E967311D454AC600A1059B /* DropDownInteractionController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
