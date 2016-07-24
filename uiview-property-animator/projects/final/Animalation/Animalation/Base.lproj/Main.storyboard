@@ -18,23 +18,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="JX5-et-ABP">
+                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="JX5-et-ABP">
+                                <frame key="frameInset" minX="234" minY="490" width="570" height="82"/>
                                 <subviews>
-                                    <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hzR-vx-m0j">
+                                    <slider hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hzR-vx-m0j">
+                                        <frame key="frameInset" minX="-2" width="574" height="31"/>
                                         <connections>
                                             <action selector="handleProgressSliderChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="LPR-Ot-FSj"/>
                                         </connections>
                                     </slider>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Rci-0G-Mnj">
+                                    <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Rci-0G-Mnj">
+                                        <frame key="frameInset" minY="33" width="570" height="49"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="bVm-Tb-hbh">
+                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="bVm-Tb-hbh">
+                                                <frame key="frameInset" width="386" height="49"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="state" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FuG-Df-yth">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="state" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FuG-Df-yth">
+                                                        <frame key="frameInset" minX="174" width="38" height="21"/>
                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
                                                         <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hkE-0u-XOp">
+                                                    <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hkE-0u-XOp">
+                                                        <frame key="frameInset" minX="90" minY="21" width="206" height="29"/>
                                                         <segments>
                                                             <segment title=".inactive"/>
                                                             <segment title=".active"/>
@@ -43,7 +49,8 @@
                                                     </segmentedControl>
                                                 </subviews>
                                             </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="g7c-H7-AkI">
+                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="g7c-H7-AkI">
+                                                <frame key="frameInset" minX="391" width="87" height="49"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="isRunning" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5oB-Sz-T3k">
                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
@@ -58,7 +65,8 @@
                                                     </segmentedControl>
                                                 </subviews>
                                             </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="KWX-8l-xtq">
+                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="KWX-8l-xtq">
+                                                <frame key="frameInset" minX="483" width="87" height="49"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="isReversed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sMd-6P-fUB">
                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
@@ -98,9 +106,8 @@
                                     <outletCollection property="gestureRecognizers" destination="HeU-5K-LHN" appends="YES" id="Uy5-Cf-67Q"/>
                                 </connections>
                             </view>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aOF-xb-tFn">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aOF-xb-tFn">
                                 <frame key="frameInset" minX="489" minY="78" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Stop"/>
                                 <connections>
                                     <action selector="handleStopButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="R4B-2j-Nh2"/>
@@ -111,8 +118,10 @@
                         <color key="tintColor" red="0.058513942880000003" green="0.31111027689999998" blue="0.40635734559999998" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="JX5-et-ABP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="36z-hs-2HB"/>
+                            <constraint firstItem="aOF-xb-tFn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GHl-qM-VF4"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="JX5-et-ABP" secondAttribute="bottom" constant="50" id="Gvs-4c-1Ox"/>
                             <constraint firstItem="NBm-hX-gfB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Jxb-jj-FoA"/>
+                            <constraint firstItem="aOF-xb-tFn" firstAttribute="top" secondItem="NBm-hX-gfB" secondAttribute="bottom" constant="8" id="SDc-R3-5oY"/>
                             <constraint firstItem="NBm-hX-gfB" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="xjs-Et-ESv"/>
                         </constraints>
                     </view>

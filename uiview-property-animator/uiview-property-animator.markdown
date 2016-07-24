@@ -8,17 +8,16 @@ title: "Chapter 9: Property Animators"
 
 ## Introduction
 
-TODO: Summary of property animator
-
 If you've done any animations in UIKit you've probably used the UIView animation methods (`UIView.animate(withDuration:animations:)` and friends). `UIViewPropertyAnimator` is a new way to write animation code. It isn't a replacement for the existing API, nor is it objectively "better", but it does give you a lot of control that wasn't possible before. 
 
 In this chapter you'll learn about the following new features that property animators give you access to:
 
-- Detailed control over animation timing
+- Detailed control over animation timing curves
+- A superior spring animation
 - Monitoring and altering of animation state
-- Pause, reverse and scrub animations
+- Pause, reverse and scrub animations or abandon them part-way through
 
-TODO: Places where using this would make sense
+The fine control over animation timing alone would make a property animator an improvement for your existing UIView animations, but where they really shine is when you are creating animations that aren't just fire-and-forget. If you're animating something in response to user gestures, or if you want the user to be able to grab an animating object and do something else with it, then property animators are your new best friend. 
 
 ## Getting started
 
@@ -305,32 +304,223 @@ Stopping an animator is, or can be, a two-stage process. Here's the breakdown of
 2. There's nothing to do for the inactive state
 3. A stopped animator should be finished at the current position. 
 
-If you're feeling a little confused at this point, don't worry. A property animator can be paused, stopped or finished, and those all mean different things. 
+Build and run the project then do the following:
 
-* Reversing [Theory]
+- Tap the animate button to start the animation
+- Tap the frog to pause the animation
+- Tap the stop button to stop the animation
+- Tap the stop button _again_ to finish the animation.
 
-What this means, how you'd use it
+If you're feeling a little confused at this point, don't worry. A property animator can be paused, stopped or finished, and those all mean different things: 
 
-* Animalation: reversing [instruction]
+### Paused
 
-Reverse the animations as in the screencast, 
-Impact on completion handlers
+State: `.active`, Running: `true`. 
 
-* Interruptibility [theory]
+This is a running animator that you've called `pauseAnimation()` on. All of the animations are still in play. The animations can be modified, and the animator can be started again by calling `startAnimation()`.
 
-What it means, how it benefits an app
+### Stopped
 
-* Interruptibility [instruction]
+State: `.stopped`, Running: `false`.
 
-Allow an in-flight update to be taken over by tapping somewhere else, so it smoothly turns to the new destination. Not sure how much of this is out of the box but it wasn't covered in the screencast.
+This is a running or paused animator that you've called `stopAnimation(_:)` on, passing `false`. All of the animations are removed, and the views that were being animated have their properties updated to the current state as determined by the animation. The completion block has not been called. You can finish the animation by calling `finishAnimation(at:)`, passing `.end`, `.start` or `.current`. 
 
-* Working together [Theory and instruction]
+### Finished
 
-Multiple property animators - how to animate multiple things - can do by adding additional animations as well as the multiple animators approach shown in the screencast
+State: `.inactive`, Running: `false`.
 
-morph animal example from the screenshot
+This is an animator that's got to the end of its animations naturally, or a running animator that you've called `stopAnimation(_:)` on, passing `true`, or a stopped animator that you've called `finishAnimation(at:)` on (you can't call `finishAnimation(at:)` on anything other than a stopped animator). 
+
+The animated views will have their properties set to match the end point of the animation. The completion block for the animator will be called. 
+
+We haven't discussed completion blocks for property animators yet. They're a little different to those from UIView animations, where you get a `Bool` indicating if the animation was completed or not. One of the main reasons they're different is because a property animator can be run in reverse. 
+
+## Reversing
+
+Why would you want to run an animation in reverse? It's all related to making gesture-driven interfaces. Imagine something like a swipe gesture to dismiss a presented view, then the user decides not to dismiss it and swipes back slightly in the other direction. A property animator can take all of this into account and run the animation back to the start point, without you having to store or recalculate anything. 
+
+To demonstrate this in the sample app, you're going to change the function of the **Animate** button. If you tap it while an animation is running, it's going to reverse the animation. 
+
+In **ViewController.swift** find `handleAnimateButtonTapped(_:)` and replace the implementation with the following:
+
+```swift
+if let imageMoveAnimator = imageMoveAnimator, imageMoveAnimator.isRunning {
+  imageMoveAnimator.isReversed = !imageMoveAnimator.isReversed
+} else {
+  animateAnimalToRandomLocation()
+}
+```
+
+For a running animation, this will toggle the reversed property, otherwise it will start the animation as before. 
+
+Build and run and tap the animate button, then tap it again - you'll see the frog return to its original position, but still using the spring timing to settle naturally back into place! You can see that the **isReversed** indicator on the screen updates.
+
+> TODO: This doesn't update in beta 3
+
+You now have three different ways that the animation can end - it can finish normally, you can stop it half way, or you can reverse it and it finishes where it started. This is useful information to know when you have a completion block on the animation, so you're going to add one now.
+
+In `animateAnimalTo(location: initialVelocity:)`, add the following code after you call `addAnimations(_:)`:
+
+```swift
+imageMoveAnimator?.addCompletion { position in
+  switch position {
+  case .end: print("End")
+  case .start: print("Start")
+  case .current: print("Current")
+  }
+}
+```
+
+The completion block takes a `UIViewAnimatingPosition` enum as its argument, which tells you the state of the animator when it finished.
+
+Build and run the project and try to obtain all three completion block printouts by ending the animation at the end, start or somewhere in the middle.  
+
+For a more practical demonstration of the various states of a completion block, you're going to add a second animation and run the two of them together.
+
+## Multiple animators
+
+You can add as many changes as you like to a single property animator, but it's also possible to have several animators working on the same view. You're going to add a second animator to run alongside the first, which will change the animal image displayed.
+
+In **ViewController.swift** add the following array of images, before the class declaration of ViewController:
+
+```swift
+let animalImages = [#imageLiteral(resourceName: "bear"), #imageLiteral(resourceName: "frog"), #imageLiteral(resourceName: "wolf"), #imageLiteral(resourceName: "cat")]
+```
+
+You'll see the pasted code transform into image literals... how cool is that? 
+
+Next, underneath the declaration for `imageMoveAnimator`, add a declaration for the second animator:
+
+```swift
+var imageChangeAnimator: UIViewPropertyAnimator?
+```
+
+In the extension where `animateAnimalToRandomLocation()` is, add the following new method:
+
+```swift
+private func animateRandomAnimalChange() {
+  //1
+  let randomImage = animalImages[Int(arc4random_uniform(UInt32(animalImages.count)))]
+  //2
+  let duration = imageMoveAnimator?.duration ?? 3.0
   
-* Where To Go From Here?
+  //3
+  let snapshot = animalImageView.snapshotView(afterScreenUpdates: false)!
+  imageContainer.addSubview(snapshot)
+  animalImageView.alpha = 0
+  animalImageView.image = randomImage
+  
+  //4
+  imageChangeAnimator = UIViewPropertyAnimator(duration: duration, curve: .linear) {
+    self.animalImageView.alpha = 1
+    snapshot.alpha = 0
+  }
+  
+  //5
+  imageChangeAnimator?.addCompletion({ (position) in
+    snapshot.removeFromSuperview()
+  })
+  
+  //6
+  imageChangeAnimator?.startAnimation()
+}
+```
 
-iOS animations by tutorials!!
+Here's the play-by-play:
 
+1. Select a random destination image from the array you just created
+2. You want the duration of this animation to match that from the move animation. Remember how with a spring animation, the duration you pass in is ignored? What happens instead is that the duration is calculated based on the spring parameters, and is available for you to use via the `duration` property. 
+3. Here you set up the animation - take a snapshot of the current animal, add that to the image container, make the actual image view invisible and set the new image.
+4. Create a new animator with a linear timing curve (you don't really want a spring for a fade animation!) and within that, fade in the image view and fade out the snapshot for a cross-dissolve effect
+5. When the animation is complete, remove the snapshot
+6. Start the animation
+
+Add a call to this method in `handleAnimateButtonTapped(_:)`, right after the call to `animateAnimalToRandomLocation()`:
+
+```swift
+animateRandomAnimalChange()
+``` 
+
+Build and run and hit the animate button, and you'll see the image cross-fade while it moves:
+
+![ipad](images/Animalation4.png)
+
+> **Note:** The animal won't always change. Sometimes the randomly selected animal is the same as the one that's already there! 
+
+If you pause the animation, you'll see that the cross-fade merrily continues. This might be what you want - it can be handy to have independent animations on the same object. However, you're going to sync up the state of the two animators. 
+
+Find `handleTapOnImage(_:)` and where you pause or start `imageMoveAnimator`, do the same to `imageChangeAnimator`:
+
+```swift
+case .active:
+  if imageMoveAnimator.isRunning {
+    imageMoveAnimator.pauseAnimation()
+    imageChangeAnimator?.pauseAnimation()
+    progressSlider.isHidden = false
+    progressSlider.value = Float(imageMoveAnimator.fractionComplete)
+  } else {
+    imageMoveAnimator.startAnimation()
+    imageChangeAnimator?.startAnimation()
+  }
+```
+
+Change `handleProgressSliderChanged(_:)` to adjust the second animator by adding this line:
+
+```swift
+imageChangeAnimator?.fractionComplete = CGFloat(sender.value)
+```
+
+In `handleAnimateButtonTapped(_:)`, after you set the reversed state of the move animator, mirror it for the image change animator:
+
+```swift
+imageChangeAnimator?.isReversed = imageMoveAnimator.isReversed
+```
+
+Finally, handle the stopping. You're not going to do quite the same here - abandoning the fade animation half way through would look rather odd. In `handleStopButtonTapped(_:)`, after you stop the move animator, just pause the image change animator:
+
+```swift
+imageChangeAnimator?.pauseAnimation()
+```
+
+After you finish the move animator, add this code:
+
+```swift
+if let imageChangeAnimator = imageChangeAnimator,
+  let timing = imageChangeAnimator.timingParameters {
+  imageChangeAnimator.continueAnimation(withTimingParameters: timing,
+                                        durationFactor: 0.2)
+}
+```
+
+`continueAnimation` allows you to swap in a brand new timing curve (or spring) and a duration factor, which is used as a multiplier of the original animation duration. You can only do this to a paused animator. This means your fade animation will quickly finish, while the move animation has stopped. This is an example of the great flexibility and control that property animators can give you.  
+
+Build and run the app and try pausing, scrubbing, stopping, finishing (remember to tap "stop" _twice_ to finish) and reversing the animation. You'll notice a problem when you reverse - the animal disappears! Where's your doggone frog gone?
+
+Remember what's happening in the fade animation - a snapshot of the old image is added, the image view is updated and made transparent, then a cross fade happens. In the completion block the snapshot is removed. 
+
+If the animation is reversed, when it "finishes" (i.e. gets back to the start), the image view is transparent and the snapshot view is removed - that means you can't see anything. You need to do different things in the completion block depending on the position the animation ended in. 
+
+Go to `animateRandomAnimalChange()` and add the following line before you take the snapshot:
+
+```swift
+let originalImage = animalImageView.image
+```
+
+This keeps a reference to the original animal, which you'll need if the animation is reversed. Add the following code to the completion block:
+
+```swift
+if position == .start {
+  self.animalImageView.image = originalImage
+  self.animalImageView.alpha = 1
+}
+```
+
+This code restores the alpha and the image as they were before the animation started.
+
+Build and run again, reverse the animation and behold! No more disappearing animals! 
+
+## Where To Go From Here?
+
+Congratulations! You've had a good exploration of the new powers available to you now that you can use property animators! Go forth and fill your apps with interruptible, interactive animations! 
+
+There's a lot more detail on property animators in our excellent book, **iOS Animations By Tutorials**! Check it out!
