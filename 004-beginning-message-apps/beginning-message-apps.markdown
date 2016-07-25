@@ -1,10 +1,10 @@
 ```metadata
 author: "By Rich Turton"
-number: "5"
-title: "Chapter 5: Beginning Message Apps"
-section: 2
+number: "4"
+title: "Chapter 4: Beginning Message Apps"
+
 ```
-# Chapter 5: Beginning Message Apps
+# Chapter 4: Beginning Message Apps
 
 iOS 10 brought some fun features to iMessage – and also opened up the app to third party developers. This means you can create and sell things to use in iMessage such as applications and sticker packs, and unlike other extension points, Messages apps don't need to have a "standard" iOS app to work.
 

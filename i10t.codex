@@ -9,7 +9,7 @@ segments:
   - kind: chapter
     path: placeholders/003-xcode-8-source-editor-extensions.markdown
   - kind: chapter
-    path: 004-beginning-message-apps/beginning-message-apps.markdown.markdown
+    path: 004-beginning-message-apps/beginning-message-apps.markdown
   - kind: chapter
     path: 005-intermediate-message-apps/intermediate-message-apps.markdown
   - kind: chapter

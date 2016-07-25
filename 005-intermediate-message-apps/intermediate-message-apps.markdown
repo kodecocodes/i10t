@@ -1,9 +1,9 @@
 ```metadata
 author: "By Rich Turton"
-number: "6"
-title: "Chapter 6: Intermediate Message Apps"
+number: "5"
+title: "Chapter 5: Intermediate Message Apps"
 ```
-# Chapter 6: Intermediate Message Apps
+# Chapter 5: Intermediate Message Apps
 
 In the previous chapter, you saw how to build apps containing custom stickers for use in Messages. Stickers are great, but you can do far more than that.
 

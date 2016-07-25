@@ -1,9 +1,9 @@
 ```metadata
 author: "By Jeff Rames"
-number: "10"
-title: "Chapter 10: User Notifications"
+number: "8"
+title: "Chapter 8: User Notifications"
 ```
-# Chapter 10: User Notifications
+# Chapter 8: User Notifications
 
 Consider your favorite apps. It's likely that a good portion of them leverage some type of User Notification. 
 
@@ -41,6 +41,8 @@ Take a few minutes and explore the below items in the starter project:
 - **Main.storyboard** defines the simple UI you've already seen in full while testing the app.
 - **Utilities** contains some helpers you'll use during this tutorial.
 - **Supporting Files** contains artwork attributions, the plist, and images you'll display in your notifications.
+
+$[=s=]
 
 ## The User Notifications framework
 
