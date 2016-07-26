@@ -300,7 +300,7 @@ Edit the **Coloji** scheme, select the build action and select the Diagnostics t
 
 ![width=90% bordered](./images/enable-thread-sanitizer.png)
 
-
+Build and run. As soon as the table view loads, 
 
 * Intro  [Theory]
   * Review the dispatch group code that loads colors & emojis
@@ -312,6 +312,7 @@ Edit the **Coloji** scheme, select the build action and select the Diagnostics t
 * Fixing the Race Condition [Instruction]
 
   Fix the race, verifying the results via build & run as well as sanitizer 
+<<<<<<< HEAD
 ##View Debugging
 
 With great trepidation, you notice another pull request from Ray—open **Coloji.xcodeproj** in the **view-debugging** folder to see it. Build and run, and navigate around a bit. It's tough to tell if the threading was fixed yet, because now the cells and detail views are completely blank!
@@ -420,6 +421,14 @@ Build and run, select an emoji from the table, and the emoji is back to being ce
 In the past, if you created or modified your constraints automatically, you were pretty much on your own with runtime issues. You had to dig through often confusing console logs and study your constraint code without much direction. Layout issue warnings in the view debugger have changed all this, bringing the ease of design time constraint warnings to runtime.
 
 Having fixed these last couple of issues, it's just a simple matter of sending the feedback to Ray and getting Coloji out the door. What could go wrong?
+  
+##Static Analyzer Enhancements [Reference]
+(this will get dumped if length is an issue)
+About a paragraph about each of these.  I'll put in some screenshots, but won't tie this into Coloji.
+
+* Localizability
+* Instance Cleanup
+* Nullability
 
 ##Where to Go From Here?
 * WWDC Videos
