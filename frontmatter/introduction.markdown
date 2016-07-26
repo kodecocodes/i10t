@@ -25,8 +25,8 @@ By purchasing this book early, you get early access to this book while it is in 
 
 Since this book is still in early access, not all chapters are ready at this point. This first early access release has the 3/14 chapters ready:
 
-* Chapter 5, Beginning Message Apps
-* Chapter 6, Intermediate Message Apps
+* Chapter 4, Beginning Message Apps
+* Chapter 5, Intermediate Message Apps
 * Chapter 8, User Notifications
 
 You may wish to wait until all chapters are ready before reading the book, to get an optimal reading experience, or check out the iOS 10 screencasts which we are releasing, which this book is based on.
