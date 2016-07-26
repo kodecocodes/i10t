@@ -121,9 +121,9 @@ Fortunately, it's easy to enable malloc stack logging. Select **Coloji** from yo
 
 ![width=30% bordered](./images/edit-scheme.png)
 
-In the scheme editor, select Run on the left, then the Diagnostics tab at the top. Under Logging, check **Malloc Stack** and then choose **Live Allocations Only**. Selecting live allocations only requires fewer resources and still retains the logging you need while in the Memory Debugger.
+In the scheme editor, select the Run action on the left, then the Diagnostics tab at the top. Under Logging, check **Malloc Stack** and then choose **Live Allocations Only**—this requires fewer resources and still retains the logging you need while in the Memory Debugger. Now select **Close**.
 
-![width=50% bordered](./images/enable-malloc-stack.png)
+![width=90% bordered](./images/enable-malloc-stack.png)
 
 Build and run again, scroll the table a bit, and enter the Memory Debugger. As before, navigate to the Issue navigator and select one of the `ColojiCellFormatter` leaks. 
 
@@ -280,26 +280,27 @@ This code is doing the following:
 
 It looks like Ray was trying to improve efficiency by letting the coloji data store operations run concurrently. Concurrency and random results together are a very strong indicator that there is a race condition at play.
 
-Fortunately, the new Thread Sanitizer makes it easy to track down race conditions. Like the Memory Graph and View Debuggers, it provides runtime feedback right in the Issue navigator when enabled. It looks like this:
+Fortunately, the new Thread Sanitizer makes it easy to track down race conditions. Like the Memory Graph and View Debuggers, it provides runtime feedback right in the Issue navigator. It looks like this:
 
 ![width=40% bordered](./images/tsan-issue-navigator-preview.png)
 
-After years of struggling with <insert tools> this is a thing of beauty. One of the toughest issues in development refined down to a warning in the Issue navigator!  TODO: probably modify this, and maybe add a rageface
+After years of frantically digging through code in your problem area looking for issues that might cause a race—this tool is a life saver. One of the toughest issues in development refined down to a warning in the Issue navigator!
 
-It's important to note that Thread Sanitizer only works in the simulator. This is contrary to how you've probably been debugging race conditions, where a device is the better choice. Threading issues often behave differently on devices versus the simulator due to the different ways the platforms manage threading.
+![width=30% bordered](./images/horrible-mistake.png)
 
-However, the sanitizer can detect races even when they don't occur on a given run, as long as the operations involved in the race are kicked off. Thread sanitizer does this by monitoring the way competing threads access data. If it's able to see the opportunity for a race, a warning is provided.
+It's important to note that Thread Sanitizer only works in the simulator. This is contrary to how you've probably been debugging race conditions, where a device is the better choice. Threading issues often behave differently on devices versus the simulator due to timing and speed differences of their different processors.
 
->**Note**: Before you run off on a mad dash to find all of the horrible races in your current projects, keep in mind this tool only works with Swift 3.0. TODO: based on some tweet I saw from Apple, this might not be true - it maybe is supposed to work with Obj-C?  Need to verify.
+However, the sanitizer can detect races even when they don't occur on a given run, as long as the operations involved in the race are kicked off. Thread sanitizer does this by monitoring the way competing threads access data. If sees the opportunity for a race, a warning is provided.
 
-When you run on the simulator with Thread Sanitizer
-
-TODO: create the high level overview here
+Using Thread Sanitizer is as simple as turning it on, running your app in the simulator, and exercising the code where a race might exist. For this reason, it works well along with unit testing, and should ideally be run on a regular basis.
 
 ###Using Thread Sanitizer
-TODO: Do I need to remind the reader to turn off the memory debugging option before proceeding?  (probably do this at the same time you turn on the sanitizer)
 
-(I plan to have the async code already in the starter—which differs from the screencast—but may have users add this if this is too short)
+Edit the **Coloji** scheme, select the build action and select the Diagnostics tab. If **Malloc Stack** is still checked from your Memory Debugging, uncheck it as it cannot be enabled while running the Thread Sanitizer. Now check **Thread Sanitizer** and then select **Close**.
+
+![width=90% bordered](./images/enable-thread-sanitizer.png)
+
+
 
 * Intro  [Theory]
   * Review the dispatch group code that loads colors & emojis
