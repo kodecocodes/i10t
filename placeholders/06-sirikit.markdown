@@ -1,8 +1,8 @@
 # SiriKit
 ```metadata
 author: "By Rich Turton"
-number: "4"
-title: "Chapter 4: SiriKit"
+number: "6"
+title: "Chapter 6: SiriKit"
 ```
 
 This is an early access release of this book, and this chapter is still currently under development.
