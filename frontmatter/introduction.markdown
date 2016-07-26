@@ -7,15 +7,17 @@ title: "Introduction"
 
 Each year at WWDC, Apple introduces brand new tools and APIs for iOS developers. This year, iOS 10 and Xcode 8 has brought a lot of new goodies to play with!
 
-First, iOS 10 brought some fun features to Messages – and also opened up the app to third party developers. The first option available to developers is the ability to create and sell sticker packs - simple, but sure to be popular. The second option is to go deeper and create fully interactive message experiences. For example, in this book you'll learn how to create a simple drawing guessing game right within Messages.
+First, iOS 10 brought some fun features to Messages – and also opened up the app to third party developers. First, developers can now create and sell sticker packs - simple, but sure to be popular. Second, developers can go deeper and create fully interactive message experiences. For example, you could create a simple drawing guessing game right within Messages - in fact, you'll learn how to do that in this book.
 
-Second, iOS 10 brings a feature long wished for by developers - the ability to integrate with Siri! If your app fits into a limited number of categories, you can create a new Intents Extension to handle voice requests by users in your own apps. You can also use the new iOS 10 speech recognizer within your own apps.
+Second, iOS 10 brings a feature long wished for by developers - the ability to integrate with Siri! If your app fits into a limited number of categories, you can create a new Intents Extension to handle voice requests by users in your own apps. Regardless of your app's category, you can also use the new iOS 10 speech recognizer within your own apps.
 
-Third, Xcode 8 represents a significant new release. It ships with Swift 3, which has a number of syntax changes that will affect all developers. In addition. Xcode comes with a number of great new debugging tools to help you diagnose memory and threading issues that you're sure to love.
+Third, Xcode 8 represents a significant new release. It ships with Swift 3, which has a number of syntax changes that will affect all developers. In addition. Xcode comes with a number of great new debugging tools to help you diagnose memory and threading issues.
 
 And that's just the start - iOS 10 is chock-full of new content and changes that every developer should know about. Gone are the days when every 3rd-party developer knew everything there is to know about the OS. The sheer size of iOS can make new releases seem daunting. That's why the Tutorial Team has been working really hard to extract the important parts of the new APIs, and to present this information in an easy-to-understand tutorial format. This means you can focus on what you want to be doing — building amazing apps!
 
-Get ready for your own private tour through the amazing new features of iOS 9. 10 y the time you're done, your iOS knowledge will be completely up-to-date and you'll be able to benefit from the amazing new opportunities in iOS 10.
+$[=s=]
+
+Get ready for your own private tour through the amazing new features of iOS 10. By the time you're done, your iOS knowledge will be completely up-to-date and you'll be able to benefit from the amazing new opportunities in iOS 10.
 
 Sit back, relax and prepare for some high quality tutorials!
 
@@ -68,7 +70,7 @@ Looking for some recommendations of important chapters to start with? Here's our
 - Chapter 4, "Beginning Message Apps"
 - Chapter 5, "Intermediate Message Apps"
 - Chapter 6, "SiriKit"
-- Chapter 9, "User Notifications"
+- Chapter 8, "User Notifications"
 
 That covers the "Big 6" topics of iOS 10; from there you can dig into other topics of particular interest to you. 
 

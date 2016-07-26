@@ -13,7 +13,7 @@ segments:
   - kind: chapter
     path: 05-intermediate-message-apps/intermediate-message-apps.markdown
   - kind: chapter
-    path: placeholders/06-sirikit.markdown.markdown
+    path: placeholders/06-sirikit.markdown
   - kind: chapter
     path: placeholders/07-speech-recognizer.markdown
   - kind: chapter
