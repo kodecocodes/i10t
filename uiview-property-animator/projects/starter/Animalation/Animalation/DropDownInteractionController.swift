@@ -23,6 +23,7 @@
 import UIKit
 
 class DropDownInteractionController: UIPercentDrivenInteractiveTransition {
+  
   var isInteractive = false
   
   private weak var viewController: UIViewController?
@@ -36,7 +37,6 @@ class DropDownInteractionController: UIPercentDrivenInteractiveTransition {
   }
   
   func handle(pan: UIPanGestureRecognizer) {
-    
     let translation = pan.translation(in: pan.view).y
     let percent = (translation / pan.view!.bounds.height)
     
@@ -58,4 +58,5 @@ class DropDownInteractionController: UIPercentDrivenInteractiveTransition {
       cancel()
     }
   }
+  
 }

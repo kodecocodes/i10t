@@ -154,8 +154,6 @@
 				TargetAttributes = {
 					222541721D2D0D3500245389 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = D23W9URMHY;
-						DevelopmentTeamName = "Sam Davies";
 						ProvisioningStyle = Automatic;
 					};
 				};
