@@ -1,8 +1,8 @@
 
 ```metadata
 author: "By Jeff Rames"
-number: "10"
-title: "Chapter 10: User Notifications"
+number: "2"
+title: "Chapter 2: Xcode 8 Debugging Improvements"
 ```
   
 # Chapter 2: Xcode 8 Debugging Improvements
@@ -17,21 +17,26 @@ This chapter will cover three tools:
 
 In this chapter, you'll be playing the role of a senior developer at *Nothin' But Emojis LLC*, where you spend your days cranking out mind blowing emoji related products for iOS. Today you're assisting the boss' nephew—Ray Nooberlich—with a highly anticipated product called Coloji that lets users view curated colors and emojis.
 
-Ray is a bit new—arguably too new to be the primary resource on such an important project. As you help him get the app up and running, you'll find these new tools invaluable for debugging peculiar runtime issues.
+Ray is a bit new—arguably too new to be the primary resource on such an important project. As you help him get the app up and running, you'll find these new tools invaluable for debugging the tricky runtime issues he throws your way.
 
-TODO: prerequisites?
+If you've not used the View Debugger before, you may want to brush up with *View Debugging in Xcode 6* at [raywenderlich.com/98356](https://www.raywenderlich.com/98356). The other tools are brand new, so just bring your desire to crush bugs!
 
-##Getting Started
+## Getting Started
 
-The design specifications for Coloji indicate a master detail design. The master is a table view with cells displaying colojis, which can be colors or emojis. The detail view for color colojis shows the selected color in full screen. For emojis, it shows a large view of the emoji centered in the view.
+The design specifications for Coloji indicate a master detail interface. The master is a table view with cells displaying colojis, which consist of colors and emojis. The detail view for color colojis shows the selected color in full screen. For emojis, it shows a large view of the emoji centered in the view.
 
 Below is a preview of what the finished project will look like:
-TODO: Add screenshot showing master and detail view with an arrow from one of the cells
 
-Here's the problem—it's going to be a while before you get something in good shape from Ray. Here's a rundown of issues you'll face, and what tools you'll be able to use to resolve them: 
+![width=80%](./images/final-project-screenshot.png)
+
+Here's the problem—it's going to be a while before you get something in good shape from Ray Nooberlich. He means well, and he's trying—but just look at him. This could easily be the picture for newbie on Wikipedia.
+
+![width=50%](./images/ray-by-faud.jpeg)
+
+Here's a rundown of issues you'll face, and what tools you'll be able to use to resolve them: 
 
 1. You'll initially notice the memory footprint of Coloji continues to grow during use. You'll use the new Memory Graph Debugger to clean this up.
-2. In his next attempt, you'll use the View Debugger to determine why the table view cells aren't loading anymore. Then you'll leverage the run time constraint debugger while creating the mysteriously missing emoji detail view.
+2. In his next attempt, you'll use the View Debugger to determine why the table view cells aren't loading anymore. Then you'll leverage the run time constraint debugger while rebuilding the mysteriously missing emoji detail view.
 3. You'll run into a newly introduced race condition and use Thread Sanitizer to hunt it down.
 
 You just received a pull request from Ray with what he hopes is the completed project. Open **Coloji.xcodeproj** in the **memory-debugging** folder and take a look at what he pushed. Here are some notes on the most important pieces:
@@ -44,47 +49,27 @@ Build and run, scroll around a bit, and select a few cells. So far, it seems to 
 
 Open the Debug navigator and select **Memory** to display the Memory Report. Note the memory in use by Coloji under the Usage Comparison view. In Coloji, start scrolling the table view up and down, and you'll see the memory usage growing.
 
-![width=100% bordered](./images/memory-usage-growth.png)
+![width=90% bordered](./images/memory-usage-growth.png)
 
 It's pretty clear Coloji is leaking memory somewhere in this table view. What a great opportunity to check out Memory Graph Debugging!
 
+## Memory Graph Debugging
 
---TODO: this chunk is from the prior version.  May be able to reuse some of it--
+It's pretty clear Coloji is leaking memory somewhere in this table view. In the past, your best bets were the Allocations or Leaks instruments. They are still options, but are resource intensive and require a lot of manual analysis.
 
-In the past, your best bet was the Allocations instrument. It's still an option, but it is resource intensive and requires a lot of manual analysis.
-
-With Xcode 8, the Memory Graph Debugger has taken a lot of the work out of finding a memory leak. The tool not only lets you visually explore all objects in memory when it is invoked, but it also flags occurrences of issues like leaks.  [TODO: Does it actually flag more than just leaks?]
-
-
-
-Build and run...and wait a while. The first issue becomes immediately evident, as it takes approximately one second to load, which is a lifetime for a user waiting to explore colors and emojis.
-
-Try selecting a few cells, some at the top and some at the bottom, and you'll see several empty detail views and a few with background colors. This is because the emoji detail views are not yet implemented. t's not looking pretty.
-
-TODO: Add screenshot showing master and detail view with an arrow from one of the cells
-
-You already know there is an issue with the code that lays out the table view cells and a problem with slow startup time. Here's a quick rundown of all of the issues you're about to face, and the plan to tackle them:
-
-
---TODO: end chunk of stuff you might be able to use elsewhere ---
-
-##Memory Graph Debugging
-
-It's pretty clear Coloji is leaking memory somewhere in this table view. In the past, your best bet was the Allocations or Leaks instruments. They are still an option, but are resource intensive and require a lot of manual analysis.
-
-The Memory Graph Debugger has taken a lot of the work out of finding leaks. It not only helps you visualize your memory usage graph, but it even automatically flags potential leaks.
+The Memory Graph Debugger has taken a lot of the work out of finding leaks.
 
 When you trigger the debugger, you're able to view and filter the heap in the Debug navigator. Knowing what objects currently exist is the first step in identifying a leak—if you see something there that shouldn't be, you know to dig deeper. 
 
-After you find an object that shouldn't exist, the next step is understanding why it exists. The memory graph debugger allows you to view root analysis graphs that show the relation between all objects. When you select an object from the navigator, you can quickly view its root analysis graph to understand what references are keeping it around.
+After you find an object that shouldn't exist, the next step is to understand why it does. When you select an object in the navigator, it will reveal a root analysis graph that shows that object's relation to all associated objects. This provides you with a literal picture of what references are keeping your object around.
 
 On top of this, the tool also flags occurrences of potential leaks and displays them in a manner similar to compiler warnings. The warnings can take you straight to the associated memory graph as well as a backtrace. Finding leaks has never been this easy!
 
-TODO: Add a reference cycle graph—if I can figure out how to create one.  Might want to add some other graphics here but I don't want to duplicate stuff in the main text too much.
+TODO: should I add any graphics here?
 
-###Finding the Leak
+### Finding the Leak
 
-It's time to check these tools out firsthand to see what is causing Coloji to leak.
+It's time to check the Memory Graph Debugger out firsthand to see what is causing Coloji to leak.
 
 Build and run and scroll the table view around a bit. Then, select the **Debug Memory Graph** button on the Debug bar.
 
@@ -94,18 +79,17 @@ First, check out the Debug navigator where you'll see a list of all objects in t
 
 ![width=40% bordered](./images/debug-navigator-memory-graph.png)
 
-There sure are a lot of `ColojiCellFormatter`s (173 in this case) and `ColojiLabel`s (181 here) in the heap. The amount you see will vary based on how much you scrolled the table, but anything over about 8 is a red flag. The `ColojiCellFormatter` should only exist while the cell is being configured, and there should only be one `ColojiLabel` per visible cell. 
-TODO: Maybe there should only be a single formatter.  Check this after it's fixed and correct above text. 
+There sure are a lot of `ColojiCellFormatter`s (173 in this case) and `ColojiLabel`s (181 here) in the heap. The amount you see will vary based on how much you scrolled the table, but anything over the number of visible cells on your table view is a red flag. The `ColojiCellFormatter` should only exist while the cell is being configured, and there should only be one `ColojiLabel` per visible cell. 
 
 This alone gives you a good idea that there is a leak somewhere in cell creation. But the Memory Graph Debugger has gone a bit further by providing a warning label right next to memory addresses of `ColojiCellFormatter` instances. To investigate the warning, select the warning icon in the activity viewer in the workspace toolbar.
 
 ![width=90% bordered](./images/activity-viewer.png)
 
-> **Note**: You can alternatively select the Issue navigator directly in from the Navigator pane.
+> **Note**: You can alternatively select the Issue navigator directly from the Navigator pane.
 
 This will take you to the Issue navigator, where a few memory leaks are flagged with multiple instances of each. Be sure that you have **Runtime** issues selected in the toggle if they weren't already. 
 
-![width=90% bordered](./images/leak-issues-navigator.png)
+![width=40% bordered](./images/leak-issues-navigator.png)
 
 Select one of the instances of a `ColojiCellFormatter` leak, and you'll see a graph appear in the editor. This graph illustrates a retain cycle, where the `ColojiCellFormatter` references a Swift capture context (a closure) and the closure has a reference to the `ColojiCellFormatter`.
 
@@ -119,7 +103,7 @@ The backtrace would be a lot more helpful if it was actually there. It's off by 
 
 Fortunately, it's easy to enable malloc stack logging. Select **Coloji** from your schemes, and then click **Edit Scheme**:
 
-![width=30% bordered](./images/edit-scheme.png)
+![width=20% bordered](./images/edit-scheme.png)
 
 In the scheme editor, select the Run action on the left, then the Diagnostics tab at the top. Under Logging, check **Malloc Stack** and then choose **Live Allocations Only**—this requires fewer resources and still retains the logging you need while in the Memory Debugger. Now select **Close**.
 
@@ -156,19 +140,21 @@ To fix it, change the `cell in` line to:
 [unowned self] cell in
 ```
 
-You've specified an unowned reference to self via the capture list, removing the strong reference to `ColojiCellFormatter`. This breaks the retain cycle. Build and run, restart the Memory Debugger, and get back into the Issue navigator to confirm the leak warnings are gone.
+You've specified an unowned reference to self via the capture list, removing the strong reference to `ColojiCellFormatter`. This breaks the retain cycle. 
+
+Build and run, restart the Memory Debugger, and get back into the Issue navigator to confirm the leak warnings are gone.
 
 ![width=40% bordered](./images/cleared-memory-leaks.png)
 
-###Improving Memory Usage
+### Improving Memory Usage
 
-The leaks are gone, but you might have noticed another issue in the Debug navigator. There are quite a few `ColojiLabel`s hanging around in the heap, while you only need one per visible cell. It depends on how many times you've loaded the cell, but note the count of labels in this example:
+The leaks are gone, but you might have noticed another issue in the Debug navigator. There are quite a few `ColojiLabel`s hanging around in the heap, while you only need one per visible cell. It depends on how many times you've loaded cells, but note the 44 labels sitting around in this example:
 
 ![width=40% bordered](./images/extra-coloji-labels.png)
 
 Select a few instances of `ColojiLabel` from the Debug navigator, and you'll see varying graphs as the state of objects associated with each instance change over time. In all cases, however, you should see the ColojiLabel is tied to a `ColojiTableViewCell`:
 
-![width=80% bordered](./images/coloji-label-graph.png)
+![width=90% bordered](./images/coloji-label-graph.png)
 
 On the graph, select the ColojiLabel and then the top active line in the backtrace. This should take you to `addLabel(coloji:)` in **ColojiTableViewCell.swift**, where the ColojiLabel is created. The contents of the method looks like this:
 
@@ -227,11 +213,11 @@ Build and run, scroll the table a bit, enter the Memory Debugger and return to t
 
 Now it's time to walk Ray through the changes, and trust that he'll get it right in the next push.  What could go wrong?
 
-##Thread Sanitizer 
+## Thread Sanitizer 
 
 Well, something went wrong. Open **Coloji.xcodeproj** in the **thread-sanitizer** folder to see what Ray sent over after fixing the memory issues.
 
-Build and run, and while the memory issues were resolved, you're now seeing something new. The cells aren't loading in order, and some of them are even missing. Each time you run different cells appear in different order, but here's a look at one attempt:
+Build and run, and while the memory issues were resolved, you're now seeing something new. Data is missing, and you're only seeing a random sample of cells. Each time you run, different cells may appear, but here's a look at one attempt:
 
 ![iPhone bordered](./images/coloji-race-condition.png)
 
@@ -284,7 +270,7 @@ Fortunately, the new Thread Sanitizer makes it easy to track down race condition
 
 ![width=40% bordered](./images/tsan-issue-navigator-preview.png)
 
-After years of frantically digging through code in your problem area looking for issues that might cause a race—this tool is a life saver. One of the toughest issues in development refined down to a warning in the Issue navigator!
+After years of frantically digging through code in a problem area looking for issues that might cause a race—this tool is a life saver. One of the toughest issues in development refined down to a warning in the Issue navigator!
 
 ![width=30% bordered](./images/horrible-mistake.png)
 
@@ -294,26 +280,77 @@ However, the sanitizer can detect races even when they don't occur on a given ru
 
 Using Thread Sanitizer is as simple as turning it on, running your app in the simulator, and exercising the code where a race might exist. For this reason, it works well along with unit testing, and should ideally be run on a regular basis.
 
-###Using Thread Sanitizer
+In this section, you're focusing on race conditions as they are the most common use case for Thread Sanitizer. But keep in mind the tool can do more. It can flag thread leaks, the use of uninitiated mutexes, unlocks occurring on the wrong thread and more. 
+
+### Using Thread Sanitizer
+
+The first, and virtually only step for using Thread Sanitizer is to enable it.
 
 Edit the **Coloji** scheme, select the build action and select the Diagnostics tab. If **Malloc Stack** is still checked from your Memory Debugging, uncheck it as it cannot be enabled while running the Thread Sanitizer. Now check **Thread Sanitizer** and then select **Close**.
 
 ![width=90% bordered](./images/enable-thread-sanitizer.png)
 
-Build and run. As soon as the table view loads, 
+Build and run. As soon as the table view loads, Thread Sanitizer will start notifying you of leaks via the workspace toolbar and the Issue navigator. Open the Issue navigator, ensure you have **Runtime** selected, and you should see a number of Threading issues on display.
 
-* Intro  [Theory]
-  * Review the dispatch group code that loads colors & emojis
-  * Describe the assumption that the issue is a race condition
-  * High level overview of the thread sanitizer
-* Using Thread Sanitizer [Instruction]
+The screenshot below focuses on a single data race. In it, you can see a read operation on thread 6 was at odds with a write on thread 13. Each of these operations shows a stacktrace, where you'll see they conflicted on a line within `append()` inside `ColojiDataStore`:
 
-  hunt down the race condition by looking at runtime threading issues
-* Fixing the Race Condition [Instruction]
+![width=60% bordered](./images/thread-sanitizer-issues.png)
 
-  Fix the race, verifying the results via build & run as well as sanitizer 
-<<<<<<< HEAD
-##View Debugging
+Select `ColojiDataStore.append(coloji : Coloji) -> ()` in either trace, and you'll be taken straight to the problem code in the editor. This is the problematic line:
+
+```swift
+self.data = self.data + [coloji]
+```
+
+`data` is an array of `Coloji` objects and this code is appending a new `coloji` to the array. It's not thread safe because there is nothing to prevent two threads from attempting this read / write operation at the same time. That's why Thread Sanitizer identified a situation where one thread was reading, while another was writing.
+
+A simple solution to this to create a DispatchQueue and use it to execute operations on this data serially.
+
+Add the following property to `ColojiDataStore`:
+
+```
+let dataAccessQueue = DispatchQueue(label: "com.raywenderlich.coloji.datastore")
+```
+
+`dataAccessQueue` is the serial queue you will use to control access to the data store array.
+
+Now, replace the three methods in this class with the following:
+
+```swift
+func colojiAt(index: Int) -> Coloji {
+  return dataAccessQueue.sync {
+    return data[index]
+  }
+}
+
+func append(coloji: Coloji) {
+  dataAccessQueue.async {
+    self.data = self.data + [coloji]
+  }
+}
+
+var count: Int {
+  return dataAccessQueue.sync {
+    return self.data.count
+  }
+}
+```
+
+You've wrapped each data access call in a queue operation to ensure none can happen concurrently. Note that `colojiAt(index:)` and `count` are run synchronously, because they're required to return data immediately. `append(coloji:)` is done asynchronously, because it doesn't need to return anything.
+
+Build and run, and you should now see all of your colojis appearing:
+
+![iPhone bordered](./images/coloji-threading-issue-fixed-screenshot.png)
+
+The order can vary, because your data requests run asynchronously, but all of the cells make it to the data source.
+
+To further confirm the race conditions are resolved, take a look at the Issue navigator, and you should now see the race conditions are gone:
+
+![width=40% bordered](./images/fixed-race-condition-issue-navigator.png)
+
+Congrats—you just chased down a race condition by checking a box! Now it's just the simple matter of sending some comments off to Ray, and surely everything will come back just fine.
+
+## View Debugging
 
 With great trepidation, you notice another pull request from Ray—open **Coloji.xcodeproj** in the **view-debugging** folder to see it. Build and run, and navigate around a bit. It's tough to tell if the threading was fixed yet, because now the cells and detail views are completely blank!
 
@@ -329,7 +366,7 @@ There are plenty of more subtle enhancements as well. In the debug navigator, yo
 
 It's time to try out a few of these new features while determining what happened to the cell content.
 
-###Debugging the Cell
+### Debugging the Cell
 
 First, open **ColojiTableViewCell.swift** to get an idea of how the layout of the cell is defined. You'll see a setter for the `coloji` property that calls `addLabel(coloji:)` which places a `ColojiLabel` in the content view using Auto Layout to position it. In this same file, you can see `ColojiLabel` is a UILabel subclass that sets its background color for color cells and provides an emoji as text in emoji cells.
 
@@ -347,7 +384,7 @@ In the Debug navigator, enter **ColojiLabel** in the filter. This will show the 
 
 Select any of the labels, and take a look at the Size inspector. In the Constraints section, you'll be able to see all of the currently active constraints for the label. Looking over the constraints—you'll immediately see something is not right:
 
-![height=35% bordered](./images/label-constraint-zeroes.png)
+![height=40% bordered](./images/label-constraint-zeroes.png)
 
 A 0 height and width certainly explains an invisible label! It's time to check the code to see what has gone wrong with the code that sets the constraints.
 
@@ -355,7 +392,7 @@ To quickly jump to the view's code, switch to the Object inspector. For public c
 
 Back in the debug navigator, move up the label's hierarchy a bit until you get to the public **ColojiTableViewCell**, which happens to reside in the same file as the label. In the Object inspector, you'll now be able to click the annotation to jump right to the source for this class.
 
-![width=30% bordered](./images/source-jump.png)
+![width=40% bordered](./images/source-jump.png)
 
 Now inside **ColojiTableViewCell.swift**, find `addLabel(coloji:)` where the `label` is added to the `contentView` and constrained to its parent. It looks like this:
 
@@ -390,15 +427,15 @@ Not so fast—it appears Ray has struck again! The cells and color detail views 
 TODO: code at this point will just be missing the Y centering constraint
 ![iPhone bordered](./images/emoji-vertically-off-center.png)
 
-###Runtime Constraint Debugging
+### Runtime Constraint Debugging
 
 Missing constraints at runtime are the View Debugger's time to really shine. With an emoji detail view presented, select Debug View Hierarchy again. Once the debugger renders, select the Issue navigator and **Runtime** toggle and you'll see something like this:
 
-![width=30% bordered](./images/layout-issue-warning.png)
+![width=40% bordered](./images/layout-issue-warning.png)
 
 Select the warning and then go to the Size inspector to get a bit more context about the vertical layout. You'll see the same type of info you get during design time in interface builder, but now at runtime!
 
-![width=30% bordered](./images/size-inspector-constraint-warning.png) 
+![width=40% bordered](./images/size-inspector-constraint-warning.png) 
 
 It's pretty easy to see why the vertical layout is ambiguous. The height of the label is defined, but it has no Y position.
 
@@ -422,17 +459,33 @@ In the past, if you created or modified your constraints automatically, you were
 
 Having fixed these last couple of issues, it's just a simple matter of sending the feedback to Ray and getting Coloji out the door. What could go wrong?
   
-##Static Analyzer Enhancements [Reference]
-(this will get dumped if length is an issue)
-About a paragraph about each of these.  I'll put in some screenshots, but won't tie this into Coloji.
+## Static Analyzer Enhancements
 
-* Localizability
-* Instance Cleanup
-* Nullability
+Xcode 8 drastically enhances your ability to debug runtime issues. But it doesn't stop there—the trusty static analyzer has gained a few tricks of its own. But before you get too excited, remember the static analyzer only works with C, C++ and Objective-C.
 
-##Where to Go From Here?
-* WWDC Videos
-* RW View Debugger tutorial (noted that not a ton has changed)
+If you are working with some legacy code, it does have some goodies to offer. In addition to things like logic and memory management flaws, it can now identify problems with localization, instance cleanup, and nullability violations. TODO - wording on the last one.
+
+To use the static analyzer, select Product\Analyze with a project open. If there are issues, a static analyzer icon will be displayed in the activity viewer. Clicking the icon will bring you to the Issue navigator, where you can get more information on the problems it found. 
+
+![width=60% bordered](./images/static-analyser-warning.png)
+
+Localizability will notify you whenever a non localized string is set on a user facing control in a localized app. Consider the situation where you have a method that accepts an `NSString` and uses it to populate a `UILabel`. If the method caller provided a non localized string, static analyzer will flag it and visually indicate the flow of the problem data so you can resolve it.
+
+![width=90% bordered](./images/localizability-tool.png)
+
+Instance Cleanup is the addition of some new warnings around manual retain-release. The mere mention of this probably sends shudders down your spine. But, if you occasionally have to suffer through some legacy code without ARC, know that there are some new checks centered around `dealloc`.
+
+Finally, nullability checking finds logical issues in code containing nullability annotations. This is especially useful for applications that mix Objective-C and Swift. It flags cases where a method with a `_Nonnull` return type has a path that would return nil. 
+
+## Where to Go From Here?
+
+In this chapter, you learned about several great new additions and enhancements to Xcode debugging tools. The Memory Graph Debugger and Thread Sanitizer especially have the potential to save countless developer hours, making difficult problems much easier to identify and visualize. The View Debugger also learned some new tricks with runtime constraint warnings, along with several other niceties.
+
+This chapter provided a basic introduction to what these tools can do, and how to use them. You now know enough to take them for a spin, and see how they fit into your debugging workflow. For more detail on each, check out these WWDC videos:
+
+- Thread Sanitizer and Static Analysis—[apple.co/2aCtz6t](http://apple.co/2aCtz6t)
+- Visual Debugging with Xcode—[apple.co/2as1vVu](http://apple.co/2as1vVu)
+
 
 
 
