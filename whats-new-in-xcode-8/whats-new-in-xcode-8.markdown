@@ -284,23 +284,23 @@ group.notify(queue: DispatchQueue.main) {
 
 This code is doing the following:
 
-1. `group` is a dispatch group created to manage the order of asynchronous operations.
+1. `group` is a dispatch group created to manage the order of tasks added to it.
 2. For each color and emoji in the arrays you just reviewed, an asynchronous operation is kicked off on a `background` thread. Inside, it creates a `coloji` from the color or emoji and then appends it to the store. These are all queued up together in the same `group` so that they can complete as a group.
-3. The `notify` kicks off when all the asynchronous operations complete, based on the `group`. When this is done, the table reloads to display the new colojis.
+3. The `notify` kicks off when all the asynchronous `group` operations complete. When this is done, the table reloads to display the new colojis.
 
 It looks like Ray was trying to improve efficiency by letting the coloji data store operations run concurrently. Concurrency and random results together are a very strong indicator that there is a race condition at play.
 
-Fortunately, the new Thread Sanitizer makes it easy to track down race conditions. Like the Memory Graph and View Debuggers, it provides runtime feedback right in the Issue navigator. It looks like this:
+Fortunately, the new Thread Sanitizer makes it easy to track down race conditions. Like the Memory Graph and View Debuggers, it provides runtime feedback right in the Issue navigator. Here's an example of what it looks like:
 
 ![width=40% bordered](./images/tsan-issue-navigator-preview.png)
 
-After years of frantically digging through code in a problem area looking for issues that might cause a race—this tool is a life saver. One of the toughest issues in development refined down to a warning in the Issue navigator!
+One of the toughest issues in development refined down to a warning in the Issue navigator! This tool will surely safe a lot of headaches.
 
 ![width=30% bordered](./images/horrible-mistake.png)
 
 It's important to note that Thread Sanitizer only works in the simulator. This is contrary to how you've probably been debugging race conditions, where a device is the better choice. Threading issues often behave differently on devices versus the simulator due to timing and speed differences of their different processors.
 
-However, the sanitizer can detect races even when they don't occur on a given run, as long as the operations involved in the race are kicked off. Thread sanitizer does this by monitoring the way competing threads access data. If sees the opportunity for a race, a warning is provided.
+However, the sanitizer can detect races even when they don't occur on a given run, as long as the operations involved in the race are kicked off. Thread sanitizer does this by monitoring the way competing threads access data. If it sees the opportunity for a race, a warning is provided.
 
 Using Thread Sanitizer is as simple as turning it on, running your app in the simulator, and exercising the code where a race might exist. For this reason, it works well along with unit testing, and should ideally be run on a regular basis.
 
@@ -310,11 +310,13 @@ In this section, you're focusing on race conditions as they are the most common 
 
 The first, and virtually only step for using Thread Sanitizer is to enable it.
 
-Edit the **Coloji** scheme, select the build action and select the Diagnostics tab. If **Malloc Stack** is still checked from your Memory Debugging, uncheck it as it cannot be enabled while running the Thread Sanitizer. Now check **Thread Sanitizer** and then select **Close**.
+Edit the **Coloji** scheme, select the Run action and select the Diagnostics tab. If **Malloc Stack** is still checked from your Memory Debugging, uncheck it as it cannot be enabled while running the Thread Sanitizer. Now check **Thread Sanitizer** and then select **Close**.
 
 ![width=90% bordered](./images/enable-thread-sanitizer.png)
 
-Build and run. As soon as the table view loads, Thread Sanitizer will start notifying you of leaks via the workspace toolbar and the Issue navigator. Open the Issue navigator, ensure you have **Runtime** selected, and you should see a number of Threading issues on display.
+>**Note** Although you won't be doing that here, you can also check **Pause on issues** under Thread Sanitizer to have execution pause each time a race is detected. This will break on the problem line and include a message describing the issue.
+
+Build and run. As soon as the table view loads, Thread Sanitizer will start notifying you of threading issues via the workspace toolbar and the Issue navigator. Open the Issue navigator, ensure you have **Runtime** selected, and you should see a number of data races on display.
 
 The screenshot below focuses on a single data race. In it, you can see a read operation on thread 6 was at odds with a write on thread 13. Each of these operations shows a stacktrace, where you'll see they conflicted on a line within `append()` inside `ColojiDataStore`:
 
@@ -323,20 +325,20 @@ The screenshot below focuses on a single data race. In it, you can see a read op
 Select `ColojiDataStore.append(coloji : Coloji) -> ()` in either trace, and you'll be taken straight to the problem code in the editor. This is the problematic line:
 
 ```swift
-self.data = self.data + [coloji]
+data = data + [coloji]
 ```
 
 `data` is an array of `Coloji` objects and this code is appending a new `coloji` to the array. It's not thread safe because there is nothing to prevent two threads from attempting this read / write operation at the same time. That's why Thread Sanitizer identified a situation where one thread was reading, while another was writing.
 
 A simple solution to this to create a DispatchQueue and use it to execute operations on this data serially.
 
-Add the following property to `ColojiDataStore`:
+Still in **ColojiDataStore.swift**, add the following property at the top of `ColojiDataStore`:
 
 ```
 let dataAccessQueue = DispatchQueue(label: "com.raywenderlich.coloji.datastore")
 ```
 
-`dataAccessQueue` is the serial queue you will use to control access to the data store array.
+`dataAccessQueue` is the serial queue you will use to control access to the data store array. The label is just a unique string used to identify this queue.
 
 Now, replace the three methods in this class with the following:
 
@@ -355,12 +357,12 @@ func append(coloji: Coloji) {
 
 var count: Int {
   return dataAccessQueue.sync {
-    return self.data.count
+    return data.count
   }
 }
 ```
 
-You've wrapped each data access call in a queue operation to ensure none can happen concurrently. Note that `colojiAt(index:)` and `count` are run synchronously, because they're required to return data immediately. `append(coloji:)` is done asynchronously, because it doesn't need to return anything.
+You've wrapped each data access call in a queue operation to ensure none can happen concurrently. Note that `colojiAt(index:)` and `count` are run synchronously, because the caller is waiting on them to return data. `append(coloji:)` is done asynchronously, because it doesn't need to return anything.
 
 Build and run, and you should now see all of your colojis appearing:
 
@@ -368,7 +370,7 @@ Build and run, and you should now see all of your colojis appearing:
 
 The order can vary, because your data requests run asynchronously, but all of the cells make it to the data source.
 
-To further confirm the race conditions are resolved, take a look at the Issue navigator, and you should now see the race conditions are gone:
+To further confirm the race conditions are resolved, take a look at the Issue navigator, and you should now see 0 issues:
 
 ![width=40% bordered](./images/fixed-race-condition-issue-navigator.png)
 
@@ -376,7 +378,9 @@ Congrats—you just chased down a race condition by checking a box! Now it's jus
 
 ## View Debugging
 
-With great trepidation, you notice another pull request from Ray—open **Coloji.xcodeproj** in the **view-debugging** folder to see it. Build and run, and navigate around a bit. It's tough to tell if the threading was fixed yet, because now the cells and detail views are completely blank!
+According to your Apple watch, your pulse is up to about 120 after you receive the next pull request from Ray. Open **Coloji.xcodeproj** in the **view-debugging** folder to see how he did with the race condition fixes. 
+
+Build and run, then navigate around a bit. It's tough to tell if the threading was fixed yet, because now the cells and detail views are completely blank!
 
 ![width=70%](./images/empty-view.png)
 

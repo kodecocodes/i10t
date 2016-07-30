@@ -63,10 +63,3 @@ class ColojiViewController: UIViewController {
       ])
   }
 }
-
-
-
-
-
-
-

@@ -40,7 +40,7 @@ class ColojiDataStore {
   
   var count: Int {
     return dataAccessQueue.sync {
-      return self.data.count
+      return data.count
     }
   }
 }

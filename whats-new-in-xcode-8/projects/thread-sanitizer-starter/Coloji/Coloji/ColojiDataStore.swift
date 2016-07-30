@@ -30,10 +30,10 @@ class ColojiDataStore {
   }
   
   func append(coloji: Coloji) {
-    self.data = self.data + [coloji]
+    data = data + [coloji]
   }
   
   var count: Int {
-    return self.data.count
+    return data.count
   }
 }
