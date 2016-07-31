@@ -378,25 +378,31 @@ Congrats—you just chased down a race condition by checking a box! Now it's jus
 
 ## View Debugging
 
-According to your Apple watch, your pulse is up to about 120 after you receive the next pull request from Ray. Open **Coloji.xcodeproj** in the **view-debugging** folder to see how he did with the race condition fixes. 
+According to your Apple watch, your pulse is up to about 120 after you receive the next pull request from Ray. Open **Coloji.xcodeproj** in the **view-debugging-starter** folder to see how he did with the race condition fixes. 
 
-Build and run, then navigate around a bit. It's tough to tell if the threading was fixed yet, because now the cells and detail views are completely blank!
+Build and run, then navigate around a bit. It's tough to tell if the threading was fixed yet, because now the cells are completely blank! There are functional color detail views, but emojis are way at the top, obstructed by the navigation bar.
 
 ![width=70%](./images/empty-view.png)
 
-The View Debugger is a great tool to investigate where the views went, and that's where you'll start.
+The View Debugger is a great tool to investigate each of these issues, and you'll start with the blank cells.
 
-Prior versions of the view debugger already displayed run time constraints of your views in the size inspector. The biggest improvement in Xcode 8 View Debugger is that you can also see warnings, similar to what you see at design time in interface builder. Because the table view constraints were all done in code, this new feature allows you to view constraint warnings where you previously could not.
+Prior versions of the view debugger already displayed run time constraints of your views in the Size inspector. The biggest improvement in Xcode 8 View Debugger is that you can also see constraint warnings, similar to what you see at design time in interface builder. Below is an example of such a warning in the Size inspector:
 
-TODO: (only if room) Show a generic warning in the inspector
+![width=30%](./images/runtime-constraint-warning.png)
 
-There are plenty of more subtle enhancements as well. In the debug navigator, you can now filter the view hierarchy by memory address, class name or even super class name. From the Object inspector, you can jump straight to a view class. Debug snapshots are also much faster—70% faster by Apple's metrics.
+Because the table view constraints in Coloji were all done in code, the only way you could view constraint warnings before Xcode 8 was via difficult to discern console output. This new visual constraint warnings will make debugging constraint issues in Coloji much easier.
 
-It's time to try out a few of these new features while determining what happened to the cell content.
+There are plenty of more subtle enhancements as well. In the Debug navigator, you can now filter the view hierarchy by memory address, class name or even super class name. From the Object inspector, you can jump straight to a view class. Debug snapshots are also much faster—70% faster according to Apple.
+
+It's time to try out a few of these new features while determining what happened to the cell content and emoji detail view.
 
 ### Debugging the Cell
 
-First, open **ColojiTableViewCell.swift** to get an idea of how the layout of the cell is defined. You'll see a setter for the `coloji` property that calls `addLabel(coloji:)` which places a `ColojiLabel` in the content view using Auto Layout to position it. In this same file, you can see `ColojiLabel` is a UILabel subclass that sets its background color for color cells and provides an emoji as text in emoji cells.
+First, open **ColojiTableViewCell.swift** to get an idea of how the layout of the cell is defined. 
+
+You'll see a setter for the `coloji` property that calls `addLabel(coloji:)`, passing the newly set coloji. `addLabel(coloji:)` sets the cell's `ColojiLabel` with the given coloji. If the label is not already on the cell's `contentView`, this code places it there and positions it with Auto Layout.
+
+In this same file, you can see the definition of `ColojiLabel` which is a UILabel subclass. When it gets set, as it is by `addLabel(coloji:)`, it uses the provided coloji to either color its background or set its text with the emoji.
 
 Since you don't see the ColojiLabel, the only view that should be in the cell's content view, that's a good place to focus your questions. Is the label actually in the content view? If so, what size is it and where does it sit within the content view?
 
@@ -410,60 +416,62 @@ In the Debug navigator, enter **ColojiLabel** in the filter. This will show the 
 
 > **Note**: You can also try filtering for **UILabel**, and you'll see your ColojiLabels as well as the UILabel in the navigation bar. The ability to filter by parent class is a very useful new feature for complex layouts.
 
-Select any of the labels, and take a look at the Size inspector. In the Constraints section, you'll be able to see all of the currently active constraints for the label. Looking over the constraints—you'll immediately see something is not right:
+Select any of the labels, and take a look at the Size inspector. In the Constraints section, you'll see all of the currently active constraints for the label. Looking over the constraints—something immediately looks wrong:
 
-![height=40% bordered](./images/label-constraint-zeroes.png)
+![height=30% bordered](./images/label-constraint-zeroes.png)
 
-A 0 height and width certainly explains an invisible label! It's time to check the code to see what has gone wrong with the code that sets the constraints.
+A 0 height and width certainly explains an invisible label! It's time to investigate what has gone wrong with the code that sets the constraints.
 
-To quickly jump to the view's code, switch to the Object inspector. For public classes, an annotation will be present next to the **Class Name** allowing you to jump directly to the source. Because ColojiLabel is private, you won't see it.
+With a ColojiLabel still selected, switch to the Object inspector in the Utilities pane. For public classes, an annotation will be present next to the **Class Name** allowing you to jump directly to the source. Because ColojiLabel is private, you won't see it.
 
 Back in the debug navigator, move up the label's hierarchy a bit until you get to the public **ColojiTableViewCell**, which happens to reside in the same file as the label. In the Object inspector, you'll now be able to click the annotation to jump right to the source for this class.
 
-![width=40% bordered](./images/source-jump.png)
+![width=30% bordered](./images/source-jump.png)
 
 Now inside **ColojiTableViewCell.swift**, find `addLabel(coloji:)` where the `label` is added to the `contentView` and constrained to its parent. It looks like this:
 
 ```swift
-let label = ColojiLabel()
 label.coloji = coloji
-contentView.addSubview(label)
-NSLayoutConstraint.activate([
-  label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-  label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-  label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-  label.topAnchor.constraint(equalTo: contentView.topAnchor)
+if(label.superview == .none) {
+  contentView.addSubview(label)
+  NSLayoutConstraint.activate([
+    label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+    label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+    label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+    label.topAnchor.constraint(equalTo: contentView.topAnchor)
   ])
+}
 ```
 
 There aren't any constraints here that set the height or width of the `label` that explain what you're seeing at runtime.
 
 But, something else may have caught your eye. Auto Layout is being used, yet this is missing the vital setting to prevent autoresizing masks from being converted into constraints. The zeroed label size is exactly the type of behavior you might hit in such a case, so it seems you've found your culprit.
 
-Add the following line, right after the label definition in `addLabel(coloji:)`:
+Add the following line, right after the `if(label.superview == .none)` line:
 
 ```swift
 label.translatesAutoresizingMaskIntoConstraints = false
 ```
 
+This prevents autoresizing masks from converting into constraints you don't expect.
+
 Build and run, check out the table view, and you'll see you're back in business.
 
 ![iPhone bordered](./images/working-tableview-cells.png)
 
-Not so fast—it appears Ray has struck again! The cells and color detail views look fine, but emoji detail views aren't vertically centered anymore. 
+Unfortunately, this still hasn't solved your issue with emoji detail views. Take another look, and you'll see they appear to be horizontally centered, but not vertically:
 
-TODO: code at this point will just be missing the Y centering constraint
 ![iPhone bordered](./images/emoji-vertically-off-center.png)
 
 ### Runtime Constraint Debugging
 
 Missing constraints at runtime are the View Debugger's time to really shine. With an emoji detail view presented, select Debug View Hierarchy again. Once the debugger renders, select the Issue navigator and **Runtime** toggle and you'll see something like this:
 
-![width=40% bordered](./images/layout-issue-warning.png)
+![width=30% bordered](./images/layout-issue-warning.png)
 
 Select the warning and then go to the Size inspector to get a bit more context about the vertical layout. You'll see the same type of info you get during design time in interface builder, but now at runtime!
 
-![width=40% bordered](./images/size-inspector-constraint-warning.png) 
+![width=30% bordered](./images/size-inspector-constraint-warning.png) 
 
 It's pretty easy to see why the vertical layout is ambiguous. The height of the label is defined, but it has no Y position.
 
@@ -477,13 +485,13 @@ NSLayoutConstraint.activate([
   ])
 ```
 
-You've added a constraint that equates the `centerYAnchor` of the `emojiLabel` with that of the `view`. With this and height created from the intrinsic content size of the label, you now have a full set of vertical constraints.
+You've added a constraint that equates the `centerYAnchor` of the `emojiLabel` with that of the `view`. With this and the height derived via the label's intrinsic content size, you now have a full set of vertical constraints.
 
 Build and run, select an emoji from the table, and the emoji is back to being centered on the detail view.
 
 ![width=30% bordered](./images/vertically-centered-emoji.png)
 
-In the past, if you created or modified your constraints automatically, you were pretty much on your own with runtime issues. You had to dig through often confusing console logs and study your constraint code without much direction. Layout issue warnings in the view debugger have changed all this, bringing the ease of design time constraint warnings to runtime.
+In the past, if you created or modified your constraints programmatically, it was difficult to debug runtime issues. You had to dig through often confusing console logs and go over your constraint code with a fine toothed comb. Layout issue warnings in the view debugger have changed all this, bringing the ease of design time constraint warnings to runtime.
 
 Having fixed these last couple of issues, it's just a simple matter of sending the feedback to Ray and getting Coloji out the door. The good news is, you've taught him a lot throughout this. Who knows, maybe someday Ray will be the one helping others learn to build apps!
   
@@ -491,9 +499,9 @@ Having fixed these last couple of issues, it's just a simple matter of sending t
 
 Xcode 8 drastically enhances your ability to debug runtime issues. But it doesn't stop there—the trusty static analyzer has gained a few tricks of its own. But before you get too excited, remember the static analyzer only works with C, C++ and Objective-C.
 
-If you are working with some legacy code, it does have some goodies to offer. In addition to things like logic and memory management flaws, it can now identify problems with localization, instance cleanup, and nullability violations. TODO - wording on the last one.
+If you are working with some legacy code, it does have some goodies to offer. In addition to things like logic and memory management flaws, it can now identify problems with localization and instance cleanup. It can also flag nullability violations. 
 
-To use the static analyzer, select Product\Analyze with a project open. If there are issues, a static analyzer icon will be displayed in the activity viewer. Clicking the icon will bring you to the Issue navigator, where you can get more information on the problems it found. 
+To use the static analyzer, select Product\Analyze with a project open. If there are issues, a static analyzer icon will be displayed in the activity viewer. Clicking the icon will bring you to the Issue navigator, where more information on the problems is provided. 
 
 ![width=60% bordered](./images/static-analyser-warning.png)
 
@@ -503,13 +511,15 @@ Localizability will notify you whenever a non localized string is set on a user 
 
 Instance Cleanup is the addition of some new warnings around manual retain-release. The mere mention of this probably sends shudders down your spine. But, if you occasionally have to suffer through some legacy code without ARC, know that there are some new checks centered around `dealloc`.
 
-Finally, nullability checking finds logical issues in code containing nullability annotations. This is especially useful for applications that mix Objective-C and Swift. It flags cases where a method with a `_Nonnull` return type has a path that would return nil. 
+Finally, nullability checking finds logical issues in code containing nullability annotations. This is especially useful for applications that mix Objective-C and Swift. For example, it flags cases where a method with a `_Nonnull` return type has a path that would return nil.
+
+While not quite as exciting as new runtime tools, it's great to see continued improvement in the static analyzer. You can get more detail and some demos of these tools in the WWDC videos referenced below.
 
 ## Where to Go From Here?
 
-In this chapter, you learned about several great new additions and enhancements to Xcode debugging tools. The Memory Graph Debugger and Thread Sanitizer especially have the potential to save countless developer hours, making difficult problems much easier to identify and visualize. The View Debugger also learned some new tricks with runtime constraint warnings, along with several other niceties.
+In this chapter, you learned about several great new additions and enhancements to Xcode debugging tools. The Memory Graph Debugger and Thread Sanitizer especially have the potential to save countless developer hours, making difficult problems much easier to debug. The View Debugger also learned some new tricks with runtime constraint warnings, along with several other niceties.
 
-This chapter provided a basic introduction to what these tools can do, and how to use them. You now know enough to take them for a spin, and see how they fit into your debugging workflow. For more detail on each, check out these WWDC videos:
+This chapter provided a basic introduction to what these tools can do, and how to use them. You now know enough to take them for a spin, and start fitting them into your debugging workflow. For more detail on each, check out these WWDC videos:
 
 - Thread Sanitizer and Static Analysis—[apple.co/2aCtz6t](http://apple.co/2aCtz6t)
 - Visual Debugging with Xcode—[apple.co/2as1vVu](http://apple.co/2as1vVu)
