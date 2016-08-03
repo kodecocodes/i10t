@@ -6,64 +6,62 @@ title: "Chapter 9: Property Animators"
 
 # Chapter 9: Property Animators
 
-## Introduction
+If you’ve done any animations in UIKit, you’ve probably used the `UIView` animation methods (`UIView.animate(withDuration:animations:)` and friends). `UIViewPropertyAnimator` is a new way to write animation code. It isn’t a replacement for the existing API, nor is it objectively “better”, but it does give you a level of control that wasn’t possible before.
 
-If you've done any animations in UIKit you've probably used the `UIView` animation methods (`UIView.animate(withDuration:animations:)` and friends). `UIViewPropertyAnimator` is a new way to write animation code. It isn't a replacement for the existing API, nor is it objectively "better", but it does give you a lot of control that wasn't possible before.
-
-In this chapter you'll learn about the following new features that Property Animators give you access to:
+In this chapter, you’ll learn about the following new features that Property Animators give you access to:
 
 - Detailed control over animation timing curves
 - A superior spring animation
 - Monitoring and altering of animation state
-- Pause, reverse and scrub animations or abandon them part-way through
+- Pausing, reversing and scrubbing through animations or even abandoning them part-way through
 
-The fine control over animation timing alone would make a Property Animator an improvement for your existing `UIView` animations. But where they really shine is when you are creating animations that aren't just fire-and-forget. If you're animating something in response to user gestures, or if you want the user to be able to grab an animating object and do something else with it, then Property Animators are your new best friend.
+The fine control over animation timing alone would make a Property Animator an improvement for your existing `UIView` animations. But where they really shine is when you create animations that aren’t just fire-and-forget. If you’re animating something in response to user gestures, or if you want the user to be able to grab an animating object and do something else with it, then Property Animators are your new best friend.
 
 ## Getting started
 
-Open the **Animalation** project in the starter materials for this chapter. This is a demonstration app which you'll modify to add extra animation capabilities. There are two view controllers, some animated transition support files, and some utility files. Build and run the project:
+Open the **Animalation** project in the starter materials for this chapter. This is a demonstration app which you’ll modify to add extra animation capabilities. There are two view controllers, some animated transition support files, and some utility files. Build and run the project:
 
 ![ipad](images/Animalation1.png)
 
-If you tap the **Animate** button at the top, the frog will move to a random position. Nothing else happens - yet.
+Tap the **Animate** button at the top, and the frog will move to a random position. Nothing else happens — yet.
 
-Watch carefully as the frog moves. Can you see that it starts slowly, then gets faster, then slows down again before it stops? That is controlled by the animation's **timing curve**. Fine control over the timing curve is one of the features that Property Animators give you. Before we get into the code, here's a quick explanation of timing curves.
+Watch carefully as the frog moves. It starts slowly, then gets faster, then slows down again before it stops. That’s due to the animation’s **timing curve**. Fine control over the timing curve is one of the features that Property Animators give you. Before we get into the code, here’s a quick explanation of timing curves.
 
 ## Timing is everything
 
-Consider a very simple animation where a view moves along a line, from `x = 0` to `x = 10`. The animation takes 10 seconds.
+Consider a very simple animation, ten seconds in length, where a view moves along a line, from `x = 0` to `x = 10`.
 
-At any given second, how far along the line is the view? The answer to this question is given by the animation's **timing curve**. The simplest timing curve isn't curved at all - it's called the **linear** curve. Animations using the linear curve move along at a constant speed - after 1 second, the view is at position 1, after 2 seconds, position 2, and so on. You could plot this on a graph like so:
+At any given second, how far along the line is the view? The answer to this question is given by the animation’s **timing curve**. The simplest timing curve isn’t curved at all — it’s called the **linear** curve. Animations using the linear curve move along at a constant speed: after 1 second, the view is at position 1. After 2 seconds, position 2, and so on. You could plot this on a graph like so:
 
 ![width=40%](images/Linear.png)
 
-This doesn't lead to very fluid or natural-seeming animations; things in real life don't go from not moving at all to moving at a constant rate, and then suddenly stopping when they get to the end. For that reason, the `UIView` animation API uses an **ease-in, ease-out** timing curve. On a graph, that looks more like this:
+This doesn’t lead to very fluid or natural-looking animations; in real life, things don’t go from not moving at all to moving at a constant rate, and then suddenly stopping when they get to the end. For that reason, the `UIView` animation API uses an **ease-in, ease-out** timing curve. On a graph, that looks more like this:
 
 ![width=40%](images/Easing.png)
 
-You can see that for the first quarter or so of the time, not much progress is made, then it speeds up, then flattens out again at the end. To the eye the animated object accelerates, moves, then decelerates and stops. This looks a lot more natural, and is what you were seeing with the frog.
+You can see that for the first quarter or so of the time, your animation doesn’t make much progress. It then speeds up and slows again near the end. To the eye, the animated object accelerates, moves then decelerates and stops. This looks a lot more natural and is what you saw with the frog animation.
 
-`UIView` animations offer you four choices of timing curve: **linear** and **ease-in-ease-out**, which you've seen above, **ease-in**, which accelerates at the start but ends suddenly, and **ease-out**, which starts suddenly and decelerates at the end.
+`UIView` animations offer you four choices of timing curve: **linear** and **ease-in-ease-out**, which you’ve seen above; **ease-in**, which accelerates at the start but ends suddenly; and **ease-out**, which starts suddenly and decelerates at the end.
 
-`UIViewPropertyAnimator`, however, offers you almost limitless control over the timing curve of your animations. In addition to the four pre-baked options above, you can supply your own cubic **Bézier timing curve**.
+`UIViewPropertyAnimator`, however, offers you nearly limitless control over the timing curve of your animations. In addition to the four pre-baked options above, you can supply your own cubic **Bézier timing curve**.
 
 Your own cubic _what_ now?
 
-Don't panic. You've been looking at them already. A cubic Bézier curve goes from point A to point D, while also doing its very best to get near points B and C on the way, like a drunk wandering home past a couple of kebab shops. **TODO: Chris you might want to choose a better analogy :]**
+Don’t panic. You’ve been looking at these types of curves already. A cubic Bézier curve goes from point A to point D, while also doing its very best to get near points B and C on the way, like little kids wandering through a toy store behind their parents.
 
-With the two examples above, point A is in the bottom left and point D is in the top right. With the linear curve, points B and C happen to be on the exact straight line. With ease-in-ease-out, point B is below the line to the left of the center and point C is above it to the right of the center. This rather beautiful diagram shows you the effect on the curve of moving points B and C, which are also known as the **control points**:
+In the two examples above, point A is in the bottom left and point D is in the top right. With the linear curve, points B and C happen to be in an exact straight line. With ease-in-ease-out, point B is below the line to the left of the center, and point C is above it to the right of the center. This rather beautiful diagram shows you how the curve changes when you move points B and C, known as the **control points**:
 
 ![width=40%](images/Multiline.png)
 
 The circles represent the control points of the curve, which are varied in the horizontal or vertical direction. The filled red circles correspond to the solid lines of the equivalent color, showing variations in the horizontal direction, and the hollow green circles to the dashed lines, showing variations in the vertical direction. In the center of the pattern is a straight line, produced when both control points are on the straight path between A and D.
 
-This diagram only shows a small number of the possible curves you can make in this fashion - the take home message is that you can model almost any combination of acceleration, progress, and deceleration here.
+This diagram only shows a small number of the possible curves you can make in this fashion. The take home message is that you can model almost any combination of acceleration, progress, and deceleration.
 
-## Take control of your frog
+## Controlling your frog
 
-With that covered it's now time for you to write some code :]
+With that covered, it’s now time to write some code. :]
 
-Open **ViewController.swift** and find `animateAnimalTo(location:)`. You can see that this method currently uses a standard `UIView` animation to move the animal. Replace the body of the method with this code:
+Open **ViewController.swift** and find `animateAnimalTo(location:)`. This method currently uses a standard `UIView` animation to move the amphibian around. Replace the body of the method with this code:
 
 ```swift
 imageMoveAnimator = UIViewPropertyAnimator(
@@ -74,13 +72,13 @@ imageMoveAnimator = UIViewPropertyAnimator(
 imageMoveAnimator?.startAnimation()
 ```
 
-There's already a property in the starter project to hold the animator, so you create a new Property Animator and assign it. After the Animator is created, you need to call `startAnimation()` to set it running.
+There’s already a property in the starter project to hold the animator, so you create a new Property Animator and assign it. After the Animator is created, you need to call `startAnimation()` to set it running.
 
-> **Note:** Why do you need to assign the Animator to a property? Well, you don't _need_ to, but one of the major features of Property Animators is that you can take control of the animation at any point, and without holding a reference to it, that's not possible.
+> **Note:** Why do you need to assign the Animator to a property? Well, you don’t _need_ to, but one of the major features of Property Animators is that you can take control of the animation at any point, and without holding a reference to it, that’s not possible.
 
-Build and run the project, hit the animate button, and... well, it looks exactly the same. You've used the `.easeInOut` timing curve, which is the same as the default curve used for `UIView` animations.
+Build and run the project, hit the animate button, and... well, it looks exactly the same. You’ve used the `.easeInOut` timing curve, which is the same as the default curve used for `UIView` animations.
 
-Let's take a look at a custom timing curve. When frogs jump, they have an explosive burst of acceleration, then they land gently. In terms of timing curves, that looks something like this:
+Let’s take a look at a custom timing curve. When frogs jump, they have an explosive burst of acceleration, then they land gently. In terms of timing curves, that looks something like this:
 
 ![width=40%](images/FrogJump.png)
 
@@ -97,25 +95,27 @@ imageMoveAnimator = UIViewPropertyAnimator(
 }
 ```
 
-The two control points are those shown on the diagram above - the timing curve runs from `(0, 0)` to `(1, 1)`. Build and run and you'll see that the frog starts the move very quickly and then slows down – exactly like you wanted! Play around with the control points to see what effects you can get - what happens if any control point coordinate is greater than 1.0, or less than 0.0?
+The two control points are those shown on the diagram above — the timing curve runs from `(0, 0)` to `(1, 1)`. Build and run and you’ll see that the frog starts to move very quickly and then slows down — exactly as you wanted! Play around with the control points to see what effects you can get. What happens if any control point coordinate is greater than 1.0, or less than 0.0?
 
-## Springtime!
+## Spring animations
 
-The level of control over the timing curve goes even further than this. The two initializers you've used so far (passing in a curve or control points) are actually convenience initializers. All they do is create and pass on a `UITimingCurveProvider` object. This is a protocol that provides the relationship between elapsed time and animation progress. Unfortunately, the protocol doesn't go as far as to let you have _total_ control, but it does give you access to another cool feature: springs!
+The level of control over the timing curve goes even further than this. The two initializers you’ve used so far, passing in a curve or control points, are actually convenience initializers. All they do is create and pass on a `UITimingCurveProvider` object. This is a protocol that provides the relationship between elapsed time and animation progress. Unfortunately, the protocol doesn’t go as far as to let you have _total_ control, but it does give you access to another cool feature: springs!
 
-> **Note**: Wait!, I hear you cry. We already had spring animations! You did, but they weren't very customizable. `UIView` spring animations make you supply a duration, as well as the various parameters describing the spring. This meant that to get natural-looking spring animations you had to keep tweaking the duration value.
+> **Note**: “Wait!” you cry. “We already had spring animations!” Yes, you did, but they weren’t very customizable. `UIView` spring require a duration, as well as the various parameters describing the spring. To get natural-looking spring animations, you had to keep tweaking the duration value.
 >
-> Why is this? Well, imagine an actual spring. If you stretch it between your hands and let go, the time it takes for the spring to bounce back into shape comes entirely from the properties of the spring (What is it made of? How thick is it?) and how far you stretched it. The duration of the animation should be driven from the properties of the spring, not tacked on and the animation forced to fit into it.  
+> Why? Well, imagine an actual spring. If you stretch it between your hands and let go, the duration of the spring’s motion is really a function of the properties of the spring (What is it made of? How thick is it?) and how far you stretched it. Similarly, the duration of the animation should be driven from the properties of the spring, not tacked on and the animation forced to fit.  
 
 A Spring System is described by three factors:
 
-- The **mass** of the object attached to the spring
-- The **stiffness** of the spring
-- The **damping** - any factors that would act to slow down the movement of the system, like friction or air resistance
+- The **mass** of the object attached to the spring.
+- The **stiffness** of the spring.
+- The **damping**; these are any factors that would act to slow down the movement of the system, like friction or air resistance.
 
-The amount of damping applied will give you one of three outcomes. The system can be **under-damped**, meaning it will bounce around for a while before it settles, **critically damped**, meaning it will settle as quickly as possible without bouncing at all, or **over-damped**, meaning it will settle without bouncing but not quite as quickly.
+The amount of damping applied will give you one of three outcomes: the system can be **under-damped**, meaning it will bounce around for a while before it settles; **critically damped**, meaning it will settle as quickly as possible without bouncing at all; or **over-damped**, meaning it will settle without bouncing, but not quite as quickly.
 
-In most cases you will want a slightly under-damped system - without that your spring animations won't look particularly springy. But you don't have to guess at what values to use. The critical damping ratio is 2 times the square root of the product of the mass and stiffness values. You'll put this into action now. Replace the contents of `animateAnimalTo(location:)` with the following:
+In most cases, you’ll want a slightly under-damped system — without that, your spring animations won’t look particularly _springy_. But you don’t have to guess at what values to use. The critical damping ratio is 2 times the square root of the product of the mass and stiffness values. You’ll put this into action now.
+
+Replace the contents of `animateAnimalTo(location:)` with the following:
 
 ```swift
 //1
@@ -141,23 +141,25 @@ imageMoveAnimator?.addAnimations {
 imageMoveAnimator?.startAnimation()
 ```
 
-> **Note:** If for some reason you don't find specifying your own spring parameters exciting, there is also a convenience initializer `init(dampingRatio:, initialVelocity:)` for `UISpringTimingParameters` where 1.0 is a critically damped spring and values less than 1.0 will be under-damped.
+> **Note:** If for some reason you don’t find specifying your own spring parameters exciting, there is also a convenience initializer `init(dampingRatio:, initialVelocity:)` for `UISpringTimingParameters` where 1.0 is a critically damped spring and values less than 1.0 will be under-damped.
 
-Here's the breakdown:
+Here’s the breakdown:
 
-1. Create constants for the mass and stiffness values
-2. Derive the critical damping ratio using the formula stated above
-3. Reduce this ratio to give an under-damped spring
-4. Create a spring timing parameters object
-5. Use the designated initializer, passing in the new timing parameters. Note that because you're using spring timing parameters, the _duration is ignored_. You also have to add the animations separately when using this initializer.
+1. Create constants for the mass and stiffness values.
+2. Derive the critical damping ratio using the formula stated above.
+3. Reduce this ratio to give an under-damped spring.
+4. Create a spring timing parameters object.
+5. Use the designated initializer, passing in the new timing parameters.
 
-Build and run and you'll see the frog move in a more springy way. Experiment with the multiplier used in line 3 above and see what effects this has on the animation.
+Note that since you’re using spring timing parameters, _duration is ignored_. You also have to add the animations separately when using this initializer.
 
-There's one additional value when you create the spring timing parameters - the initial velocity. This allows you to tell the Spring System if the object being moved in the animation is already moving - in which case it can make the animation look more natural. In the running app, you can drag the frog around and when you release it, it will move back to where it started. If you do this quite quickly, you'll see that when you let go the frog suddenly starts moving in the opposite direction, so it doesn't look quite right.
+Build and run, and you’ll see the frog move in a more spring-like fashion. Experiment with the multiplier used in line 3 above and see what effect this has on the animation.
 
-The initial velocity is a `CGVector`, measured in units that correspond to the total animation distance - that is, if you are animating something by 100 points, and the object is already moving at 100 points per second, the vector would have a magnitude of 1.0.
+There’s one additional value when you create the spring timing parameters — the initial velocity. This means you can tell the Spring System that the object has momentum at the start of the animation — in which case it can make the animation look more natural. In the running app, you can drag the frog around, and when you release it, it will move back to where it started. If you do this quite quickly, you’ll see that when you let go, the frog suddenly starts moving in the opposite direction. It doesn’t look quite right.
 
-You're going to amend the app so that the velocity of the pan gesture used to move the frog is taken into account in the spring animation. First, change the `animateAnimalTo(location:)` method signature to include a velocity parameter:
+The initial velocity is a `CGVector`, measured in units that correspond to the total animation distance — that is, if you are animating something by 100 points, and the object is already moving at 100 points per second, the vector would have a magnitude of 1.0.
+
+You’re going to amend the app so that the velocity of the pan gesture used to move the frog is taken into account in the spring animation. First, change the `animateAnimalTo(location:)` method signature to include a velocity parameter:
 
 ```swift
 private func animateAnimalTo(location: CGPoint,
@@ -190,24 +192,26 @@ case .ended:
   imageDragStartPosition = .none
 ```
 
-1. The pan gesture has a `velocity(in:)` method describing how fast it is moving. This is measured in points per second. This is returned as a `CGPoint` rather than a `CGVector`, but both structures are very similar.
-2. A convenience method included in the starter project calculates the distance in points from the current position to the animation's end position. This is one "unit" when talking about the animation.
-3. Another convenience method uses that distance to convert the gesture velocity into animation units
-4. Finally the `CGPoint` is converted to a `CGVector` so it can be passed to the animation method.
+Taking each numbered comment in turn:
 
-Build and run and fling the frog about - you will see that the motion of your gesture is taken into account in the animation!
+1. The pan gesture has a `velocity(in:)` method describing how fast it’s moving measured in points per second. This is returned as a `CGPoint` rather than a `CGVector`, but both structures are very similar.
+2. A convenience method included in the starter project calculates the distance in points from the current position to the animation’s end position. This is one “unit” when talking about the animation.
+3. Another convenience method uses that distance to convert the gesture velocity into animation units.
+4. Finally, the `CGPoint` is converted to a `CGVector` so it can be passed to the animation method.
 
-> TODO: This is buggy in beta 3 - it doesn't take the Y component into account.
+Build and run and fling the frog about — you will see that the animation takes your initial gesture into account.
 
-## Every move you make, I'll be watching you
+> TODO: This is buggy in beta 3 - it doesn’t take the Y-component of the initial vector into account.
 
-What else can you get out of a Property Animator, besides fancy timing curves? Well, you can query or observe what's happening at any point in the animation. The Property Animator has the following  properties that tell you what's happening:
+## Inspecting in-progress animations
+
+What else can you get out of a Property Animator, besides fancy timing curves? Well, you can query or observe what’s happening at any point in the animation. The Property Animator has the following  properties that tell you what’s happening:
 
 - `state`: This is `.inactive`, `.active` or `.stopped`.
 - `isRunning`: This is a `Bool` telling you if the animation is running or not.
 - `isReversed`: This is a `Bool` telling you if the animation is reversed or not.
 
-These properties are all observable via key-value-observing (KVO). KVO is quite tedious to set up, so that work has been done for you in the **ViewController+Observers.swift** file. All you need to do is add this line to the start of `animateAnimalTo(location:)`:
+These properties are all observable via key-value-observing (KVO). KVO is quite tedious to set up, so that work has been done for you in **ViewController+Observers.swift**. All you need to do is add this line to the start of `animateAnimalTo(location:)`:
 
 ```swift
 removeAnimatorObservers(animator: imageMoveAnimator)
@@ -219,19 +223,19 @@ And this line just above where you call `startAnimation()`:
 addAnimatorObservers(animator: imageMoveAnimator)
 ```
 
-These lines link up the segmented controls at the bottom of the app to the current state of the animator. Build and run, start an animation, and keep an eye on the segmented controls. You can see the `state` and `isRunning` change before your eyes:
+These lines link up the segmented controls at the bottom of the app to the current state of the animator. Build and run, start an animation and keep an eye on the segmented controls. You can see `state` and `isRunning` change before your eyes:
 
-> TODO: In Beta 3 `isRunning` never seems to be changed.
+> TODO: In Beta 3 `isRunning` never seems to change.
 
 ![ipad](images/Animalation2.png)
 
-As you explore more features of the Property Animator you'll see more of these segments light up. This is where Property Animators start to get _really_ interesting!
+As you explore more features of the Property Animator you’ll see more of these segments light up. This is where Property Animators start to get _really_ interesting!
 
 ## Pausing and scrubbing
 
-With `UIView` animations you set them going and then usually forget about them unless you also added a completion block. With Property Animators, you can reach in at any point in the animation and stop it. You can, for example, use this for animations that the user can interrupt by touching the screen. Interactions like this make your users feel really connected to what is happening in the app.
+With `UIView` animations, you set them going and then usually forget about them unless you also added a completion block. With Property Animators, you can reach in at any point during the animation and stop it. You can, for example, use this for animations the user can interrupt by touching the screen. Interactions like this make your users feel incredibly connected to what’s happening in the app.
 
-The Animalation project already has a handler for tapping the image view, but at the moment it doesn't do anything. In **ViewController.swift**, find `handleTapOnImage(_:)` and add the following code:
+The Animalation project already has a handler for tapping the image view, but at the moment it doesn’t do anything. In **ViewController.swift**, find `handleTapOnImage(_:)` and add the following code:
 
 ```swift
 //1
@@ -257,13 +261,13 @@ default:
 }
 ```
 
-Here's the step-by-step breakdown:
+Here’s the step-by-step breakdown:
 
-1. If there's no `imageMoveAnimator`, there's no point doing anything and you simply break out of the method.
-2. On the provided screen you have a slider, which has currently been hidden. The slider should also be hidden in most cases when the image is tapped, so that gets set here.
-3. If you're testing values of an `enum`, it's almost always better to use a `switch`, even if in this case you're only interested in one outcome. Remember the possible values are `.active`, `.inactive` and `.stopped`.
-4. If the Animator is running, then here you pause it, show the slider, and set the slider's value to the `.fractionComplete` value of the animator. `UIKit` currently uses `CGFloat` rather than `Float` in almost all cases, but we're starting to see a switch in the Apple APIs that favors a simpler syntax such as `Float`. The `UISlider`'s value is one such example so here you have to convert between `Float` and `CGFloat`.
-5. If the Animator _isn't_ running, you set it off again.
+1. If there’s no `imageMoveAnimator`, there’s no point in doing anything, so you simply break out of the method.
+2. On the provided screen you have a slider, which has currently been hidden. The slider should also be hidden in most cases when the image is tapped, so you set that here.
+3. If you’re testing values of an `enum`, it’s almost always better to use a `switch`, even if in this case you’re only interested in one outcome. Remember the possible values are `.active`, `.inactive` and `.stopped`.
+4. If the Animator is running, then you pause it, show the slider and set the slider’s value to the `.fractionComplete` value of the animator. `UIKit` currently uses `CGFloat` rather than `Float` in almost all cases, but we’re starting to see a switch in the Apple APIs that favors a simpler syntax such as `Float`. The `UISlider`’s value is one such example, so here you have to convert between `Float` and `CGFloat`.
+5. If the Animator _isn’t_ running, you set it off again.
 
 Next, add in the implementation for `handleProgressSliderChanged(_:)`:
 
@@ -271,19 +275,19 @@ Next, add in the implementation for `handleProgressSliderChanged(_:)`:
 imageMoveAnimator?.fractionComplete = CGFloat(sender.value)
 ```
 
-This is the reverse of what you did when pausing the animation - the value of the slider is used to set the `.fractionComplete` property of the animator.
+This is the reverse of what you did when pausing the animation — the value of the slider is used to set the `.fractionComplete` property of the animator.
 
-Build and run the app and try to tap on the frog while it is moving:
+Build and run the app and try to tap the frog while it’s moving:
 
 ![ipad](images/Animalation3.png)
 
-You can see the slider appear, the **isRunning** segment change value, and the animation stop. Moving the slider back and forth moves the frog along its path - but note that it follows the straight point-to-point path, rather than the overshooting and oscillation coming from the spring - the slider is moving the animation along the **progress** axis of those charts from earlier, not the **time** axis.
+You can see the slider appear, the **isRunning** segment change value and the animation stop. Moving the slider back and forth moves the frog along its path — but note that it follows the straight point-to-point path, rather than the overshooting and oscillation coming from the spring. That’s because the slider moves the animation along the **progress** axis of those charts from earlier, not the **time** axis.
 
-It's important to note here that _pausing_ an animation isn't the same as _stopping_ one. Notice that the **state** indicator stays on `.active` when you've paused the animation.
+It’s important to note here that _pausing_ an animation isn’t the same as _stopping_ one. Notice that the **state** indicator stays on `.active` when you’ve paused the animation.
 
 ## Stopping
 
-When a Property Animator stops, it ends all animation at the current point and, more importantly, updates the properties of the animated views to match those at the current point. If you've ever tried to get in-flight values out of an interrupted `UIView` animation so that you can seamlessly stop it, you'll be quite excited to read this.
+When a Property Animator stops, it ends all animation at the current point and, more importantly, updates the properties of the animated views to match those at the current point. If you’ve ever tried to get in-flight values out of an interrupted `UIView` animation so that you can seamlessly stop it, you’ll be quite excited to read this.
 
 Inside `handleTapOnImage(_:)`, add the following line at the end of the method:
 
@@ -312,48 +316,54 @@ case .stopped:
 }
 ```
 
-Stopping an Animator is, or can be, a two-stage process. Here's the breakdown of what's happening above. There's the standard `guard` checking that the Animator object exists, then a switch on the state:
+Stopping an Animator is, or can be, a two-stage process. Above, you have the standard `guard` checking that the Animator object exists, then a switch on the state:
 
 1. For an active Animator, you tell it to stop. The parameter indicates if the Animator should immediately end and become inactive (`true`), or if it should move to the stopped state and await further instructions (`false`)
-2. There's nothing to do for the inactive state
+2. There’s nothing to do for the inactive state.
 3. A stopped Animator should be finished at the current position.
 
 Build and run the project, then do the following:
 
-- Tap the animate button to start the animation
-- Tap the frog to pause the animation
-- Tap the stop button to stop the animation
+- Tap the animate button to start the animation.
+- Tap the frog to pause the animation.
+- Tap the stop button to stop the animation.
 - Tap the stop button _again_ to finish the animation.
 
-If you're feeling a little confused at this point, don't worry. A Property Animator can be paused, stopped or finished, and those all mean different things:
+If you’re feeling a little confused at this point, don’t worry. A Property Animator can be paused, stopped or finished, and those all mean different things:
 
 ### Paused
 
-State: `.active`, Running: `true`.
+State: `.active`
 
-This is a running Animator that you've called `pauseAnimation()` on. All of the animations are still in play. The animations can be modified, and the Animator can be started again by calling `startAnimation()`.
+Running: `true`
+
+This is a running Animator on which you’ve called `pauseAnimation()`. All of the animations are still in play. The animations can be modified, and the Animator can be started again by calling `startAnimation()`.
 
 ### Stopped
 
-State: `.stopped`, Running: `false`.
+State: `.stopped`
 
-This is a running or paused Animator that you've called `stopAnimation(_:)` on, passing `false`. All of the animations are removed, and the views that were being animated have their properties updated to the current state as determined by the animation. The completion block has not been called. You can manually finish the animation by calling `finishAnimation(at:)`, passing `.end`, `.start` or `.current`.
+Running: `false`
+
+This is a running or paused Animator on which you’ve called `stopAnimation(_:)`, passing `false`. All of the animations are removed, and the views that were being animated have their properties updated to the current state as determined by the animation. The completion block has not been called. You can manually finish the animation by calling `finishAnimation(at:)`, passing `.end`, `.start` or `.current`.
 
 ### Finished
 
-State: `.inactive`, Running: `false`.
+State: `.inactive`
 
-This is an Animator that's got to the end of its animations naturally, a running Animator that you've called `stopAnimation(_:)` on, passing `true`, or a stopped Animator that you've called `finishAnimation(at:)` on (note that you cannot call `finishAnimation(at:)` on anything other than a stopped animator).
+Running: `false`
 
-The animated views will have their properties set to match the end point of the animation and the completion block for the Animator will be called.
+This is either an Animator that’s reached the end of its animations naturally; a running Animator on which you’ve called `stopAnimation(_:)`, passing `true`; or a stopped Animator on which you’ve called `finishAnimation(at:)`. Note that you cannot call `finishAnimation(at:)` on anything other than a stopped animator.
 
-We haven't discussed completion blocks for Property Animators yet. They're a little different to those from `UIView` animations, where you get a `Bool` indicating if the animation was completed or not. One of the main reasons they're different is because a Property Animator can be run in reverse.
+The animated views will have their properties set to match the end point of the animation, and the completion block for the Animator will be called.
+
+We haven’t yet discussed completion blocks for Property Animators. They’re a little different to those from `UIView` animations, where you get a `Bool` indicating if the animation was completed or not. One of the main reasons they’re different is because a Property Animator can be run in reverse.
 
 ## Reversing
 
-You might be thinking why you would ever want to run an animation in reverse. A good use case is for working with gesture-driven interfaces. Imagine something like a swipe gesture to dismiss a presented view, where, during the dismiss animation, the user decides not to dismiss it and swipes back slightly in the other direction. A Property Animator can take all of this into account and run the animation back to the start point, without you having to store or recalculate anything.
+You might be thinking “Why would I ever want to run an animation in reverse?” A good use case is when you’re working with gesture-driven interfaces. Imagine using something like a swipe gesture to dismiss a presented view, where, during the dismiss animation, the user decides not to dismiss it, and swipes back slightly in the other direction. A Property Animator can take all of this into account and run the animation back to the start point, without having to store or recalculate anything.
 
-To demonstrate this in the sample app, you're going to change the function of the **Animate** button. If you tap it while an animation is running, it's going to reverse the animation.
+To demonstrate this in the sample app, you’re going to change the function of the **Animate** button. If you tap it while an animation is running, it’s going to reverse the animation.
 
 In **ViewController.swift** find `handleAnimateButtonTapped(_:)` and replace the implementation with the following:
 
@@ -365,13 +375,13 @@ if let imageMoveAnimator = imageMoveAnimator, imageMoveAnimator.isRunning {
 }
 ```
 
-For a running animation, this will toggle the reversed property, otherwise it will start the animation as before.
+For a running animation, this will toggle the reversed property; otherwise, it will start the animation as before.
 
-Build and run and tap the animate button, then tap it again - you'll see the frog return to its original position, but still using the spring timing to settle naturally back into place! You can see that the **isReversed** indicator on the screen updates.
+Build and run, then tap the animate button — then tap it again. You’ll see the frog return to its original position, but using the spring timing to settle naturally back into place! You can see that the **isReversed** indicator on the screen updates appropriately.
 
-> TODO: This doesn't update in beta 3
+> TODO: This doesn’t update in beta 3
 
-You now have three different ways that the animation can end - it can finish normally, you can stop it half way, or you can reverse it and it finishes where it started. This is useful information to know when you have a completion block on the animation, so you're now going to add one now.
+You now have three different ways that the animation can end: it can finish normally, you can stop it half way, or you can reverse it to finish where it started. This is useful information to know when you have a completion block on the animation, so you’re now going to add one now.
 
 In `animateAnimalTo(location: initialVelocity:)`, add the following code after you call `addAnimations(_:)`:
 
@@ -385,15 +395,15 @@ imageMoveAnimator?.addCompletion { position in
 }
 ```
 
-The completion block takes a `UIViewAnimatingPosition` enum as its argument, which tells you the state of the Animator when it finished.
+The completion block takes a `UIViewAnimatingPosition` enum as its argument, which tells you what state the Animator was in when it finished.
 
 Build and run the project and try to obtain all three completion block printouts by ending the animation at the end, start or somewhere in the middle.  
 
-For a more practical demonstration of the various states of a completion block, you're going to add a second animation and run the two of them together.
+For a more practical demonstration of the various states of a completion block, you’re going to add a second animation and run the two of them together.
 
 ## Multiple animators
 
-You can add as many changes as you like to a single Property Animator, but it's also possible to have several Animators working on the same view. You're going to add a second Animator to run alongside the first, which will change the animal image displayed.
+You can add as many changes as you like to a single Property Animator, but it’s also possible to have several Animators working on the same view. You’re going to add a second Animator to run alongside the first, which will change the animal image displayed.
 
 In **ViewController.swift** add the following array of images, before the class declaration of ViewController:
 
@@ -406,7 +416,7 @@ let animalImages = [
 ]
 ```
 
-You'll see the pasted code transform into image literals... how cool is that?
+You’ll see the pasted code transform into image literals... how cool is that?
 
 Next, underneath the declaration for `imageMoveAnimator`, add a declaration for the second animator:
 
@@ -414,7 +424,7 @@ Next, underneath the declaration for `imageMoveAnimator`, add a declaration for 
 var imageChangeAnimator: UIViewPropertyAnimator?
 ```
 
-In the extension where `animateAnimalToRandomLocation()` is, add the following new method:
+In the extension where `animateAnimalToRandomLocation()` lives, add the following new method:
 
 ```swift
 private func animateRandomAnimalChange() {
@@ -448,14 +458,14 @@ private func animateRandomAnimalChange() {
 }
 ```
 
-Here's the play-by-play:
+Here’s the play-by-play:
 
-1. Select a random destination image from the array you just created
-2. You want the duration of this animation to match that from the move animation. Remember how with a spring animation, the duration you pass in is ignored? What happens instead is that the duration is calculated based on the spring parameters, and is available for you to use via the `duration` property.
-3. Here you set up the animation - take a snapshot of the current animal, add that to the image container, make the actual image view invisible and set the new image.
-4. Create a new Animator with a linear timing curve (you don't really want a spring for a fade animation) and within that, fade in the image view and fade out the snapshot for a cross-dissolve effect
-5. When the animation is complete, remove the snapshot
-6. Start the animation
+1. Select a random destination image from the array you just created.
+2. You want the duration of this animation to match that from the move animation. Remember that a spring animation ignores the duration you pass in. Instead, the duration is calculated based on the spring parameters and is available for you to use via the `duration` property.
+3. Here you set up the animation: you take a snapshot of the current animal, add that to the image container, make the actual image view invisible and set the new image.
+4. Create a new Animator with a linear timing curve (you don’t really want a spring for a fade animation) and within that, fade in the image view and fade out the snapshot for a cross-dissolve effect.
+5. When the animation is complete, remove the snapshot.
+6. Finally, start the animation.
 
 Add a call to this method in `handleAnimateButtonTapped(_:)`, right after the call to `animateAnimalToRandomLocation()`:
 
@@ -463,13 +473,13 @@ Add a call to this method in `handleAnimateButtonTapped(_:)`, right after the ca
 animateRandomAnimalChange()
 ```
 
-Build and run and hit the animate button, and you'll see the image cross-fade while it moves:
+Build and run and hit the animate button, and you’ll see the image cross-fade while it moves:
 
 ![ipad](images/Animalation4.png)
 
-> **Note:** The animal won't always change. Sometimes the randomly selected animal is the same as the one that's already there!
+> **Note:** The animal won’t always change. Sometimes the randomly selected animal is the same as the one that’s already there!
 
-If you pause the animation, you'll see that the cross-fade merrily continues. This might be what you want - it can be handy to have independent animations on the same object. However, for this app you're going to sync up the state of the two animators.
+If you pause the animation, you’ll see that the cross-fade merrily continues. This might be what you want — it can be handy to have independent animations on the same object. However, for this app, you’re going to sync up the state of the two animators.
 
 Find `handleTapOnImage(_:)` and where you pause or start `imageMoveAnimator`, do the same to `imageChangeAnimator`:
 
@@ -498,13 +508,13 @@ In `handleAnimateButtonTapped(_:)`, after you set the reversed state of the move
 imageChangeAnimator?.isReversed = imageMoveAnimator.isReversed
 ```
 
-Finally, handle the stopping. You're not going to do quite the same here - abandoning the fade animation half way through would look rather odd. In `handleStopButtonTapped(_:)`, after you stop the move animator, just pause the image change animator:
+Finally, you need to handle the stopping. You’re not going to do quite the same thing here — abandoning the fade animation half way through would look rather odd. In `handleStopButtonTapped(_:)`, after you stop the move animator, simply pause the image change animator:
 
 ```swift
 imageChangeAnimator?.pauseAnimation()
 ```
 
-After you finish the move animator in the `.stopped` case, add this code:
+After you finish the move animator in the `.stopped` case, add the following code:
 
 ```swift
 if let imageChangeAnimator = imageChangeAnimator,
@@ -515,13 +525,13 @@ if let imageChangeAnimator = imageChangeAnimator,
 }
 ```
 
-`continueAnimation` allows you to swap in a brand new timing curve (or spring) and a duration factor, which is used as a multiplier of the original animation duration. You can only do this to a paused animator. This means your fade animation will quickly finish, while the move animation has stopped. This is an example of the great flexibility and control that Property Animators can give you.  
+`continueAnimation` lets you swap in a brand new timing curve (or spring) and a duration factor, which is used as a multiplier of the original animation duration. You can only do this to a paused animator. This means your fade animation will quickly finish, while the move animation has stopped. This is an example of the great flexibility and control that Property Animators can give you.  
 
-Build and run the app and try pausing, scrubbing, stopping, finishing (remember to tap "stop" _twice_ to finish) and reversing the animation. You'll notice a problem when you reverse - the animal disappears! Where's your doggone frog gone?
+Build and run the app, and try pausing, scrubbing, stopping, finishing (remember to tap “stop” _twice_ to finish) and reversing the animation. You’ll notice a problem when you reverse — the animal disappears! Where’s your doggone frog gone?
 
-Remember what's happening in the fade animation - a snapshot of the old image is added, the image view is updated and made transparent, then a cross fade happens. In the completion block the snapshot is removed.
+Remember what’s happening in the fade animation — a snapshot of the old image is added, the image view is updated and made transparent, then a cross fade happens. In the completion block, the snapshot is removed.
 
-If the animation is reversed, when it "finishes" (i.e. gets back to the start), the image view is transparent and the snapshot view is removed - that means you can't see anything. You need to do different things in the completion block depending on the position the animation ended in.
+If the animation is reversed, when it “finishes” (i.e. returns to the start), the image view is transparent and the snapshot view is removed, which means you can’t see anything. You need to do different things in the completion block depending on which position the animation ended in.
 
 Go to `animateRandomAnimalChange()` and add the following line before you take the snapshot:
 
@@ -529,7 +539,7 @@ Go to `animateRandomAnimalChange()` and add the following line before you take t
 let originalImage = animalImageView.image
 ```
 
-This keeps a reference to the original animal, which you'll need if the animation is reversed. Add the following code to the completion block of the `imageChangeAnimator`:
+This keeps a reference to the original animal, which you’ll need if the animation is reversed. Add the following code to the completion block of the `imageChangeAnimator`:
 
 ```swift
 if position == .start {
@@ -542,11 +552,11 @@ This code restores the alpha and the image as they were before the animation sta
 
 Build and run again, reverse the animation and behold! No more disappearing animals!
 
-## View Controller Transitions
+## View controller transitions
 
-Property Animators, or to be specific, objects that conform to `UIViewImplicitlyAnimating`, can also be plugged in to your interactive view controller transitions. Previously, you could start an interactive transition, track a gesture, and then hand it off to finish or be cancelled by the system - but after that point, the user had no control. When you add Property Animators to the mix you can switch multiple times between interactive and non-interactive modes, making your users feel really connected to what's happening on the screen.
+Property Animators, or to be specific, objects that conform to `UIViewImplicitlyAnimating`, can also be plugged in to your interactive view controller transitions. Previously, you could start an interactive transition, track a gesture, and then hand it off to finish or be canceled by the system — but after that point, the user had no control. When you add Property Animators to the mix, you can switch multiple times between interactive and non-interactive modes, making your users feel really connected to what’s happening on the screen.
 
-Setting up and building interactive transitions is a complex topic outside the scope of this chapter. See [https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions](https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions) or our iOS Animations By Tutorials book for an overview. The starter project already contains an interactive transition, you're going to amend this to make it use Property Animators and become interruptible.
+Setting up and building interactive transitions is a complex topic outside the scope of this chapter. See [https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions](https://www.raywenderlich.com/110536/custom-uiviewcontroller-transitions) or our book _iOS Animations By Tutorials_ for an overview. The starter project already contains an interactive transition; you’re going to amend this to make it use Property Animators and become interruptible.
 
 First, take a look at the existing transition. Open **Main.storyboard**, find the **Animals** button on the bottom right of the main view controller and make it visible by unchecking the **Hidden** box. Build and run the project and tap the button:
 
@@ -556,9 +566,9 @@ To dismiss the controller interactively, pull down:
 
 ![ipad bordered](images/Animals2.png)
 
-Once you've let go, the animation will either return to the top, or complete. If you try and grab the screen as it's disappearing (the transition is super slow to help you with this!), nothing will happen.
+Once you’ve let go, the animation will either return to the top or complete. If you try and grab the screen as it’s disappearing (the transition is super slow to help you with this!), nothing will happen.
 
-To make an interactive transition super duper interruptibly interactive, there's a new method to implement on your `UIViewControllerAnimatedTransitioning` object. Open **DropDownDismissAnimator.swift**. This is a standard transition Animator object. Add the following new method:
+To make an interactive transition super-duper interruptibly interactive, there’s a new method to implement on your `UIViewControllerAnimatedTransitioning` object. Open **DropDownDismissAnimator.swift**. This is a standard transition Animator object. Add the following new method:
 
 ```swift
 func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
@@ -584,7 +594,7 @@ var hasStarted = false
 var interruptedPercent: CGFloat = 0
 ```
 
-You will use `hasStarted` to decide if a new pan gesture is the start of a new dismissal, or an attempt to interrupt an ongoing dismissal. If you do interrupt an ongoing dismissal, `interruptedPercent` will be used to make sure the pan gesture's translation takes the current position of the view into account.
+You will use `hasStarted` to decide if a new pan gesture is the start of a new dismissal, or an attempt to interrupt an ongoing dismissal. If you do interrupt an ongoing dismissal, `interruptedPercent` will be used to make sure the pan gesture’s translation takes the current position of the view into account.
 
 Inside `handle(pan:)`, amend the calculation of `percent`:
 
@@ -592,7 +602,7 @@ Inside `handle(pan:)`, amend the calculation of `percent`:
 let percent = (translation / pan.view!.bounds.height) + interruptedPercent
 ```
 
-You're adding the interrupted percent on here, because if the dismissal was already 50% through when the user touches the screen, that needs to be reflected in the position of the view.
+You’re adding the interrupted percent on here, because if the dismissal was already 50% through when the user touches the screen, that needs to be reflected in the position of the view.
 
 Inside the same method, replace the `.began` case in the switch statement with the following code:
 
@@ -609,7 +619,7 @@ case .began:
   }
 ```
 
-If this isn't the first gesture in the dismissal, the transition is paused and the current percentage is taken from it. The transition must be paused **before** you read the percentage, otherwise you'll get an inaccurate figure.
+If this isn’t the first gesture in the dismissal, the transition is paused and the current percentage is taken from it. The transition must be paused **before** you read the percentage, otherwise you’ll get an inaccurate figure.
 
 Finally, switch over to **AppDelegate.swift** and add the following line to the `animationCleanup` closure created in `animationController(forDismissed:)`:
 
@@ -621,8 +631,8 @@ This ensures that the interaction controller is properly reset when the animatio
 
 Build and run the project, show the animals view, then have fun interrupting yourself and wobbling the view up and down!
 
-## Where To Go From Here?
+## Where to go from here?
 
-Congratulations! You've had a good exploration of the new powers available to you now that you can use Property Animators! Go forth and fill your apps with interruptible, interactive animations, including an extra level of awesome in your view controller transitions.
+Congratulations! You’ve had a good exploration of the new powers available to you now that you can use Property Animators! Go forth and fill your apps with interruptible, interactive animations, including an extra level of awesomeness in your view controller transitions.
 
-There's a lot more detail on Property Animators in our excellent book, **iOS Animations By Tutorials**! Check it out! The WWDC video, 2016 session 216, available at [https://developer.apple.com/videos/play/wwdc2016/216/](https://developer.apple.com/videos/play/wwdc2016/216/) is also full of useful information.
+There’s a lot more detail on Property Animators in our excellent book, _iOS Animations By Tutorials_! Check it out! The WWDC video, 2016 session 216, available at [https://developer.apple.com/videos/play/wwdc2016/216/](https://developer.apple.com/videos/play/wwdc2016/216/) is also full of useful information.
