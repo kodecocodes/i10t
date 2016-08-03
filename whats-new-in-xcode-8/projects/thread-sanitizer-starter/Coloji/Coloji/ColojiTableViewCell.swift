@@ -35,7 +35,7 @@ class ColojiTableViewCell: UITableViewCell {
   
   private func addLabel(coloji: Coloji) {
     label.coloji = coloji
-    if(label.superview == .none) {
+    if label.superview == .none {
       label.translatesAutoresizingMaskIntoConstraints = false
       contentView.addSubview(label)
       NSLayoutConstraint.activate([

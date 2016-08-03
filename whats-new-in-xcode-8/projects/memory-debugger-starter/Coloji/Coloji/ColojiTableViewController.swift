@@ -26,7 +26,7 @@ import UIKit
 
 class ColojiTableViewController: UITableViewController {
   
-  let colors = [UIColor.gray(), UIColor.green(), UIColor.yellow(), UIColor.brown(), UIColor.cyan(), UIColor.purple()]
+  let colors: [UIColor] = [.gray(), .green(), .yellow(), .brown(), .cyan(), .purple()]
   let emoji = ["💄", "🙋🏻", "👠", "🎒", "🏩", "🎏"]
   let colojiStore = ColojiDataStore()
   
