@@ -22,14 +22,19 @@
 
 import UIKit
 
-let animalImages = [#imageLiteral(resourceName: "bear"), #imageLiteral(resourceName: "frog"), #imageLiteral(resourceName: "wolf"), #imageLiteral(resourceName: "cat")]
+let animalImages = [
+  #imageLiteral(resourceName: "bear"),
+  #imageLiteral(resourceName: "frog"),
+  #imageLiteral(resourceName: "wolf"),
+  #imageLiteral(resourceName: "cat")
+]
 
 class ViewController: UIViewController {
   // Properties
   var imageMoveAnimator: UIViewPropertyAnimator?
   var imageChangeAnimator: UIViewPropertyAnimator?
   var imageDragStartPosition: CGPoint?
-  
+
   // IBOutlets
   @IBOutlet weak var progressSlider: UISlider!
   @IBOutlet weak var stateSegment: UISegmentedControl!
@@ -44,7 +49,7 @@ class ViewController: UIViewController {
     imageMoveAnimator?.fractionComplete = CGFloat(sender.value)
     imageChangeAnimator?.fractionComplete = CGFloat(sender.value)
   }
-  
+
   @IBAction func handleAnimateButtonTapped(_ sender: UIButton) {
     if let imageMoveAnimator = imageMoveAnimator, imageMoveAnimator.isRunning {
       imageMoveAnimator.isReversed = !imageMoveAnimator.isReversed
@@ -54,32 +59,39 @@ class ViewController: UIViewController {
       animateRandomAnimalChange()
     }
   }
-  
+    
   @IBAction func handleStopButtonTapped(_ sender: UIButton) {
     guard let imageMoveAnimator = imageMoveAnimator else {
       return
     }
     switch imageMoveAnimator.state {
+    //1
     case .active:
       imageMoveAnimator.stopAnimation(false)
       imageChangeAnimator?.pauseAnimation()
+    //2
     case .inactive:
       break
+    //3
     case .stopped:
       imageMoveAnimator.finishAnimation(at: .current)
       if let imageChangeAnimator = imageChangeAnimator,
         let timing = imageChangeAnimator.timingParameters {
-        imageChangeAnimator.continueAnimation(withTimingParameters: timing,
-                                              durationFactor: 0.2)
+        imageChangeAnimator.continueAnimation(
+          withTimingParameters: timing,
+          durationFactor: 0.2)
       }
     }
   }
   
   @IBAction func handleTapOnImage(_ sender: UITapGestureRecognizer) {
+    //1
     guard let imageMoveAnimator = imageMoveAnimator else {
       return
     }
+    //2
     progressSlider.isHidden = true
+    //3
     switch imageMoveAnimator.state {
     case .active:
       if imageMoveAnimator.isRunning {
@@ -113,7 +125,9 @@ class ViewController: UIViewController {
         let normalisedVelocity = animationVelocity.normalise(weight: animationDistance)
         //4
         let initialVelocity = normalisedVelocity.toVector
-        animateAnimalTo(location: imageDragStartPosition, initialVelocity: initialVelocity)
+        animateAnimalTo(
+          location: imageDragStartPosition,
+          initialVelocity: initialVelocity)
       }
       imageDragStartPosition = .none
     default:
@@ -125,23 +139,28 @@ class ViewController: UIViewController {
 
 extension ViewController {
   private func animateAnimalTo(location: CGPoint,
-                               initialVelocity: CGVector = .zero) {
-    
+                             initialVelocity: CGVector = .zero) {
     removeAnimatorObservers(animator: imageMoveAnimator)
+    //1
     let mass: CGFloat = 1.0
     let stiffness: CGFloat = 10.0
+    //2
     let criticalDamping = 2 * sqrt(mass * stiffness)
+    //3
     let damping = criticalDamping * 0.5
+    //4
     let parameters = UISpringTimingParameters(
       mass: mass,
       stiffness: stiffness,
       damping: damping,
       initialVelocity: initialVelocity)
-    imageMoveAnimator = UIViewPropertyAnimator(duration: 10, timingParameters: parameters)
+    //5
+    imageMoveAnimator = UIViewPropertyAnimator(
+      duration: 3,
+      timingParameters: parameters)
     imageMoveAnimator?.addAnimations {
       self.imageContainer.center = location
     }
-    
     imageMoveAnimator?.addCompletion { position in
       switch position {
       case .end: print("End")
@@ -149,7 +168,6 @@ extension ViewController {
       case .current: print("Current")
       }
     }
-    
     addAnimatorObservers(animator: imageMoveAnimator)
     imageMoveAnimator?.startAnimation()
   }
@@ -159,29 +177,38 @@ extension ViewController {
   }
   
   private func animateRandomAnimalChange() {
-    let randomImage = animalImages[Int(arc4random_uniform(UInt32(animalImages.count)))]
-    
+    //1
+    let randomIndex = Int(arc4random_uniform(UInt32(animalImages.count)))
+    let randomImage = animalImages[randomIndex]
+    //2
     let duration = imageMoveAnimator?.duration ?? 3.0
-    
+
     let originalImage = animalImageView.image
+
+    //3
     let snapshot = animalImageView.snapshotView(afterScreenUpdates: false)!
     imageContainer.addSubview(snapshot)
     animalImageView.alpha = 0
     animalImageView.image = randomImage
-    
-    imageChangeAnimator = UIViewPropertyAnimator(duration: duration, curve: .linear) {
-      self.animalImageView.alpha = 1
-      snapshot.alpha = 0
-    }
-    
+
+    //4
+    imageChangeAnimator = UIViewPropertyAnimator(
+        duration: duration,
+        curve: .linear) {
+          self.animalImageView.alpha = 1
+          snapshot.alpha = 0
+      }
+
+    //5
     imageChangeAnimator?.addCompletion({ (position) in
+      snapshot.removeFromSuperview()            
       if position == .start {
         self.animalImageView.image = originalImage
         self.animalImageView.alpha = 1
       }
-      snapshot.removeFromSuperview()
     })
-    
+
+    //6
     imageChangeAnimator?.startAnimation()
   }
 }

@@ -6,7 +6,9 @@ title: "Chapter 9: Property Animators"
 
 # Chapter 9: Property Animators
 
-If you’ve done any animations in UIKit, you’ve probably used the `UIView` animation methods (`UIView.animate(withDuration:animations:)` and friends). `UIViewPropertyAnimator` is a new way to write animation code. It isn’t a replacement for the existing API, nor is it objectively “better”, but it does give you a level of control that wasn’t possible before.
+If you’ve done any animations in UIKit, you’ve probably used the `UIView` animation methods `UIView.animate(withDuration:animations:)` and friends. 
+
+iOS 10 has introduced a new way to write animation code: using `UIViewPropertyAnimator`. This isn’t a replacement for the existing API, nor is it objectively “better”, but it does give you a level of control that wasn’t possible before.
 
 In this chapter, you’ll learn about the following new features that Property Animators give you access to:
 
@@ -15,7 +17,9 @@ In this chapter, you’ll learn about the following new features that Property A
 - Monitoring and altering of animation state
 - Pausing, reversing and scrubbing through animations or even abandoning them part-way through
 
-The fine control over animation timing alone would make a Property Animator an improvement for your existing `UIView` animations. But where they really shine is when you create animations that aren’t just fire-and-forget. If you’re animating something in response to user gestures, or if you want the user to be able to grab an animating object and do something else with it, then Property Animators are your new best friend.
+The fine control over animation timing alone would make a Property Animator an improvement for your existing `UIView` animations. But where they really shine is when you create animations that aren’t just fire-and-forget. 
+
+For example, if you’re animating something in response to user gestures, or if you want the user to be able to grab an animating object and do something else with it, then Property Animators are your new best friend.
 
 ## Getting started
 
@@ -23,9 +27,22 @@ Open the **Animalation** project in the starter materials for this chapter. This
 
 ![ipad](images/Animalation1.png)
 
-Tap the **Animate** button at the top, and the frog will move to a random position. Nothing else happens — yet.
+Tap the **Animate** button at the top, and the frog will move to a random position. This happens with a traditional call to `UIView.animate(withDuration:)` in **ViewController.swift**:
 
-Watch carefully as the frog moves. It starts slowly, then gets faster, then slows down again before it stops. That’s due to the animation’s **timing curve**. Fine control over the timing curve is one of the features that Property Animators give you. Before we get into the code, here’s a quick explanation of timing curves.
+```swift
+private func animateAnimalTo(location: CGPoint) {
+  // TODO
+  UIView.animate(withDuration: 3) {
+    self.imageContainer.center = location
+  }
+}
+```
+
+Watch carefully as the frog moves. It starts slowly, then gets faster, then slows down again before it stops. 
+
+That’s due to the animation’s **timing curve**. `UIView.animate(withDuration:)` uses a built-in timing curve called `curveEaseInOut`, which represents this slow/fast/slow behavior. There are a few other timing curve options provided by Apple, but your choices are quite limited.
+
+Often, you want precise control over an animation's timing curve, and this is one of the features that Property Animators give you. Before we get into the code, here’s a quick explanation of timing curves.
 
 ## Timing is everything
 
@@ -43,25 +60,39 @@ You can see that for the first quarter or so of the time, your animation doesn�
 
 `UIView` animations offer you four choices of timing curve: **linear** and **ease-in-ease-out**, which you’ve seen above; **ease-in**, which accelerates at the start but ends suddenly; and **ease-out**, which starts suddenly and decelerates at the end.
 
-`UIViewPropertyAnimator`, however, offers you nearly limitless control over the timing curve of your animations. In addition to the four pre-baked options above, you can supply your own cubic **Bézier timing curve**.
+`UIViewPropertyAnimator`, however, offers you nearly limitless control over the timing curve of your animations. In addition to the four pre-baked options above, you can supply your own **cubic Bézier timing curve**.
+
+### Cubic Bézier timing curves
 
 Your own cubic _what_ now?
 
 Don’t panic. You’ve been looking at these types of curves already. A cubic Bézier curve goes from point A to point D, while also doing its very best to get near points B and C on the way, like little kids wandering through a toy store behind their parents.
 
-In the two examples above, point A is in the bottom left and point D is in the top right. With the linear curve, points B and C happen to be in an exact straight line. With ease-in-ease-out, point B is below the line to the left of the center, and point C is above it to the right of the center. This rather beautiful diagram shows you how the curve changes when you move points B and C, known as the **control points**:
+Let's review the examples from earlier. In both examples above, point A is in the bottom left and point D is in the top right. With the linear curve, points B and C happen to be in an exact straight line. 
 
-![width=40%](images/Multiline.png)
+[TODO Rich: Diagram of this, cleerly showing points A, B, C, D on diagram.]
 
-The circles represent the control points of the curve, which are varied in the horizontal or vertical direction. The filled red circles correspond to the solid lines of the equivalent color, showing variations in the horizontal direction, and the hollow green circles to the dashed lines, showing variations in the vertical direction. In the center of the pattern is a straight line, produced when both control points are on the straight path between A and D.
+With ease-in-ease-out, point B is below the line to the left of the center, and point C is above it to the right of the center. 
 
-This diagram only shows a small number of the possible curves you can make in this fashion. The take home message is that you can model almost any combination of acceleration, progress, and deceleration.
+[TODO Rich: Diagram of this, cleerly showing points A, B, C, D on diagram.]
+
+Finally, here's what the ease-in and ease-out curves look like:
+
+[TODO Rich: Diagram of these side-by-side, clearly showing points A, B, C, D on diagrams.]
+
+But what if you want something custom? You could set up the four points like this and make a custom animation curve:
+
+[TODO Rich: Diagram of this, cleerly showing points A, B, C, D on diagram.]
+
+This would represent... [TODO Rich: Describe what this custom curve would make an animation feel like].
+
+Points B and C in this diagram are often referred to as **control points**. [TODO Rich: define control points here]. 
 
 ## Controlling your frog
 
 With that covered, it’s now time to write some code. :]
 
-Open **ViewController.swift** and find `animateAnimalTo(location:)`. This method currently uses a standard `UIView` animation to move the amphibian around. Replace the body of the method with this code:
+Open **ViewController.swift** and find `animateAnimalTo(location:)`. Replace the body of the method with this code:
 
 ```swift
 imageMoveAnimator = UIViewPropertyAnimator(
@@ -82,7 +113,11 @@ Let’s take a look at a custom timing curve. When frogs jump, they have an expl
 
 ![width=40%](images/FrogJump.png)
 
-You can see the two control points on the diagram. To create a Property Animator with a custom timing curve like this, you replace the initializer above with this code:
+[TODO Rich: Redo this and label each dot controlPoint1 (0.2, 0.8), controlPoint2 (0.4, 0.9). Also mark where 1 is on each axis.]
+
+You can see the two control points on the diagram. Let's try it out!
+
+Replace the contents of `animateAnimalTo(location:)` with the following:
 
 ```swift
 let controlPoint1 = CGPoint(x: 0.2, y: 0.8)
@@ -93,19 +128,24 @@ imageMoveAnimator = UIViewPropertyAnimator(
   controlPoint2: controlPoint2) {
     self.imageContainer.center = location
 }
+imageMoveAnimator?.startAnimation()
 ```
 
-The two control points are those shown on the diagram above — the timing curve runs from `(0, 0)` to `(1, 1)`. Build and run and you’ll see that the frog starts to move very quickly and then slows down — exactly as you wanted! Play around with the control points to see what effects you can get. What happens if any control point coordinate is greater than 1.0, or less than 0.0?
+The two control points are those shown on the diagram above — the timing curve runs from `(0, 0)` to `(1, 1)`. Build and run and you’ll see that the frog starts to move very quickly and then slows down — exactly as you wanted! 
+
+> **Challenge**: Play around with the control points to see what effects you can get. What happens if any control point coordinate is greater than 1.0, or less than 0.0?
 
 ## Spring animations
 
-The level of control over the timing curve goes even further than this. The two initializers you’ve used so far, passing in a curve or control points, are actually convenience initializers. All they do is create and pass on a `UITimingCurveProvider` object. This is a protocol that provides the relationship between elapsed time and animation progress. Unfortunately, the protocol doesn’t go as far as to let you have _total_ control, but it does give you access to another cool feature: springs!
+The level of control over the timing curve goes even further than this. The two initializers you’ve used so far, passing in a curve or control points, are actually convenience initializers. All they do is create and pass on a `UITimingCurveProvider` object. 
+
+`UITimingCurveProvider` is a protocol that provides the relationship between elapsed time and animation progress. Unfortunately, the protocol doesn’t go as far as to let you have _total_ control, but it does give you access to another cool feature: springs!
 
 > **Note**: “Wait!” you cry. “We already had spring animations!” Yes, you did, but they weren’t very customizable. `UIView` spring require a duration, as well as the various parameters describing the spring. To get natural-looking spring animations, you had to keep tweaking the duration value.
 >
 > Why? Well, imagine an actual spring. If you stretch it between your hands and let go, the duration of the spring’s motion is really a function of the properties of the spring (What is it made of? How thick is it?) and how far you stretched it. Similarly, the duration of the animation should be driven from the properties of the spring, not tacked on and the animation forced to fit.  
 
-A Spring System is described by three factors:
+Apple has provided an implementation of `UITimingCurveProvider` to create timing curves for springs, called `UISpringTimingParameters`. To use `UISpringTimingParameters` you need to provide three values to describe the spring system:
 
 - The **mass** of the object attached to the spring.
 - The **stiffness** of the spring.
@@ -141,8 +181,6 @@ imageMoveAnimator?.addAnimations {
 imageMoveAnimator?.startAnimation()
 ```
 
-> **Note:** If for some reason you don’t find specifying your own spring parameters exciting, there is also a convenience initializer `init(dampingRatio:, initialVelocity:)` for `UISpringTimingParameters` where 1.0 is a critically damped spring and values less than 1.0 will be under-damped.
-
 Here’s the breakdown:
 
 1. Create constants for the mass and stiffness values.
@@ -153,9 +191,17 @@ Here’s the breakdown:
 
 Note that since you’re using spring timing parameters, _duration is ignored_. You also have to add the animations separately when using this initializer.
 
-Build and run, and you’ll see the frog move in a more spring-like fashion. Experiment with the multiplier used in line 3 above and see what effect this has on the animation.
+Build and run, and you’ll see the frog move in a more spring-like fashion. 
 
-There’s one additional value when you create the spring timing parameters — the initial velocity. This means you can tell the Spring System that the object has momentum at the start of the animation — in which case it can make the animation look more natural. In the running app, you can drag the frog around, and when you release it, it will move back to where it started. If you do this quite quickly, you’ll see that when you let go, the frog suddenly starts moving in the opposite direction. It doesn’t look quite right.
+> **Challenge**: Experiment with the mass and stiffness used in section 1 and the multiplier used in section 3, and see what effect this has on the animation.
+
+> **Note:** If for some reason you don’t find specifying your own spring parameters exciting, there is also a convenience initializer `init(dampingRatio:, initialVelocity:)` for `UISpringTimingParameters` where 1.0 is a critically damped spring and values less than 1.0 will be under-damped.
+
+### Initial velocity
+
+There’s one additional value when you create the spring timing parameters — the initial velocity. This means you can tell the spring system that the object has momentum at the start of the animation — in which case it can make the animation look more natural. 
+
+Build and run the app, and drag the frog around. Notice that when you release the frog, he moves back to where he started. Then try moving the frog quickly, and release your mouse while you're still moving the frog. You’ll see that when you let go, the frog suddenly starts moving in the opposite direction. It doesn’t look quite right: you'd expect the frog to continue moving in the direction you were dragging for a bit before he moves back to the initial point.
 
 The initial velocity is a `CGVector`, measured in units that correspond to the total animation distance — that is, if you are animating something by 100 points, and the object is already moving at 100 points per second, the vector would have a magnitude of 1.0.
 
@@ -201,7 +247,7 @@ Taking each numbered comment in turn:
 
 Build and run and fling the frog about — you will see that the animation takes your initial gesture into account.
 
-> TODO: This is buggy in beta 3 - it doesn’t take the Y-component of the initial vector into account.
+> **Note**: At the time of writing this chapter, there appears to be a bug in Xcode 8 beta 4 where the Y-component of the initial vector isn't taken into account.
 
 ## Inspecting in-progress animations
 
@@ -211,7 +257,9 @@ What else can you get out of a Property Animator, besides fancy timing curves? W
 - `isRunning`: This is a `Bool` telling you if the animation is running or not.
 - `isReversed`: This is a `Bool` telling you if the animation is reversed or not.
 
-These properties are all observable via key-value-observing (KVO). KVO is quite tedious to set up, so that work has been done for you in **ViewController+Observers.swift**. All you need to do is add this line to the start of `animateAnimalTo(location:)`:
+These properties are all observable via key-value-observing (KVO). KVO is quite tedious to set up, so that work has been done for you in **ViewController+Observers.swift**. 
+
+Let's try it out. Add this line to the start of `animateAnimalTo(location:initialVelocity:)`:
 
 ```swift
 removeAnimatorObservers(animator: imageMoveAnimator)
@@ -225,7 +273,7 @@ addAnimatorObservers(animator: imageMoveAnimator)
 
 These lines link up the segmented controls at the bottom of the app to the current state of the animator. Build and run, start an animation and keep an eye on the segmented controls. You can see `state` and `isRunning` change before your eyes:
 
-> TODO: In Beta 3 `isRunning` never seems to change.
+> **Note**: At the time of writing this chapter, there appears to be a bug in Xcode 8 beta 4 where `isRunning` never seems to change.
 
 ![ipad](images/Animalation2.png)
 
@@ -379,7 +427,7 @@ For a running animation, this will toggle the reversed property; otherwise, it w
 
 Build and run, then tap the animate button — then tap it again. You’ll see the frog return to its original position, but using the spring timing to settle naturally back into place! You can see that the **isReversed** indicator on the screen updates appropriately.
 
-> TODO: This doesn’t update in beta 3
+> **Note**: At the time of writing this chapter, there appears to be a bug in Xcode 8 beta 4 where isReversed does not update properly.
 
 You now have three different ways that the animation can end: it can finish normally, you can stop it half way, or you can reverse it to finish where it started. This is useful information to know when you have a completion block on the animation, so you’re now going to add one now.
 
@@ -398,7 +446,6 @@ imageMoveAnimator?.addCompletion { position in
 The completion block takes a `UIViewAnimatingPosition` enum as its argument, which tells you what state the Animator was in when it finished.
 
 Build and run the project and try to obtain all three completion block printouts by ending the animation at the end, start or somewhere in the middle.  
-
 For a more practical demonstration of the various states of a completion block, you’re going to add a second animation and run the two of them together.
 
 ## Multiple animators
@@ -635,4 +682,4 @@ Build and run the project, show the animals view, then have fun interrupting you
 
 Congratulations! You’ve had a good exploration of the new powers available to you now that you can use Property Animators! Go forth and fill your apps with interruptible, interactive animations, including an extra level of awesomeness in your view controller transitions.
 
-There’s a lot more detail on Property Animators in our excellent book, _iOS Animations By Tutorials_! Check it out! The WWDC video, 2016 session 216, available at [https://developer.apple.com/videos/play/wwdc2016/216/](https://developer.apple.com/videos/play/wwdc2016/216/) is also full of useful information.
+There’s a lot more detail on Property Animators in our excellent book, _iOS Animations By Tutorials_; check it out! The WWDC video, 2016 session 216, available at [https://developer.apple.com/videos/play/wwdc2016/216/](https://developer.apple.com/videos/play/wwdc2016/216/) is also full of useful information.

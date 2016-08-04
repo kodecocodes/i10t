@@ -41,7 +41,7 @@ class DropDownDismissAnimator : NSObject, UIViewControllerAnimatedTransitioning 
       else {
         return
     }
-    let containerView = transitionContext.containerView()
+    let containerView = transitionContext.containerView
     containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
     let finalFrame = containerView.bounds.offsetBy(dx: 0, dy: containerView.bounds.height)
     
@@ -51,20 +51,22 @@ class DropDownDismissAnimator : NSObject, UIViewControllerAnimatedTransitioning 
         fromVC.view.frame = finalFrame
       },
       completion: { _ in
-        transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
+        transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
       }
     )
-  }
-  
-  func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
-    let animator = UIViewPropertyAnimator(duration: transitionDuration(using: transitionContext), curve: .easeInOut) {
-      self.performAnimations(using: transitionContext)
-    }
-    
-    return animator
   }
   
   func animationEnded(_ transitionCompleted: Bool) {
     animationCleanup?()
   }
+  
+  func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
+    let animator = UIViewPropertyAnimator(
+      duration: transitionDuration(using: transitionContext),
+      curve: .easeInOut) {
+        self.performAnimations(using: transitionContext)
+    }
+    return animator
+  }
+  
 }

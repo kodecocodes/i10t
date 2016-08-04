@@ -25,6 +25,6 @@ import UIKit
 class AnimalsViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
-    transitioningDelegate = UIApplication.shared().delegate as! AppDelegate
+    transitioningDelegate = UIApplication.shared.delegate as! AppDelegate
   }
 }
