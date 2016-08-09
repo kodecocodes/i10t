@@ -36,8 +36,9 @@ The problem is that it will be a while before you get any code in good shape fro
 Here’s a rundown of the issues you’ll face, and which tools you’ll use to solve them:
 
 1. First, the memory footprint of Coloji continues to grow during use. You’ll use the new Memory Graph Debugger to clean this up.
-2. Next, the table view cells don’t load anymore. You’ll use the View Debugger to figure out why, then you’ll leverage the run time constraint debugger while rebuilding the mysteriously missing emoji detail view.
-3. Finally, a race condition has reared its ugly head. You’ll use Thread Sanitizer to hunt it down and fix it for good.
+2. Next, the table view cells don’t load anymore. You’ll use the View Debugger to figure out why.
+3. Then you'll encounter a mysteriously absent emoji detail view. You'll use the run time constraint debugger to flush out this bug.
+4. Finally, a race condition has reared its ugly head. You’ll use Thread Sanitizer to hunt it down and fix it for good.
 
 You’ve just received a pull request from Ray with what he hopes is the completed project. Open **Coloji.xcodeproj** in the **memory-debugger-starter** folder and take a look at what he pushed. Here are some notes on the most important pieces of the project:
 
