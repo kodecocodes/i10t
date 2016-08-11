@@ -19,7 +19,7 @@ allTomorrow > next24Hours
 allTomorrow > next48Hours
 //: Make an interval to describe a working week:
 let calendar = Calendar.current
-var components = calendar.dateComponents([.year, .weekOfYear], from: Date())
+var components = calendar.components([.year, .weekOfYear], from: Date())
 components.weekday = 2
 components.hour = 8
 let startOfWeek = calendar.date(from: components)!

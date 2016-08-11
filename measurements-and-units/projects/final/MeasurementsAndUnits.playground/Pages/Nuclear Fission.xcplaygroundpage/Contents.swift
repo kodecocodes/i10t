@@ -12,19 +12,19 @@ let ba141 = Measurement(value: 140.914411, unit: amus)
 let massAfter = kr92 + ba141 + (3 * neutron)
 //: Function for converting mass to energy, thanks to Einstein:
 func emc2(mass: Measurement<UnitMass>) -> Measurement<UnitEnergy> {
-    let speedOfLight = Measurement(value: 299792458, unit: UnitSpeed.metersPerSecond)
-    let energy = mass.converted(to: .kilograms).value * pow(speedOfLight.value, 2)
-    return Measurement(value: energy, unit: UnitEnergy.joules)
+  let speedOfLight = Measurement(value: 299792458, unit: UnitSpeed.metersPerSecond)
+  let energy = mass.converted(to: .kilograms).value * pow(speedOfLight.value, 2)
+  return Measurement(value: energy, unit: UnitEnergy.joules)
 }
 //: How much mass has been converted to energy for one atom?
 let massDifference = massBefore - massAfter
 let energy = emc2(mass: massDifference)
 //: How many atoms in a given mass of a substance?
 func atoms(atomicMass: Double, substanceMass: Measurement<UnitMass>) -> Double {
-    let grams = substanceMass.converted(to: .grams)
-    let moles = grams.value / atomicMass
-    let avogadro = 6.0221409e+23
-    return moles * avogadro
+  let grams = substanceMass.converted(to: .grams)
+  let moles = grams.value / atomicMass
+  let avogadro = 6.0221409e+23
+  return moles * avogadro
 }
 //: How many atoms in a pound of Uranium-235?
 let numberOfAtoms = atoms(atomicMass: u235.value, substanceMass: Measurement(value: 1, unit: .pounds))
