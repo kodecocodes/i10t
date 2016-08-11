@@ -26,7 +26,7 @@ import UIKit
 
 class ColojiTableViewController: UITableViewController {
   
-  let colors = [UIColor.gray(), UIColor.green(), UIColor.yellow(), UIColor.brown(), UIColor.cyan(), UIColor.purple()]
+  let colors: [UIColor] = [.gray, .green, .yellow, .brown, .cyan, .purple]
   let emoji = ["💄", "🙋🏻", "👠", "🎒", "🏩", "🎏"]
   let colojiStore = ColojiDataStore()
   
@@ -38,7 +38,7 @@ class ColojiTableViewController: UITableViewController {
     
     loadData()
   }
-  
+
   // MARK: - Table view data source
   override func numberOfSections(in tableView: UITableView) -> Int {
     return 1
@@ -60,7 +60,7 @@ class ColojiTableViewController: UITableViewController {
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
-    if let destVC = segue.destinationViewController as? ColojiViewController,
+    if let destVC = segue.destination as? ColojiViewController,
       let selectedIndex = tableView.indexPathForSelectedRow
     {
       destVC.coloji = colojiStore.colojiAt(index: selectedIndex.row)
@@ -82,7 +82,7 @@ extension ColojiTableViewController {
         group.leave()
       }
     }
-    
+
     for emoji in emoji {
       group.enter()
       queue.async {
@@ -92,7 +92,7 @@ extension ColojiTableViewController {
       }
     }
     
-    group.notify(queue: DispatchQueue.main) {
+    group.notify(queue: DispatchQueue.main) { 
       self.tableView.reloadData()
     }
   }

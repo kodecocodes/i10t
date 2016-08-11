@@ -29,16 +29,14 @@ class ColojiTableViewController: UITableViewController {
   let colors: [UIColor] = [.gray, .green, .yellow, .brown, .cyan, .purple]
   let emoji = ["💄", "🙋🏻", "👠", "🎒", "🏩", "🎏"]
   let colojiStore = ColojiDataStore()
-  
   let queue = DispatchQueue(label: "com.raywenderlich.coloji.data-load", attributes: .concurrent, target: .none)
-  
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     loadData()
   }
-
+  
   // MARK: - Table view data source
   override func numberOfSections(in tableView: UITableView) -> Int {
     return 1
@@ -66,7 +64,6 @@ class ColojiTableViewController: UITableViewController {
       destVC.coloji = colojiStore.colojiAt(index: selectedIndex.row)
     }
   }
-  
 }
 
 
@@ -75,27 +72,23 @@ extension ColojiTableViewController {
     let group = DispatchGroup()
     
     for color in colors {
-      group.enter()
-      queue.async {
-        let coloji = createColoji(color: color)
-        self.colojiStore.append(coloji: coloji)
-        group.leave()
-      }
-    }
-
-    for emoji in emoji {
-      group.enter()
-      queue.async {
-        let coloji = createColoji(emoji: emoji)
-        self.colojiStore.append(coloji: coloji)
-        group.leave()
-      }
+      queue.async(group: group, qos: .background,
+                  flags: DispatchWorkItemFlags(), execute: {
+                    let coloji = createColoji(color: color)
+                    self.colojiStore.append(coloji: coloji)
+      })
     }
     
-    group.notify(queue: DispatchQueue.main) { 
+    for emoji in emoji {
+      queue.async(group: group, qos: .background,
+                  flags: DispatchWorkItemFlags(), execute: {
+                    let coloji = createColoji(emoji: emoji)
+                    self.colojiStore.append(coloji: coloji)
+      })
+    }
+    
+    group.notify(queue: DispatchQueue.main) {
       self.tableView.reloadData()
     }
   }
 }
-
-

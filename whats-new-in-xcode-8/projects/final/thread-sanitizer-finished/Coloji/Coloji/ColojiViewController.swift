@@ -22,55 +22,44 @@
 
 import UIKit
 
-class ColojiTableViewCell: UITableViewCell {
-  private let label = ColojiLabel()
+class ColojiViewController: UIViewController {
   
-  var coloji: Coloji? {
-    didSet {
-      if let coloji = coloji {
-        addLabel(coloji: coloji)
-      }
-    }
+  var coloji: Coloji?
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    createLayout()
   }
   
-  private func addLabel(coloji: Coloji) {
-    label.coloji = coloji
-    if(label.superview == .none) {
-      label.translatesAutoresizingMaskIntoConstraints = false
-      contentView.addSubview(label)
-      NSLayoutConstraint.activate([
-        label.leadingAnchor.constraint(equalTo:
-          contentView.leadingAnchor),
-        label.bottomAnchor.constraint(equalTo:
-          contentView.bottomAnchor),
-        label.trailingAnchor.constraint(equalTo:
-          contentView.trailingAnchor),
-        label.topAnchor.constraint(equalTo:
-          contentView.topAnchor)
-        ])
-    }
-  }
-}
-
-private class ColojiLabel: UILabel {
-  var coloji: Coloji? {
-    didSet {
-      if let coloji = coloji {
-        display(coloji: coloji)
-      }
-    }
-  }
-  
-  private func display(coloji: Coloji) {
-    font = UIFont.systemFont(ofSize: 50)
-    textAlignment = .center
+  private func createLayout() {
+    guard let coloji = coloji else { return }
+    
     switch coloji {
     case .color(let color):
-      backgroundColor = color
-      text = .none
+      layoutFor(color: color)
     case .emoji(let emoji):
-      backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-      text = emoji
+      layoutFor(emoji: emoji)
     }
+  }
+  
+  private func layoutFor(color: UIColor) {
+    view.backgroundColor = color
+  }
+  
+  private func layoutFor(emoji: String) {
+    view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    
+    let emojiLabel = UILabel()
+    view.addSubview(emojiLabel)
+    emojiLabel.text = emoji
+    emojiLabel.font = UIFont.systemFont(ofSize: 100)
+    emojiLabel.sizeToFit()
+    emojiLabel.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      emojiLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      emojiLabel.widthAnchor.constraint(equalTo: view.widthAnchor),
+      emojiLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
   }
 }
