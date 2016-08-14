@@ -50,11 +50,11 @@ Consider a very simple animation, ten seconds in length, where a view moves alon
 
 At any given second, how far along the line is the view? The answer to this question is given by the animation’s **timing curve**. The simplest timing curve isn’t curved at all — it’s called the **linear** curve. Animations using the linear curve move along at a constant speed: after 1 second, the view is at position 1. After 2 seconds, position 2, and so on. You could plot this on a graph like so:
 
-![width=40%](images/Linear.png)
+![width=40%](images/LinearNoPoints.png)
 
 This doesn’t lead to very fluid or natural-looking animations; in real life, things don’t go from not moving at all to moving at a constant rate, and then suddenly stopping when they get to the end. For that reason, the `UIView` animation API uses an **ease-in, ease-out** timing curve. On a graph, that looks more like this:
 
-![width=40%](images/Easing.png)
+![width=40%](images/EasingNoPoints.png)
 
 You can see that for the first quarter or so of the time, your animation doesn’t make much progress. It then speeds up and slows again near the end. To the eye, the animated object accelerates, moves then decelerates and stops. This looks a lot more natural and is what you saw with the frog animation.
 
@@ -66,27 +66,27 @@ You can see that for the first quarter or so of the time, your animation doesn�
 
 Your own cubic _what_ now?
 
-Don’t panic. You’ve been looking at these types of curves already. A cubic Bézier curve goes from point A to point D, while also doing its very best to get near points B and C on the way, like little kids wandering through a toy store behind their parents.
+Don’t panic. You’ve been looking at these types of curves already. A cubic Bézier curve goes from point A to point D, while also doing its very best to get near points B and C on the way, like a dog running across the park, being distracted by interesting trees.
 
-Let's review the examples from earlier. In both examples above, point A is in the bottom left and point D is in the top right. With the linear curve, points B and C happen to be in an exact straight line. 
+Let's review the examples from earlier. In both examples above, point A is in the bottom left and point D is in the top right. With the linear curve, points B and C happen to be in an exact straight line: 
 
-[TODO Rich: Diagram of this, cleerly showing points A, B, C, D on diagram.]
+![width=40%](images/Linear.png)
 
-With ease-in-ease-out, point B is below the line to the left of the center, and point C is above it to the right of the center. 
+With ease-in-ease-out, point B is directly to the right of point A, and point C is directly to the left of point D. You can imagine the line being pulled from A towards B, then C takes over, then D: 
 
-[TODO Rich: Diagram of this, cleerly showing points A, B, C, D on diagram.]
+![width=40%](images/Easing.png)
 
-Finally, here's what the ease-in and ease-out curves look like:
+Finally, here's what the ease-in and ease-out curves look like. With the ease-in curve, point C is directly under point D, and with the ease-out curve, B is under A:
 
-[TODO Rich: Diagram of these side-by-side, clearly showing points A, B, C, D on diagrams.]
+![width=80%](images/EaseInAndEaseOut.png)
 
 But what if you want something custom? You could set up the four points like this and make a custom animation curve:
 
-[TODO Rich: Diagram of this, cleerly showing points A, B, C, D on diagram.]
+![width=40%](images/CustomCurve.png)
 
-This would represent... [TODO Rich: Describe what this custom curve would make an animation feel like].
+Here, points B and C are above the top of the graph, so the animation would actually overshoot and then come back to its final position. 
 
-Points B and C in this diagram are often referred to as **control points**. [TODO Rich: define control points here]. 
+Points B and C in these diagrams are the **control points** of the animation curve. They define the shape of the line as it travels from A to D. 
 
 ## Controlling your frog
 
@@ -113,15 +113,13 @@ Let’s take a look at a custom timing curve. When frogs jump, they have an expl
 
 ![width=40%](images/FrogJump.png)
 
-[TODO Rich: Redo this and label each dot controlPoint1 (0.2, 0.8), controlPoint2 (0.4, 0.9). Also mark where 1 is on each axis.]
-
 You can see the two control points on the diagram. Let's try it out!
 
 Replace the contents of `animateAnimalTo(location:)` with the following:
 
 ```swift
-let controlPoint1 = CGPoint(x: 0.2, y: 0.8)
-let controlPoint2 = CGPoint(x: 0.4, y: 0.9)
+let controlPoint1 = CGPoint(x: 0.2, y: 0.8) // B on the diagram
+let controlPoint2 = CGPoint(x: 0.4, y: 0.9) // C on the diagram
 imageMoveAnimator = UIViewPropertyAnimator(
   duration: 3,
   controlPoint1: controlPoint1,
@@ -131,7 +129,7 @@ imageMoveAnimator = UIViewPropertyAnimator(
 imageMoveAnimator?.startAnimation()
 ```
 
-The two control points are those shown on the diagram above — the timing curve runs from `(0, 0)` to `(1, 1)`. Build and run and you’ll see that the frog starts to move very quickly and then slows down — exactly as you wanted! 
+The two control points correspond to the labelled points on the diagram as indicated by the comments. The timing curve always runs from `(0, 0)` at **A** to `(1, 1)` at **D**. Build and run and you’ll see that the frog starts to move very quickly and then slows down — exactly as you wanted! 
 
 > **Challenge**: Play around with the control points to see what effects you can get. What happens if any control point coordinate is greater than 1.0, or less than 0.0?
 
