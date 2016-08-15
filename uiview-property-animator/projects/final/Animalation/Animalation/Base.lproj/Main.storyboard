@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11185.3" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11151.4"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Animalation" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="JX5-et-ABP">
+                                <subviews>
+                                    <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hzR-vx-m0j">
+                                        <connections>
+                                            <action selector="handleProgressSliderChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="LPR-Ot-FSj"/>
+                                        </connections>
+                                    </slider>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Rci-0G-Mnj">
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="bVm-Tb-hbh">
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="state" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FuG-Df-yth">
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                                        <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hkE-0u-XOp">
+                                                        <segments>
+                                                            <segment title=".inactive"/>
+                                                            <segment title=".active"/>
+                                                            <segment title=".stopped"/>
+                                                        </segments>
+                                                    </segmentedControl>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="g7c-H7-AkI">
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="isRunning" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5oB-Sz-T3k">
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                                        <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xPz-6q-DBO">
+                                                        <segments>
+                                                            <segment title="false"/>
+                                                            <segment title="true"/>
+                                                        </segments>
+                                                    </segmentedControl>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="KWX-8l-xtq">
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="isReversed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sMd-6P-fUB">
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                                        <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="7De-sK-Skc">
+                                                        <segments>
+                                                            <segment title="false"/>
+                                                            <segment title="true"/>
+                                                        </segments>
+                                                    </segmentedControl>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NBm-hX-gfB">
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="Animate!"/>
+                                <connections>
+                                    <action selector="handleAnimateButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Tjy-4L-asF"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SjW-Hn-dEx">
+                                <frame key="frameInset" minX="284" minY="412" width="200" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="frog" translatesAutoresizingMaskIntoConstraints="NO" id="1fh-YP-Bqu">
+                                        <frame key="frameInset" width="200" height="200"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="c4w-kV-D4P" appends="YES" id="iWB-49-5Sf"/>
+                                    <outletCollection property="gestureRecognizers" destination="HeU-5K-LHN" appends="YES" id="Uy5-Cf-67Q"/>
+                                </connections>
+                            </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aOF-xb-tFn">
+                                <state key="normal" title="Stop"/>
+                                <connections>
+                                    <action selector="handleStopButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="R4B-2j-Nh2"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rKL-Mn-3pE">
+                                <state key="normal" title="Animals"/>
+                                <connections>
+                                    <segue destination="PN9-zv-VJa" kind="presentation" id="xPw-Xd-ghW"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.71372549019999998" green="0.7843137255" blue="0.29803921570000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" red="0.058513942880000003" green="0.31111027689999998" blue="0.40635734559999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="JX5-et-ABP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="36z-hs-2HB"/>
+                            <constraint firstItem="aOF-xb-tFn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GHl-qM-VF4"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="JX5-et-ABP" secondAttribute="bottom" constant="50" id="Gvs-4c-1Ox"/>
+                            <constraint firstItem="NBm-hX-gfB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Jxb-jj-FoA"/>
+                            <constraint firstItem="aOF-xb-tFn" firstAttribute="top" secondItem="NBm-hX-gfB" secondAttribute="bottom" constant="8" id="SDc-R3-5oY"/>
+                            <constraint firstAttribute="trailing" secondItem="rKL-Mn-3pE" secondAttribute="trailing" constant="16" id="dN7-e0-j0Y"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="rKL-Mn-3pE" secondAttribute="bottom" constant="20" id="jYO-Qh-AQx"/>
+                            <constraint firstItem="NBm-hX-gfB" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="xjs-Et-ESv"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="animalImageView" destination="1fh-YP-Bqu" id="hfu-Bt-BB4"/>
+                        <outlet property="imageContainer" destination="SjW-Hn-dEx" id="xiJ-rJ-J1k"/>
+                        <outlet property="progressSlider" destination="hzR-vx-m0j" id="XqR-QN-T4F"/>
+                        <outlet property="reversedSegment" destination="7De-sK-Skc" id="RZ0-Yd-UNl"/>
+                        <outlet property="runningSegment" destination="xPz-6q-DBO" id="6nn-5K-fvR"/>
+                        <outlet property="stateSegment" destination="hkE-0u-XOp" id="mmQ-eX-iSV"/>
+                        <outlet property="stopButton" destination="aOF-xb-tFn" id="fPR-zc-0Ej"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="c4w-kV-D4P">
+                    <connections>
+                        <action selector="handleTapOnImage:" destination="BYZ-38-t0r" id="jbk-ov-om7"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="HeU-5K-LHN">
+                    <connections>
+                        <action selector="handleDragImage:" destination="BYZ-38-t0r" id="u8y-TO-EJa"/>
+                    </connections>
+                </panGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="137.5" y="137.6953125"/>
+        </scene>
+        <!--Animals View Controller-->
+        <scene sceneID="otH-xo-wRV">
+            <objects>
+                <viewController id="PN9-zv-VJa" customClass="AnimalsViewController" customModule="Animalation" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XzA-J0-GXU"/>
+                        <viewControllerLayoutGuide type="bottom" id="cVf-nn-hFt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vDd-Nd-SL6">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="MaT-pB-naA">
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ImT-Ax-fUy">
+                                        <subviews>
+                                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="bear" translatesAutoresizingMaskIntoConstraints="NO" id="OyW-am-R0N"/>
+                                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="cat" translatesAutoresizingMaskIntoConstraints="NO" id="ccm-Aq-gHT"/>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0om-w1-FbQ">
+                                        <subviews>
+                                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="frog" translatesAutoresizingMaskIntoConstraints="NO" id="vLM-GT-8G3"/>
+                                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="wolf" translatesAutoresizingMaskIntoConstraints="NO" id="3Jk-RV-jI9"/>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="MaT-pB-naA" firstAttribute="centerY" secondItem="vDd-Nd-SL6" secondAttribute="centerY" id="1DP-LG-Evm"/>
+                            <constraint firstItem="MaT-pB-naA" firstAttribute="centerX" secondItem="vDd-Nd-SL6" secondAttribute="centerX" id="2Tz-is-kZp"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="swh-7m-ezN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137" y="902"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="bear" width="300" height="300"/>
+        <image name="cat" width="300" height="300"/>
+        <image name="frog" width="300" height="300"/>
+        <image name="wolf" width="300" height="300"/>
+    </resources>
+</document>
