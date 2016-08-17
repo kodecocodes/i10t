@@ -137,9 +137,9 @@ Add the following extension to **CandyStickerBrowserViewController.swift**, belo
 ```swift
 extension CandyStickerBrowserViewController {
 
-  private func loadStickers() {
+  func loadStickers() {
     stickers = stickerNames.map({ name in
-      let url = Bundle.main.urlForResource(name,
+      let url = Bundle.main.url(forResource: name,
         withExtension: "png")!
       return try! MSSticker(
         contentsOfFileURL: url,
@@ -241,7 +241,7 @@ This will pass the chocoholic mode down to any child view controller that is `Ch
 First, update the declaration of `loadStickers()`:
 
 ```swift
-private func loadStickers(_ chocoholic: Bool = false) {
+func loadStickers(_ chocoholic: Bool = false) {
 ```
 
 This lets you pass in the chocoholic mode, with a default value of `false` so the existing call from `viewDidLoad()` remains unaffected.
@@ -252,7 +252,7 @@ Next, replace the whole function body with this code:
 stickers = stickerNames.filter( { name in
   return chocoholic ? name.contains("Chocolate") : true
 }).map({ name in
-  let url = Bundle.main.urlForResource(name,
+  let url = Bundle.main.url(forResource: name,
     withExtension: "png")!
   return try! MSSticker(contentsOfFileURL: url,
     localizedDescription: name)
@@ -376,7 +376,7 @@ Just as you did with the sticker browser view controller subclass, you'll need t
 ```swift
 extension StickerCollectionViewController {
   // 1
-  private func loadStickers(_ chocoholic: Bool = false) {
+  func loadStickers(_ chocoholic: Bool = false) {
     // 2
     stickerGroups = stickerNameGroups.filter({ (name, _) in
       // 3
@@ -384,7 +384,7 @@ extension StickerCollectionViewController {
     }).map { (name, stickerNames) in
       // 4
       let stickers: [MSSticker] = stickerNames.map { name in
-        let url = Bundle.main.urlForResource(name,
+        let url = Bundle.main.url(forResource: name,
           withExtension: "png")!
         return try! MSSticker(contentsOfFileURL: url,
           localizedDescription: name)
@@ -393,7 +393,7 @@ extension StickerCollectionViewController {
       return StickerGroup(name: name, members: stickers)
     }
     // 6
-    stickerGroups.sort(isOrderedBefore: { $0.name < $1.name })
+    stickerGroups.sort(by: { $0.name < $1.name })
   }
 }
 ```

@@ -51,7 +51,7 @@ Open **MessagesViewController.swift** and add the following extension:
 ```swift
 // MARK: Child View Controllers
 extension MessagesViewController {
-  private func switchTo(viewController controller: UIViewController) {
+  func switchTo(viewController controller: UIViewController) {
     // Remove any existing child view controller
     for child in childViewControllers {
       child.willMove(toParentViewController: .none)
@@ -84,7 +84,7 @@ The first view controller the user will see is the `SummaryViewController` – a
 Add the following utility function to the extension to create a new `SummaryViewController`:
 
 ```swift
-private func instantiateSummaryViewController(game: WenderPicGame?) ->
+func instantiateSummaryViewController(game: WenderPicGame?) ->
   UIViewController {
   guard let controller = storyboard?.instantiateViewController(
     withIdentifier: "summaryVC") as? SummaryViewController
@@ -104,7 +104,7 @@ The decision for which of the three game view controllers you will show at any p
 Add the following code to the extension:
 
 ```swift
-private func presentViewController(
+func presentViewController(
   forConversation conversation: MSConversation,
   withPresentationStyle style: MSMessagesAppPresentationStyle) {
 
@@ -174,7 +174,7 @@ if let conversation = activeConversation {
 Inside your extension where you work with the child view controllers, add a utility function to the to make a new `DrawingViewController`:
 
 ```swift
-private func instantiateDrawingViewController(game: WenderPicGame?) ->
+func instantiateDrawingViewController(game: WenderPicGame?) ->
   UIViewController {
   guard let controller = storyboard?.instantiateViewController(
     withIdentifier: "drawingVC") as? DrawingViewController
@@ -252,7 +252,7 @@ In **MessagesViewController.swift**, add the following function in a new extensi
 
 ```swift
 extension MessagesViewController {
-  private func composeMessage(with game: WenderPicGame,
+  func composeMessage(with game: WenderPicGame,
   caption: String, session: MSSession? = .none) -> MSMessage {
     //1
     let layout = MSMessageTemplateLayout()
@@ -443,7 +443,7 @@ Now you have the ability to reconstruct a game from a message. If the user recei
 Switch to **MessagesViewController.swift** and add the following function to create the `GuessViewController` in the extension where you define the functions for dealing with child view controllers:
 
 ```swift
-private func instantiateGuessViewController(game: WenderPicGame?) ->
+func instantiateGuessViewController(game: WenderPicGame?) ->
   UIViewController {
   guard let controller = storyboard?.instantiateViewController(
     withIdentifier: "guessVC") as? GuessViewController

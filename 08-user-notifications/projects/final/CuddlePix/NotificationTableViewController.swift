@@ -25,7 +25,7 @@ import UserNotifications
 
 class NotificationTableViewController: UITableViewController {
   
-  private var tableSectionProviders = [NotificationTableSection : TableSectionProvider]()
+  var tableSectionProviders = [NotificationTableSection : TableSectionProvider]()
   
   @IBAction func handleRefresh(_ sender: UIRefreshControl) {
     loadNotificationData {
@@ -125,7 +125,7 @@ extension NotificationTableViewController {
     loadNotificationData()
   }
   
-  private func loadNotificationData(callback: (() -> ())? = .none) {
+  func loadNotificationData(callback: (() -> ())? = .none) {
     let group = DispatchGroup()
     
     // 1
@@ -180,8 +180,8 @@ extension NotificationTableViewController {
 
 // MARK: - ConfigurationViewControllerDelegate
 extension NotificationTableViewController: ConfigurationViewControllerDelegate {
-  override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
-    if let destVC = segue.destinationViewController as? ConfigurationViewController {
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let destVC = segue.destination as? ConfigurationViewController {
       destVC.delegate = self
     }
   }

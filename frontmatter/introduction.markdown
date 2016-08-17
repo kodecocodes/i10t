@@ -25,11 +25,14 @@ Sit back, relax and prepare for some high quality tutorials!
 
 By purchasing this book early, you get early access to this book while it is in development.
 
-Since this book is still in early access, not all chapters are ready at this point. This first early access release has the 3/14 chapters ready:
+Since this book is still in early access, not all chapters are ready at this point. This second early access release has the 6/14 chapters ready (compatible with Xcode 8 beta 6):
 
+* Chapter 2, Xcode 8 Debugging Improvements
 * Chapter 4, Beginning Message Apps
 * Chapter 5, Intermediate Message Apps
 * Chapter 8, User Notifications
+* Chapter 9, UIView Property Animator
+* Chapter 10, Measurements and Units
 
 You may wish to wait until all chapters are ready before reading the book, to get an optimal reading experience, or check out the iOS 10 screencasts which we are releasing, which this book is based on.
 
@@ -39,7 +42,7 @@ But if you want a head start or a sneak peek of what's coming, that's what this 
 
 To follow along with the tutorials in this book, you'll need the following:
 - __A Mac running OS X Yosemite or later.__ You'll need this to be able to install the latest version of Xcode.
-- __Xcode 8 beta 3 or later.__ Xcode is the main development tool for iOS. You'll need Xcode 8 beta 3 or later for all tasks in this book. You can download the latest version of Xcode 8 beta on Apple's developer site here: [apple.co/2asi58y](https://developer.apple.com/develop/)
+- __Xcode 8 beta 6 or later.__ Xcode is the main development tool for iOS. You'll need Xcode 8 beta 6 or later for all tasks in this book. You can download the latest version of Xcode 8 beta on Apple's developer site here: [apple.co/2asi58y](https://developer.apple.com/develop/)
 - __One or more devices (iPhone, iPad, or iPod Touch) running iOS 10 or later.__ Most of the chapters in the book let you run your code on the iOS 10 Simulator that comes with Xcode. However, a few chapters later in the book require one or more physical iOS devices for testing.
   
 Once you have these items in place, you'll be able to follow along with every chapter in this book. 

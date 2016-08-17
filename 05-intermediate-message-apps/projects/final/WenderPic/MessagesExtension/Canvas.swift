@@ -60,14 +60,15 @@ extension Canvas {
 }
 
 extension Canvas {
-  private func addLine(fromPoint: CGPoint, toPoint: CGPoint, withForce force: CGFloat = 1) {
+  func addLine(fromPoint: CGPoint, toPoint: CGPoint, withForce force: CGFloat = 1) {
     UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0.0)
     
     image?.draw(in: bounds)
     
     if let cxt = UIGraphicsGetCurrentContext() {
-      cxt.moveTo(x: fromPoint.x, y: fromPoint.y)
-      cxt.addLineTo(x: toPoint.x, y: toPoint.y)
+    
+      cxt.move(to: fromPoint)
+      cxt.addLine(to: toPoint)
       
       cxt.setLineCap(.round)
       

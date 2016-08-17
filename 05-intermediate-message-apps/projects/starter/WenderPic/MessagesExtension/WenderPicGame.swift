@@ -38,7 +38,7 @@ struct WenderPicGame {
   let gameId: UUID
   var gameState = GameState.challenge
   
-  private init(word: String, drawerId: UUID) {
+  init(word: String, drawerId: UUID) {
     self.word = word
     self.drawerId = drawerId
     self.currentDrawing = .none

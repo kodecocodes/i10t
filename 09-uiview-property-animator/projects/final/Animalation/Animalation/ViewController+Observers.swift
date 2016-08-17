@@ -37,14 +37,22 @@ extension ViewController {
     animator.addObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.isReversed), options: .new, context: nil)
   }
   
-  override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
+  override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
     switch keyPath {
     case .some(#keyPath(UIViewPropertyAnimator.state)):
       stateSegment.selectedSegmentIndex = imageMoveAnimator?.state.rawValue ?? 0
     case .some(#keyPath(UIViewPropertyAnimator.isRunning)):
-      runningSegment.selectedSegmentIndex = Int(imageMoveAnimator?.isRunning ?? false)
+      if imageMoveAnimator?.isRunning == true {
+        runningSegment.selectedSegmentIndex = 1
+      } else {
+        runningSegment.selectedSegmentIndex = 0
+      }
     case .some(#keyPath(UIViewPropertyAnimator.isReversed)):
-      reversedSegment.selectedSegmentIndex = Int(imageMoveAnimator?.isReversed ?? false)
+      if imageMoveAnimator?.isReversed == true {
+        reversedSegment.selectedSegmentIndex = 1
+      } else {
+        reversedSegment.selectedSegmentIndex = 0
+      }
     default:
       break
     }

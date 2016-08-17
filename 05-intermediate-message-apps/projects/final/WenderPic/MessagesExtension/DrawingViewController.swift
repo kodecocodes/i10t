@@ -55,7 +55,7 @@ class DrawingViewController: UIViewController {
     maxInkAllowed = view.bounds.width
   }
   
-  private func update(forGame game: WenderPicGame?) {
+  func update(forGame game: WenderPicGame?) {
     guard let game = game else { return }
     canvas?.image = game.currentDrawing
     instructionLabel?.text = game.word

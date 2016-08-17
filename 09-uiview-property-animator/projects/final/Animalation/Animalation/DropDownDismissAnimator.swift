@@ -36,8 +36,8 @@ class DropDownDismissAnimator : NSObject, UIViewControllerAnimatedTransitioning 
   
   func performAnimations(using transitionContext: UIViewControllerContextTransitioning) {
     guard
-      let fromVC = transitionContext.viewController(forKey: UITransitionContextFromViewControllerKey),
-      let toVC = transitionContext.viewController(forKey: UITransitionContextToViewControllerKey)
+      let fromVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from),
+      let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
       else {
         return
     }

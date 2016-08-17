@@ -57,7 +57,7 @@ class ColojiTableViewController: UITableViewController {
     return cell
   }
   
-  override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let destVC = segue.destination as? ColojiViewController,
       let selectedIndex = tableView.indexPathForSelectedRow
     {
@@ -68,7 +68,7 @@ class ColojiTableViewController: UITableViewController {
 
 
 extension ColojiTableViewController {
-  private func loadData() {
+  func loadData() {
     let group = DispatchGroup()
     
     for color in colors {

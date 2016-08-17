@@ -119,9 +119,9 @@ let request = UNNotificationRequest(
 UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error) in
   if let error = error {
     print(error)
-    completion(success: false)
+    completion(false)
   } else {
-    completion(success: true)
+    completion(true)
   }
 })
 ```
@@ -502,7 +502,7 @@ To start, you need to register a notification category and action in the app.
 Open **AppDelegate.swift** and add the following method to `AppDelegate`:
 
 ```swift
-private func configureUserNotifications() {
+func configureUserNotifications() {
   // 1
   let starAction = UNNotificationAction(identifier:
     "star", title: "🌟 star my cuddle 🌟 ", options: [])
@@ -553,15 +553,15 @@ Inside ContentExtension, open **NotificationViewController.swift** and you'll se
 Add the following to `NotificationViewController`:
 
 ```swift
-func didReceive(_ response: UNNotificationResponse,
-                completionHandler completion:
-  (UNNotificationContentExtensionResponseOption) -> Void) {
+internal func didReceive(_ response: UNNotificationResponse,
+                  completionHandler completion:
+    @escaping (UNNotificationContentExtensionResponseOption) -> Void) {
   // 1
   if response.actionIdentifier == "star" {
     // TODO Show Stars
     let time = DispatchTime.now() +
       DispatchTimeInterval.milliseconds(2000)
-    DispatchQueue.main.after(when: time) {
+    DispatchQueue.main.asyncAfter(deadline: time) {
       // 2
       completion(.dismissAndForwardAction)
     }
@@ -667,8 +667,7 @@ Add the following at the bottom of the app delegate, just below the final bracke
 ```swift
 extension AppDelegate {
   // 1
-  func application(_ application: UIApplication,
-    didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+  func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
       print("Registration for remote notifications failed")
       print(error.localizedDescription)
   }

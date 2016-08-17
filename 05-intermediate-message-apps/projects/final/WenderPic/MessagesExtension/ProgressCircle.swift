@@ -50,7 +50,7 @@ extension ProgressCircle {
 
 
 extension ProgressCircle {
-  private func layoutLayers() {
+  func layoutLayers() {
     let squareSize = min(bounds.width, bounds.height)
     let square = bounds.insetBy(dx: (bounds.width - squareSize) / 2, dy: (bounds.height - squareSize) / 2)
     for l in [outerCircleLayer, innerCicleLayer] {
@@ -65,9 +65,9 @@ extension ProgressCircle {
     styleLayers()
   }
   
-  private func styleLayers() {
+  func styleLayers() {
     outerCircleLayer.lineWidth = 1
-    outerCircleLayer.fillColor = UIColor.clear().cgColor
+    outerCircleLayer.fillColor = UIColor.clear.cgColor
     
     innerCicleLayer.lineWidth = 0
     
@@ -75,11 +75,11 @@ extension ProgressCircle {
     innerCicleLayer.fillColor = tintColor.withAlphaComponent(0.8).cgColor
   }
   
-  private func updateProgress() {
+  func updateProgress() {
     innerCicleLayer.path = innerPath
   }
   
-  private var innerPath: CGPath {
+  var innerPath: CGPath {
     let path = UIBezierPath()
     
     let endAngle = 2 * .pi * progress - .pi / 2

@@ -92,7 +92,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
 // MARK: Child View Controllers
 extension MessagesViewController {
-  private func presentViewController(forConversation conversation: MSConversation, withPresentationStyle style: MSMessagesAppPresentationStyle) {
+  func presentViewController(forConversation conversation: MSConversation, withPresentationStyle style: MSMessagesAppPresentationStyle) {
     let controller: UIViewController
     
     switch style {
@@ -115,7 +115,7 @@ extension MessagesViewController {
     switchTo(viewController: controller)
   }
   
-  private func instantiateSummaryViewController(game: WenderPicGame?) -> UIViewController {
+  func instantiateSummaryViewController(game: WenderPicGame?) -> UIViewController {
     guard let controller = storyboard?.instantiateViewController(withIdentifier: "summaryVC") as? SummaryViewController else { fatalError("Unable to instantiate a summary view controller") }
     
     controller.game = game
@@ -123,14 +123,14 @@ extension MessagesViewController {
     return controller
   }
   
-  private func instantiateDrawingViewController(game: WenderPicGame?) -> UIViewController {
+  func instantiateDrawingViewController(game: WenderPicGame?) -> UIViewController {
     guard let controller = storyboard?.instantiateViewController(withIdentifier: "drawingVC") as? DrawingViewController else { fatalError("Unable to instantiate a drawing view controller") }
     controller.delegate = self
     controller.game = game
     return controller
   }
   
-  private func instantiateGuessViewController(game: WenderPicGame?) -> UIViewController {
+  func instantiateGuessViewController(game: WenderPicGame?) -> UIViewController {
     guard let controller = storyboard?.instantiateViewController(withIdentifier: "guessVC") as? GuessViewController else { fatalError("Unable to instantiate a guess view controller") }
     controller.delegate = self
     controller.game = game
@@ -138,7 +138,7 @@ extension MessagesViewController {
   }
   
   
-  private func switchTo(viewController controller: UIViewController) {
+  func switchTo(viewController controller: UIViewController) {
     // Remove any existing child view controller
     for child in childViewControllers {
       child.willMove(toParentViewController: .none)
@@ -164,7 +164,7 @@ extension MessagesViewController {
 }
 
 extension MessagesViewController {
-  private func composeMessage(with game: WenderPicGame,
+  func composeMessage(with game: WenderPicGame,
                               caption: String, session: MSSession? = .none) -> MSMessage {
     //1
     let layout = MSMessageTemplateLayout()

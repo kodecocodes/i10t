@@ -33,15 +33,15 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     }
   }
   
-  func didReceive(_ response: UNNotificationResponse,
+  internal func didReceive(_ response: UNNotificationResponse,
                   completionHandler completion:
-    (UNNotificationContentExtensionResponseOption) -> Void) {
+    @escaping (UNNotificationContentExtensionResponseOption) -> Void) {
     // 1
     if response.actionIdentifier == "star" {
       imageView.showStars()
       let time = DispatchTime.now() +
         DispatchTimeInterval.milliseconds(2000)
-      DispatchQueue.main.after(when: time) {
+        DispatchQueue.main.asyncAfter(deadline: time) {
         // 2
         completion(.dismissAndForwardAction)
       }

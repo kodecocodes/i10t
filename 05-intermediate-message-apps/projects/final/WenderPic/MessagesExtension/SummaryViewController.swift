@@ -41,7 +41,7 @@ class SummaryViewController: UIViewController {
     update(forGame: game)
   }
   
-  private func update(forGame game: WenderPicGame?) {
+  func update(forGame game: WenderPicGame?) {
     imageView?.image = game?.currentDrawing
     if let drawing = game?.currentDrawing {
       imageView?.image = drawing

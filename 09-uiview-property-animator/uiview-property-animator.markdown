@@ -30,7 +30,7 @@ Open the **Animalation** project in the starter materials for this chapter. This
 Tap the **Animate** button at the top, and the frog will move to a random position. This happens with a traditional call to `UIView.animate(withDuration:)` in **ViewController.swift**:
 
 ```swift
-private func animateAnimalTo(location: CGPoint) {
+func animateAnimalTo(location: CGPoint) {
   // TODO
   UIView.animate(withDuration: 3) {
     self.imageContainer.center = location
@@ -206,7 +206,7 @@ The initial velocity is a `CGVector`, measured in units that correspond to the t
 You’re going to amend the app so that the velocity of the pan gesture used to move the frog is taken into account in the spring animation. First, change the `animateAnimalTo(location:)` method signature to include a velocity parameter:
 
 ```swift
-private func animateAnimalTo(location: CGPoint,
+func animateAnimalTo(location: CGPoint,
                              initialVelocity: CGVector = .zero) {
 ```
 
@@ -472,7 +472,7 @@ var imageChangeAnimator: UIViewPropertyAnimator?
 In the extension where `animateAnimalToRandomLocation()` lives, add the following new method:
 
 ```swift
-private func animateRandomAnimalChange() {
+func animateRandomAnimalChange() {
   //1
   let randomIndex = Int(arc4random_uniform(UInt32(animalImages.count)))
   let randomImage = animalImages[randomIndex]

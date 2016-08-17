@@ -26,7 +26,7 @@ import UIKit
 
 class ColojiTableViewController: UITableViewController {
   
-  let colors: [UIColor] = [.gray(), .green(), .yellow(), .brown(), .cyan(), .purple()]
+  let colors: [UIColor] = [.gray, .green, .yellow, .brown, .cyan, .purple]
   let emoji = ["💄", "🙋🏻", "👠", "🎒", "🏩", "🎏"]
   let colojiStore = ColojiDataStore()
   let queue = DispatchQueue(label: "com.raywenderlich.coloji.data-load", attributes: .concurrent, target: .none)
@@ -57,8 +57,8 @@ class ColojiTableViewController: UITableViewController {
     return cell
   }
   
-  override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
-    if let destVC = segue.destinationViewController as? ColojiViewController,
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let destVC = segue.destination as? ColojiViewController,
       let selectedIndex = tableView.indexPathForSelectedRow
     {
       destVC.coloji = colojiStore.colojiAt(index: selectedIndex.row)
@@ -68,7 +68,7 @@ class ColojiTableViewController: UITableViewController {
 
 
 extension ColojiTableViewController {
-  private func loadData() {
+  func loadData() {
     let group = DispatchGroup()
     
     for color in colors {

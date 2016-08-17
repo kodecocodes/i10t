@@ -46,7 +46,7 @@ class GuessViewController: UIViewController {
     }
   }
   
-  private func update(forGame game: WenderPicGame?) {
+  func update(forGame game: WenderPicGame?) {
     guard let game = game else { return }
     imageView?.image = game.currentDrawing
   }

@@ -73,14 +73,14 @@ class ViewController: UIViewController {
 
 
 extension ViewController {
-  private func animateAnimalTo(location: CGPoint) {
+  func animateAnimalTo(location: CGPoint) {
     // TODO
     UIView.animate(withDuration: 3) { 
       self.imageContainer.center = location
     }
   }
   
-  private func animateAnimalToRandomLocation() {
+  func animateAnimalToRandomLocation() {
     animateAnimalTo(location: view.randomPoint)
   }
 }

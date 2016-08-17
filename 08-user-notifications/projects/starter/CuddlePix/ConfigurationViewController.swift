@@ -58,7 +58,7 @@ class ConfigurationViewController: UIViewController {
 
 // MARK: - Notification Scheduling
 extension ConfigurationViewController {
-  private func scheduleRandomNotifications(number: Int, completion: () -> ()) {
+  func scheduleRandomNotifications(number: Int, completion: @escaping () -> ()) {
     guard number > 0  else {
       completion()
       return
@@ -79,15 +79,15 @@ extension ConfigurationViewController {
     }
   }
   
-  private func scheduleRandomNotification(inSeconds: TimeInterval, completion: (success: Bool) -> ()) {
+  func scheduleRandomNotification(inSeconds: TimeInterval, completion: @escaping (_ success: Bool) -> ()) {
     let randomImageName = "hug\(arc4random_uniform(12) + 1)"
-    guard let imageURL = Bundle.main.urlForResource(randomImageName, withExtension: "jpg") else {
-      completion(success: false)
+    guard let imageURL = Bundle.main.url(forResource: randomImageName, withExtension: "jpg") else {
+      completion(false)
       return
     }
     
     print("Schedule notification with \(imageURL)")
     
-    completion(success: true)
+    completion(true)
   }
 }

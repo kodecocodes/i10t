@@ -35,17 +35,17 @@ class StickerCollectionViewController: UICollectionViewController {
 }
 
 extension StickerCollectionViewController {
-  private func loadStickers(_ chocoholic: Bool = false) {
+  func loadStickers(_ chocoholic: Bool = false) {
     stickerGroups = stickerNameGroups.filter({ (name, _) in
       return chocoholic ? name == "Chocolate" : true
     }).map { (name, stickerNames) in
       let stickers: [MSSticker] = stickerNames.map { name in
-        let url = Bundle.main.urlForResource(name, withExtension: "png")!
+        let url = Bundle.main.url(forResource: name, withExtension: "png")!
         return try! MSSticker(contentsOfFileURL: url, localizedDescription: name)
       }
       return StickerGroup(name: name, members: stickers)
     }
-    stickerGroups.sort(isOrderedBefore: { $0.name < $1.name })
+    stickerGroups.sort(by: { $0.name < $1.name })
   }
 }
 

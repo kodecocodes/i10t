@@ -30,14 +30,14 @@ let newCuddlePixCategoryName = "newCuddlePix"
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+  private func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     UNUserNotificationCenter.current().delegate = self
     configureUserNotifications()
     application.registerForRemoteNotifications()
     return true
   }
   
-  private func configureUserNotifications() {
+  func configureUserNotifications() {
     // 1
     let starAction = UNNotificationAction(identifier:
       "star", title: "🌟 star my cuddle 🌟 ", options: [])
@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-  func userNotificationCenter(_ center: UNUserNotificationCenter,
+  private func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification,
                               withCompletionHandler completionHandler:
     (UNNotificationPresentationOptions) -> Void) {
@@ -66,7 +66,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     completionHandler(.alert)
   }
   
-  func userNotificationCenter(_ center: UNUserNotificationCenter,
+  private func userNotificationCenter(_ center: UNUserNotificationCenter,
                               didReceive response: UNNotificationResponse,
                               withCompletionHandler
     completionHandler: () -> Void) {
@@ -77,8 +77,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
 extension AppDelegate {
   // 1
-  func application(_ application: UIApplication,
-                   didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+  func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
     print("Registration for remote notifications failed")
     print(error.localizedDescription)
   }

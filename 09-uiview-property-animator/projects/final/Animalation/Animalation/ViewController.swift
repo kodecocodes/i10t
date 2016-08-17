@@ -138,7 +138,7 @@ class ViewController: UIViewController {
 
 
 extension ViewController {
-  private func animateAnimalTo(location: CGPoint,
+  func animateAnimalTo(location: CGPoint,
                              initialVelocity: CGVector = .zero) {
     removeAnimatorObservers(animator: imageMoveAnimator)
     //1
@@ -172,11 +172,11 @@ extension ViewController {
     imageMoveAnimator?.startAnimation()
   }
   
-  private func animateAnimalToRandomLocation() {
+  func animateAnimalToRandomLocation() {
     animateAnimalTo(location: view.randomPoint)
   }
   
-  private func animateRandomAnimalChange() {
+  func animateRandomAnimalChange() {
     //1
     let randomIndex = Int(arc4random_uniform(UInt32(animalImages.count)))
     let randomImage = animalImages[randomIndex]
