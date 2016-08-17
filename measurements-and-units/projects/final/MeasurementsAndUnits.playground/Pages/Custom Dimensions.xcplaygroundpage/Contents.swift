@@ -24,7 +24,7 @@ class UnitConverterLogarithmic: UnitConverter, NSCopying {
     self.logBase = logBase
   }
   
-  func copy(with zone: NSZone? = nil) -> AnyObject {
+  func copy(with zone: NSZone? = nil) -> Any {
     return self
   }
   

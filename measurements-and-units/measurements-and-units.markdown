@@ -22,24 +22,41 @@ But that’s not quite correct if there’s only one mile, or if the mile has a 
 If this is a familiar story, you’re in luck. The Foundation framework has some exciting new additions this year for solving exactly these problems. You’re going to learn about `Measurement` and `Unit`, and how they allow you to do the following:
 
 - Get rid of fiddly conversions
-- Use strongly typed values that prevent, for example, from using yards when you meant Kelvin
+- Use strongly typed values that prevent you from making unit mistakes; for example, using yards when you meant Kelvin
 - Show values to the user in terms they understand
 - Get all this power for your _own_ measurements and units.
 
-Another exciting addition to Foundation this year is the date interval — a period from one `Date` to another. Again, this represents a problem that is commonly solved by having to write a lot of code that you probably don’t test (admit it), and you almost certainly don’t test for international users. Date intervals and the associated date interval formatter will make your life easier when you need to work with dates — and let’s face it, dates are hard, so all help is welcome!
+### Date intervals
 
-To get started, you’re going to learn about two new types that will make a _measurable_ improvement to your code. :]
+Another exciting addition to Foundation this year is the date interval — a period from one `Date` to another. 
+
+Again, this represents a problem that is commonly solved by having to write a lot of code that you probably don’t test (admit it), and you almost certainly don’t test for international users. Date intervals and the associated date interval formatter will make your life easier when you need to work with dates. 
+
+As I'm sure you can agree, dates are hard, so all help is welcome!
 
 ## Measurement and Unit
 
-The `Measurement` struct doesn’t sound like much; it has two properties, a `value`, which is a `Double`, and a `unit`, which is a `Unit`. `Unit` is even more minimal — all it has is a `symbol`, which is just a `String`.
+To get started, you’re going to learn about two new types that will make a _measurable_ improvement to your code. :]
+
+The `Measurement` struct doesn’t sound like much. It has just two properties:
+
+* `value`, which is a `Double`
+* `unit`, which is a `Unit`
+
+`Unit` is even more minimal — it has just one propert:
+
+* `symbol`, which is a `String`
 
 This minimal implementation gives you some benefits. Given a `Measurement`, you’d know right away what its units were, and be able to format it for display using the symbol that comes with the unit. But the real power of the system comes from two things:
 
 - The `Unit` subclasses that are included with Foundation
 - The use of generics to associate a particular `Measurement` with a given `Unit`
 
-First, the `Unit` subclasses. Foundation gives you the `Dimension` subclass to represent units that have a dimension, such as length or temperature. Dimensions have a base unit and a converter that can interpret the value to and from the base unit. It’s an abstract class, which means you’re expected to subclass it to make your own dimensions. A wide variety are already included in Foundation.
+### Unit subclasses
+
+`Dimension` is a subclass of `Unit` in Foundation. This represents units that have a dimension, such as length or temperature. Dimensions have a base unit and a converter that can interpret the value to and from the base unit. 
+
+`Dimension` is an abstract class, which means you’re expected to subclass it to make your own dimensions. A wide variety are already included in Foundation.
 
 As an example, there is a `UnitLength` class. This is a subclass of `Dimension` used to represent lengths or distances. The base unit is the meter, which is the SI unit for length.
 
@@ -49,13 +66,23 @@ As an example, there is a `UnitLength` class. This is a subclass of `Dimension` 
 
 `UnitLength.meters`, for example, has a converter that does nothing, because the unit is already in the base unit. `UnitLength.miles` will have a converter that knows that there are around 0.000621371 miles per meter.
 
+### Units and generics 
+
 When you create a `Measurement`, you give it a value and a unit. That unit becomes a generic constraint on the measurement. Knowing that a measurement is associated with a particular `Unit` means that Swift won’t let you do things with two measurements that don’t use the same unit, and it means that you _can_ do useful things with measurements that do — like math.
 
 ## I want to ride my bicycle
 
-A triathlon is a fun event if your idea of fun is spending all day hurting. The annual raywenderlich.com team triathlon event is particularly fun. There’s a 25km bike ride, a swim of 3 nautical miles and a half marathon.
+A triathlon is a fun event if your idea of fun is spending all day hurting. That means the annual raywenderlich.com team triathlon event is particularly fun! 
 
-Open a new playground to get started. The bike ride and swim are pretty easy to make:
+The annual raywenderlich.com team triathalon includes:
+
+  * a 25km bike ride
+  * a 3 nautical mile swim
+  * a half marathon run
+
+Let's see how we can create some measurements representing these lengths using the new classes in Foundation.
+
+Open a new playground and enter the following code:
 
 ```swift
 let cycleRide = Measurement(value: 25,
@@ -64,7 +91,11 @@ let swim = Measurement(value: 3,
   unit: UnitLength.nauticalMiles)
 ```
 
-A marathon is 26 miles, 385 yards. This awkward number comes from the 1908 London Olympics, where the organiz ers planned a course of 26 miles, then had to add an extra bit so that the race would finish neatly in front of the Royal Box. Do you know what 26 miles, 385 yards is in “Decimal miles”? I don’t, and now, I don’t have to.
+Here you define the length of the cycle and swim using the new `Measurement` class. You simply set the `value` and choose the appropriate `unit`: simple!
+
+But what about the half marathon?
+
+A marathon is 26 miles, 385 yards. This awkward number comes from the 1908 London Olympics, where the organizers planned a course of 26 miles, then had to add an extra bit so that the race would finish neatly in front of the Royal Box. Do you know what 26 miles, 385 yards is in “Decimal miles”? I don’t, and now, I don’t have to.
 
 To create a measurement of a marathon, add the following to the playground:
 
@@ -81,7 +112,19 @@ swim.unit.symbol
 cycleRide.unit.symbol
 ```
 
-The results sidebar shows the units in use for each measurement: meters, nautical miles, and kilometers. Find the length of a half-marathon like this:
+The results sidebar shows the units in use for each measurement: 
+
+```swift
+"m"
+"NM"
+"km"
+```
+
+These stand for meters, nautical miles, and kilometer respectively.
+
+Remember that the raywenderlich.com team triathalon is a half-marathon, not a full marathon. You don't really think computer geeks like us could run a full marathon, do you? :]
+
+So next, add the following code to find the length of a half-marathon:
 
 ```swift
 let run = marathon / 2
@@ -93,7 +136,13 @@ Then you can get the total distance covered in the triathlon like this:
 let triathlon = cycleRide + swim + run
 ```
 
-As you might expect, `triathlon` shows up in the results sidebar in meters, which isn’t particularly useful. Generics can help you here. `Measurement` instances with a `Unit` subclassing `Dimension` have a useful extra feature: they can convert to other units, or be converted to other units. To see the triathlon total in miles, add this line:
+As you might expect, `triathlon` shows up in the results sidebar in meters
+
+```swift
+51653.442 m
+```
+
+This isn’t particularly useful, but generics can help you here. `Measurement` instances with a `Unit` subclassing `Dimension` have a useful extra feature: they can convert to other units, or be converted to other units. To see the triathlon total in miles, add this line:
 
 ```swift
 triathlon.converted(to: .miles)
@@ -270,7 +319,9 @@ The third option doesn’t relate to temperatures. You’ll look at that in the 
 
 ## I would walk 500 miles
 
-Remember earlier, when you added miles to yards to nautical miles to kilometers, and the answer was given in meters? The number of meters was quite high, and to present a meaningful value to the user you would have to have a conversion step to a more sensible unit, and you may need to write code to determine what that more sensible unit should be. Measurement formatters can do this for you, for some kinds of units.
+Remember earlier, when you added miles to yards to nautical miles to kilometers, and the answer was given in meters? 
+
+The number of meters was quite high, and to present a meaningful value to the user you would have to have a conversion step to a more sensible unit, and you may need to write code to determine what that more sensible unit should be. Measurement formatters can do this for you, for some kinds of units.
 
 Add the following code to the playground:
 
@@ -291,9 +342,9 @@ Now you get a more sensible `20 km`. `.naturalScale` works together with `.provi
 ```swift
 let speck = Measurement(value: 0.0002, unit: UnitLength.meters)
 formatter.string(from: speck)
-```  
+```
 
-This gives you a value in mm.
+This gives you the result `0.2 mm`.
 
 The `unitStyle` option on the formatter will tell it to present the full names or abbreviations of units where possible:
 
@@ -301,6 +352,8 @@ The `unitStyle` option on the formatter will tell it to present the full names o
 formatter.unitStyle = .long
 formatter.string(from: run)
 ```
+
+This gives you the result `20 kilometers`.
 
 The default value is `.medium`, which prints the symbol of the unit in use. There is currently no public API to provide extended or shorter names or symbols for your own units.
 
@@ -343,14 +396,14 @@ Some things, like temperature, are a little more complicated. When people were i
 
 It seems like in Olde England when people would have a thing that needed measuring, they would look around them, pick the first thing they saw and use that as a unit. Hence we have poppyseed, finger, hand, foot, rod, chain, and many more.
 
-As you probably know, a chain is 20.1168 meters. So, you could create a unit to use in measurements like this:
+It turns out that a chain is 20.1168 meters. So, you could create a unit to use in measurements like this:
 
 ```swift
 let chains = UnitLength(symbol: "ch",
   converter: UnitConverterLinear(coefficient: 20.1168))
 ```
 
-This is similar to the code you used earlier when creating `amus`. However, the chain is such a useful unit of measure, you want it to be available everywhere, just like the meter or the mile. To do this, you create an extension on `UnitLength` and add a new class variable. Add the following code to a new playground:
+This is similar to the code you used earlier when creating `amus`. However, imagine that you believe the chain is such a useful unit of measure, you want it to be available everywhere, just like the meter or the mile. To do this, you create an extension on `UnitLength` and add a new class variable. Add the following code to a new playground:
 
 ```swift
 extension UnitLength {
@@ -403,7 +456,7 @@ class UnitConverterLogarithmic: UnitConverter, NSCopying {
     self.logBase = logBase
   }
   // 4
-  func copy(with zone: NSZone? = nil) -> AnyObject {
+  func copy(with zone: NSZone? = nil) -> Any {
     return self
   }
 }
@@ -411,7 +464,7 @@ class UnitConverterLogarithmic: UnitConverter, NSCopying {
 
 Here’s the breakdown:
 
-1. You’re subclassing `UnitConverter`. Subclasses must also implement `NSCopying`, though that isn’t currently mentioned in the documentation.
+1. You’re subclassing `UnitConverter`. Subclasses must also implement `NSCopying`, though that isn’t mentioned in the documentation at the time of writing this chapter.
 2. These are the two properties needed to perform logarithmic conversions. A coefficient and a log base.
 3. This is the initializer which allows you to set the two properties
 4. This is the implementation required for `NSCopying`. Your class is immutable, so you can just return `self`.
@@ -537,11 +590,11 @@ var components = calendar.dateComponents([.year, .weekOfYear],
 // 2
 components.weekday = 2
 components.hour = 8
-let startOfWeek = calendar.date(from: components)
+let startOfWeek = calendar.date(from: components)!
 // 3
 components.weekday = 6
 components.hour = 17
-let endOfWeek = calendar.date(from: components)
+let endOfWeek = calendar.date(from: components)!
 // 4
 let workingWeek = DateInterval(start: startOfWeek,
   end: endOfWeek)
