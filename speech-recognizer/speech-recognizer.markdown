@@ -19,6 +19,9 @@ In this chapter, you'll build an app called Gangstribe that will transcribe some
 
 The section on live recordings will use AVAudioEngine. The text will guide you through it, but you may want to familiarize yourself if you haven't used it before. The 2014 WWDC session *AVAudioEngine in Practice* is a great intro to this, and can be found here - [apple.co/28tATc1](http://apple.co/28tATc1)
 
+
+**This session video explains many of the systems and terminology we use later in the tutorial, so we highly recommend you watching it first.**
+
 The Speech Recognition framework does not work in the simulator, so be sure you have a real device with iOS 10 for this chapter.
 
 ## Getting Started
@@ -86,7 +89,7 @@ You'll start on Gangstribe by implementing a file transcription very similar to 
 
 ## Audio File Speech Transcription 
 
-Before you start reading and sending chunks of the user's audio off to a remote server, it would be polite to ask permission. In fact, considering their commitment user privacy, it should come as no surprise that Apple requires this! :]
+Before you start reading and sending chunks of the user's audio off to a remote server, it would be polite to ask permission. In fact, considering their commitment to user privacy, it should come as no surprise that Apple requires this! :]
 
 You're going to kick off the authorization process when the **Transcribe** button in the detail controller is tapped.
 
@@ -137,6 +140,7 @@ Back in **RecordingViewController.swift**, find the `RecordingViewController` ex
 
 ```swift
 private func transcribeFile(url: URL) {
+
   // 1
   guard let recognizer = SFSpeechRecognizer() else {
     print("Speech recognition not available for specified locale")
@@ -151,6 +155,7 @@ private func transcribeFile(url: URL) {
   // 2
   updateUIForTranscriptionInProgress()
   let request = SFSpeechURLRecognitionRequest(url: url)
+  
   // 3
   recognizer.recognitionTask(with: request) {
     [unowned self] (result, error) in
@@ -158,6 +163,7 @@ private func transcribeFile(url: URL) {
       print("There was an error transcribing that file")
       return
     }
+    
     // 4
     if result.isFinal {
       self.updateUIWithCompletedTranscription(
@@ -417,7 +423,7 @@ var mostRecentlyProcessedSegmentDuration: TimeInterval = 0
 Now add the following to the top of `startRecording()`:
 
 ```swift
-self.mostRecentlyProcessedSegmentDuration = 0
+mostRecentlyProcessedSegmentDuration = 0
 ```
 
 This will reset the tracked duration each time recording starts. 
@@ -431,8 +437,8 @@ fileprivate func updateUIWithTranscription(_ transcription: SFTranscription) {
   
   // 2
   if let lastSegment = transcription.segments.last,
-    lastSegment.duration > self.mostRecentlyProcessedSegmentDuration {
-    self.mostRecentlyProcessedSegmentDuration = lastSegment.duration
+    lastSegment.duration > mostRecentlyProcessedSegmentDuration {
+    mostRecentlyProcessedSegmentDuration = lastSegment.duration
     // 3
     faceSource.selectFace(string: lastSegment.substring)
   }

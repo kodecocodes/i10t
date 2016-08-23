@@ -48,6 +48,8 @@ class RecordingViewController: UIViewController {
     } else {
       contentStackView.isHidden = true
     }
+    
+    try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [])
   }
   
   // Mark: - Audio control
