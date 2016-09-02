@@ -4,8 +4,12 @@ segments:
     path: frontmatter/cover.markdown
   - kind: title
     path: frontmatter/title.markdown
-  - kind: information
-    path: frontmatter/information.markdown
+  - kind: legal
+    path: frontmatter/legal.markdown
+  - kind: dedications
+    path: frontmatter/dedications.markdown
+  - kind: team-bios
+    path: frontmatter/team.markdown
   - kind: chapter
     path: frontmatter/introduction.markdown
   - kind: chapter
