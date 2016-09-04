@@ -33,39 +33,45 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     let buffer = invocation.buffer
     let selectedFont = font(from: invocation.commandIdentifier)
     
-    for selection in buffer.selections where selection is XCSourceTextRange
-      && (selection as! XCSourceTextRange).start.line == (selection as! XCSourceTextRange).end.line {
-        let selection = selection as! XCSourceTextRange
-        let line = buffer.lines[selection.start.line] as! String
-        let startIndex = line.characters.index(line.startIndex, offsetBy: selection.start.column)
-        let endIndex = line.characters.index(line.startIndex, offsetBy: selection.end.column)
+    buffer.selections.forEach({ selection in
+      guard let selection = selection as? XCSourceTextRange,
+        selection.start.line == selection.end.line else { return }
+      
+      let line = buffer.lines[selection.start.line] as! String
+      let startIndex = line.characters.index(
+        line.startIndex, offsetBy: selection.start.column)
+      let endIndex = line.characters.index(
+        line.startIndex, offsetBy: selection.end.column)
+      
+      let selectedText = line.substring(with:
+        startIndex..<line.index(after: endIndex))
+      if let asciiified = figlet.render(input: selectedText, withFont: selectedFont) {
+        let newLines = asciiified.components(separatedBy: "\n").map { "// \($0)" }
+        let startLine = selection.start.line
         
-        let selectedText = line.substring(with: startIndex ..< line.index(after: endIndex))
+        buffer.lines.removeObject(at: startLine)
+        buffer.lines.insert(
+          newLines,
+          at: IndexSet(startLine ..< startLine + newLines.count))
         
-        if let asciiified = figlet.render(input: selectedText, withFont: selectedFont) {
-          let newLines = asciiified.components(separatedBy: "\n").map { "// \($0)" }
-          let startLine = selection.start.line
-          
-          buffer.lines.removeObject(at: startLine)
-          buffer.lines.insert(newLines, at: IndexSet(startLine ..< startLine + newLines.count))
-          
-          let startPosition = XCSourceTextPosition(line: startLine, column: 0)
-          
-          var endLine = startLine
-          if newLines.count > 0 {
-            endLine = startLine + newLines.count - 1
-          }
-          
-          var endColumn = 0
-          if let lastLine = newLines.last {
-            endColumn = lastLine.characters.count
-          }
-          
-          let endPosition = XCSourceTextPosition(line: endLine, column: endColumn)
-          let selection = XCSourceTextRange(start: startPosition, end: endPosition)
-          newSelections.append(selection)
+        let startPosition = XCSourceTextPosition(line: startLine, column: 0)
+        
+        var endLine = startLine
+        if newLines.count > 0 {
+          endLine = startLine + newLines.count - 1
         }
-    }
+        
+        var endColumn = 0
+        if let lastLine = newLines.last {
+          endColumn = lastLine.characters.count
+        }
+        
+        let endPosition = XCSourceTextPosition(line: endLine, column: endColumn)
+        
+        let selection = XCSourceTextRange(start: startPosition, end: endPosition)
+        newSelections.append(selection)
+      }
+    })
     
     if newSelections.count > 0 {
       buffer.selections.setArray(newSelections)
