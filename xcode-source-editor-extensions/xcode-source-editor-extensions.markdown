@@ -87,7 +87,15 @@ Select the AsciiifyComment build scheme, then build and run. When prompted to ch
 
 This instance of Xcode is meant for testing your extensions. Once launched, select one of your recent projects or create a new playground. The specifics don't matter as you'll just be adding comments.
 
-Next, navigate to **Editor\Asciiify Comment\Source Editor Command** in the test Xcode instance. Currently this does nothing, because you've not yet implemented any functionality.
+Next, navigate to **Editor\Asciiify Comment\Source Editor Command** in the test Xcode instance. If you don't see the menu item—*don't panic*. See the note below.
+
+>**Note**: As of this writing, Xcode 8's release notes indicate an extra step required to run editor extensions under El Capitan. In the terminal, run the following command:
+>
+>```/usr/libexec/xpccachectl```
+>
+>Then restart your Mac. Once this is done, run the AsciiifyComment build scheme and attempt to navigate to the extension again.
+
+Currently clicking the command does nothing, because you've not yet implemented any functionality.
 
 ![width=80% bordered](./images/extension-menu-item.png)
 
