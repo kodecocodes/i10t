@@ -12,7 +12,7 @@ $[#tb]
 
 ![portrait](images/Jeff.jpg)
 
-**Jeff Rames** works on enterprise healthcare iOS products at AirStrip Technologies. He found his passion in mobile software shortly after the iOS SDK was released, and made it his full time gig in 2011. You say hi to Jeff on Twitter at @jefframes. 
+**Jeff Rames** is an iOS developer at AirStrip Technologies, building software that helps save lives. Originally a mainframer, he found his passion in iOS development shortly after the SDK was released and has been doing it ever since. When not working, he's spending time with his wife and daughters, watching rocket launches, or cooking with his pizza oven. Say hi to Jeff on Twitter at [@jefframes](https://twitter.com/jefframes). 
 
 $[tb#]
 
