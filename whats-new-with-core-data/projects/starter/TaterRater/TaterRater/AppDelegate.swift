@@ -17,6 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         if let split = window?.rootViewController as? UISplitViewController {
+            
+            split.delegate = self
+            split.preferredDisplayMode = .allVisible
+            
             if
                 let primaryNav = split.viewControllers.first as? UINavigationController,
                 let potatoList = primaryNav.topViewController as? PotatoTableViewController,
@@ -35,8 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     print("Error generating potato list \(error.localizedDescription)")
                 }
             }
-            split.delegate = self
-            split.preferredDisplayMode = .allVisible
         }
         
         return true
