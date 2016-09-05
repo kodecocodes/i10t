@@ -22,11 +22,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         coreDataStack = PotatoDataStack(name: "TaterRater")
         
         // Delete the store files on first run while we test this
-        if let contents = try? FileManager.default.contentsOfDirectory(at: NSPersistentContainer.defaultDirectoryURL(), includingPropertiesForKeys: nil, options: []) {
-            for url in contents {
-                try? FileManager.default.removeItem(at: url)
-            }
-        }
+//        if let contents = try? FileManager.default.contentsOfDirectory(at: NSPersistentContainer.defaultDirectoryURL(), includingPropertiesForKeys: nil, options: []) {
+//            for url in contents {
+//                try? FileManager.default.removeItem(at: url)
+//            }
+//        }
         
         coreDataStack.loadPersistentStores {
             [unowned self]
@@ -38,13 +38,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.coreDataStack.checkAndLoadInitialData()
         }
         
+        coreDataStack.viewContext.automaticallyMergesChangesFromParent = true
+        
         if let split = window?.rootViewController as? UISplitViewController {
-            split.delegate = self
             if
                 let primaryNav = split.viewControllers.first as? UINavigationController,
                 let potatoList = primaryNav.topViewController as? PotatoTableViewController {
                 potatoList.coreDataStack = coreDataStack
             }
+            split.delegate = self
+            split.preferredDisplayMode = .allVisible
         }
         
         return true

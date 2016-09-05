@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		79F8F9461D798CBA00E0F549 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9451D798CBA00E0F549 /* ViewController.swift */; };
 		79F8F94B1D798CBA00E0F549 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79F8F94A1D798CBA00E0F549 /* Assets.xcassets */; };
 		79F8F94E1D798CBA00E0F549 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79F8F94C1D798CBA00E0F549 /* LaunchScreen.storyboard */; };
 		79F8F9591D798CCE00E0F549 /* PotatoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9551D798CCE00E0F549 /* PotatoTableViewController.swift */; };
@@ -17,11 +16,11 @@
 		79F8F95F1D798DB700E0F549 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F95E1D798DB700E0F549 /* AppDelegate.swift */; };
 		79F8F9611D798DD800E0F549 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79F8F9601D798DD800E0F549 /* Main.storyboard */; };
 		79F8F9631D798FD200E0F549 /* PotatoDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9621D798FD200E0F549 /* PotatoDataStack.swift */; };
+		79F8F9651D79AE1500E0F549 /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9641D79AE1500E0F549 /* NoteViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		79F8F9401D798CBA00E0F549 /* TaterRater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaterRater.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		79F8F9451D798CBA00E0F549 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		79F8F94A1D798CBA00E0F549 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		79F8F94D1D798CBA00E0F549 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		79F8F94F1D798CBA00E0F549 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -32,6 +31,7 @@
 		79F8F95E1D798DB700E0F549 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79F8F9601D798DD800E0F549 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		79F8F9621D798FD200E0F549 /* PotatoDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotatoDataStack.swift; sourceTree = "<group>"; };
+		79F8F9641D79AE1500E0F549 /* NoteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,11 +65,9 @@
 			isa = PBXGroup;
 			children = (
 				79F8F95E1D798DB700E0F549 /* AppDelegate.swift */,
-				79F8F9551D798CCE00E0F549 /* PotatoTableViewController.swift */,
+				79F8F9661D79AE1F00E0F549 /* View Controllers */,
 				79F8F9601D798DD800E0F549 /* Main.storyboard */,
 				79F8F95D1D798CD700E0F549 /* Model */,
-				79F8F9581D798CCE00E0F549 /* PotatoViewController.swift */,
-				79F8F9451D798CBA00E0F549 /* ViewController.swift */,
 				79F8F94A1D798CBA00E0F549 /* Assets.xcassets */,
 				79F8F94C1D798CBA00E0F549 /* LaunchScreen.storyboard */,
 				79F8F94F1D798CBA00E0F549 /* Info.plist */,
@@ -85,6 +83,16 @@
 				79F8F9621D798FD200E0F549 /* PotatoDataStack.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		79F8F9661D79AE1F00E0F549 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				79F8F9551D798CCE00E0F549 /* PotatoTableViewController.swift */,
+				79F8F9581D798CCE00E0F549 /* PotatoViewController.swift */,
+				79F8F9641D79AE1500E0F549 /* NoteViewController.swift */,
+			);
+			name = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,12 +168,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79F8F9651D79AE1500E0F549 /* NoteViewController.swift in Sources */,
 				79F8F95C1D798CCE00E0F549 /* PotatoViewController.swift in Sources */,
 				79F8F9631D798FD200E0F549 /* PotatoDataStack.swift in Sources */,
 				79F8F95B1D798CCE00E0F549 /* TaterRater.xcdatamodel in Sources */,
 				79F8F9591D798CCE00E0F549 /* PotatoTableViewController.swift in Sources */,
 				79F8F95F1D798DB700E0F549 /* AppDelegate.swift in Sources */,
-				79F8F9461D798CBA00E0F549 /* ViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +327,7 @@
 				79F8F9541D798CBA00E0F549 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

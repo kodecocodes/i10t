@@ -1,7 +1,7 @@
 Adirondack Blue
 Adirondack Red
 Agata
-Agria potato
+Agria
 Ajanhuiri
 Almond
 Alpine Russet
@@ -113,7 +113,7 @@ Langlade
 Laura
 Lenape
 Lima
-Linda potato
+Linda
 Linzer Blaue
 Linzer Delikatess
 Linzer Rose
@@ -126,7 +126,7 @@ Maris Piper
 Marquis
 Mayan Queen
 Megachip
-Melody[1]
+Melody
 Miss Blush
 Mizen
 Monalisa
@@ -147,7 +147,7 @@ Pink Eye
 Pink Fir Apple
 Präsident Krüger
 Primura
-Prince Edward Island Potatoes
+Prince Edward Island
 Princess
 Professor Wohltmann
 Puca Quitish

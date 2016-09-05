@@ -11,10 +11,7 @@ import CoreData
 
 class PotatoTableViewController: UITableViewController {
 
-    @IBAction func wtf(_ sender: AnyObject) {
-        tableView.reloadData()
-    }
-    var coreDataStack: NSPersistentContainer!
+    var coreDataStack: PotatoDataStack!
     var resultsController: NSFetchedResultsController<Potato>!
     
     override func viewDidLoad() {
@@ -43,6 +40,7 @@ class PotatoTableViewController: UITableViewController {
                 return
             }
             detail.potato = resultsController.object(at: path)
+            detail.coreDataStack = coreDataStack
         }
     }
 
@@ -65,6 +63,12 @@ class PotatoTableViewController: UITableViewController {
     fileprivate func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) {
         let potato = resultsController.object(at: indexPath)
         cell.textLabel?.text = potato.variety
+        if potato.userRating > 0 {
+            cell.detailTextLabel?.text = "\(potato.userRating) / 5"
+            cell.setNeedsLayout()
+        } else {
+            cell.detailTextLabel?.text = ""
+        }
     }
 
 }

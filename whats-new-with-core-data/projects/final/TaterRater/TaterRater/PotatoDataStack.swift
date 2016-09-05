@@ -8,8 +8,14 @@
 
 import CoreData
 
-class PotatoDataStack: NSPersistentContainer {
+var scoreFormatter: NumberFormatter = {
+    $0.numberStyle = .decimal
+    $0.maximumSignificantDigits = 2
+    return $0
+}(NumberFormatter())
 
+class PotatoDataStack: NSPersistentContainer {
+    
     func checkAndLoadInitialData() {
         performBackgroundTask { context in
             let request: NSFetchRequest<Potato> = Potato.fetchRequest()
@@ -23,19 +29,47 @@ class PotatoDataStack: NSPersistentContainer {
                     for spud in spudList {
                         let potato = Potato(context: context)
                         potato.variety = spud
+                        potato.crowdRating = Float(arc4random_uniform(50)) / Float(10)
                     }
                     
-                    let observer: Any? = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave, object: context, queue: .main) {
-                        notification in
-                        self.viewContext.mergeChanges(fromContextDidSave: notification)
-                    }
                     try context.save()
-                    NotificationCenter.default.removeObserver(observer)
                 }
             } catch {
                 print("Error importing potatoes: \(error.localizedDescription)")
             }
         }
     }
-
+    
+    private var timer: Timer? {
+        willSet {
+            timer?.invalidate()
+        }
+    }
+    
+    func startUpdatingCrowdScores(potato: Potato) {
+        timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) {
+            timer in
+            self.updateCrowdScores(potatoID: potato.objectID)
+        }
+    }
+    
+    func stopUpdatingCrowdScores() {
+        timer = nil
+    }
+    
+    private func updateCrowdScores(potatoID: NSManagedObjectID) {
+        performBackgroundTask { context in
+            do {
+                guard let potato = try context.existingObject(with: potatoID) as? Potato else { return }
+                let adjustment: Float = arc4random_uniform(2) == 1 ? -0.1 : 0.1
+                potato.crowdRating += adjustment
+                potato.crowdRating = min(potato.crowdRating, 5)
+                potato.crowdRating = max(potato.crowdRating, 0)
+                try context.save()
+            } catch {
+                print("Error updating crowd score: \(error.localizedDescription)")
+            }
+        }
+    }
+    
 }
