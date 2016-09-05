@@ -12,9 +12,5 @@ class Potato: NSObject {
     var crowdRating: Float = 0
     dynamic var notes: String?
     var userRating: Int16 = 0
-    let variety: String
-    
-    init(variety: String) {
-        self.variety = variety
-    }
+    var variety: String?
 }

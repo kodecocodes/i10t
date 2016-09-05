@@ -25,7 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let spuds = try String(contentsOf: spudsURL)
                 let spudList = spuds.components(separatedBy: .newlines)
                 let potatoes: [Potato] = spudList.map {
-                        let potato = Potato(variety: $0)
+                        let potato = Potato()
+                        potato.variety = $0
                         potato.crowdRating = Float(arc4random_uniform(50)) / Float(10)
                         return potato
                     }
