@@ -5,19 +5,19 @@ title: "Chapter 7: Speech Recognition"
 ```
 # Chapter 7: Speech Recognition
 
-The new Speech Recognition API lets your app transcribe live or pre-recorded audio. It leverages the same speech recognition engine used by Siri and Keyboard Dictation, but provides much more control and improved access.
+iOS 10's new Speech Recognition API lets your app transcribe live or pre-recorded audio. It leverages the same speech recognition engine used by Siri and Keyboard Dictation, but provides much more control and improved access.
 
 The engine is fast and accurate and can currently interpret over 50 languages and dialects. It even adapts results to the user using information about their contacts, installed apps, media and various other pieces of data.
 
 Audio fed to a recognizer is transcribed in near real time, and results are provided incrementally. This lets you react to voice input very quickly, regardless of context, unlike Keyboard Dictation, which is tied to a specific input object.
 
-Speech Recognizer creates some truly amazing possibilities in your apps. An example implementation of live transcription provided by Apple is a camera app that could take a photo when it hears the word “cheese”. For pre-recorded audio, transcriptions could be stored and used to enable text searches in a library of recordings.
+Speech Recognizer creates some truly amazing possibilities in your apps. For example, you could create an app that takes a photo when you say "cheese". You could also create an app that could automatically transcribe audio from Simpsons episodes so you could search for your favorite lines. 
 
 In this chapter, you'll build an app called Gangstribe that will transcribe some pretty hardcore (hilarious) gangster rap recordings using speech recognition. It will also get users in the mood to record their own rap hits with a live audio transcriber that draws emojis on their faces based on what they say. :]
 
 ![iPhone bordered](./images/intro-teaser-image.png)
 
-The section on live recordings will use AVAudioEngine. The text will guide you, but you may want to familiarize yourself with that framework if you haven't used it before. The 2014 WWDC session *AVAudioEngine in Practice* is a great intro to this, and can be found at [apple.co/28tATc1](http://apple.co/28tATc1). This session video explains many of the systems and terminology we'll use in the tutorial, so we **highly recommend** watching it first.
+The section on live recordings will use AVAudioEngine. If you haven't used AVAudioEngine before, you may want to familiarize yourself with that framework first. The 2014 WWDC session *AVAudioEngine in Practice* is a great intro to this, and can be found at [apple.co/28tATc1](http://apple.co/28tATc1). This session video explains many of the systems and terminology we'll use in this chapter.
 
 The Speech Recognition framework doesn't work in the simulator, so be sure to use a real device with iOS 10 for this chapter.
 
@@ -192,6 +192,8 @@ Build and run, select **Gangsta's Paradise**, and then tap the **Transcribe** bu
 
 ![iPhone bordered](./images/transcription-result.png)
 
+## Transcription and locales
+
 The results aren't bad, considering Coolio doesn't seem to own a copy of Webster's Dictionary. Depending on the locale of your device, there could be another reason things are a bit off. The above screenshot was a transcription completed on a device configured for US English, while DJ Sammy D has a slightly different dialect.
 
 But you don't need to book a flight overseas to fix this. When creating a recognizer, you have the option of specifying a locale — that's what you'll do next.
@@ -264,7 +266,7 @@ import Speech
 
 Now the live transcription controller has access to Speech Recognition.
 
-Next find `viewDidLoad()` and replace `startRecording()` with the following:
+Next find `viewDidLoad()` and replace the line `startRecording()` with the following:
 
 ```swift
 SFSpeechRecognizer.requestAuthorization {
