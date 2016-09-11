@@ -7,30 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		792359731D81A11500686DFA /* PotatoTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792359721D81A11500686DFA /* PotatoTasks.swift */; };
+		79B3BC7C1D7DBFCE00927F31 /* TaterRater.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79B3BC7A1D7DBFCE00927F31 /* TaterRater.xcdatamodeld */; };
 		79F8F94B1D798CBA00E0F549 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79F8F94A1D798CBA00E0F549 /* Assets.xcassets */; };
 		79F8F94E1D798CBA00E0F549 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79F8F94C1D798CBA00E0F549 /* LaunchScreen.storyboard */; };
 		79F8F9591D798CCE00E0F549 /* PotatoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9551D798CCE00E0F549 /* PotatoTableViewController.swift */; };
 		79F8F95A1D798CCE00E0F549 /* Potatoes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 79F8F9561D798CCE00E0F549 /* Potatoes.txt */; };
-		79F8F95B1D798CCE00E0F549 /* TaterRater.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9571D798CCE00E0F549 /* TaterRater.xcdatamodel */; };
 		79F8F95C1D798CCE00E0F549 /* PotatoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9581D798CCE00E0F549 /* PotatoViewController.swift */; };
 		79F8F95F1D798DB700E0F549 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F95E1D798DB700E0F549 /* AppDelegate.swift */; };
 		79F8F9611D798DD800E0F549 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79F8F9601D798DD800E0F549 /* Main.storyboard */; };
-		79F8F9631D798FD200E0F549 /* PotatoDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9621D798FD200E0F549 /* PotatoDataStack.swift */; };
 		79F8F9651D79AE1500E0F549 /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8F9641D79AE1500E0F549 /* NoteViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		792359721D81A11500686DFA /* PotatoTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotatoTasks.swift; sourceTree = "<group>"; };
+		79B3BC7B1D7DBFCE00927F31 /* TaterRater.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaterRater.xcdatamodel; sourceTree = "<group>"; };
 		79F8F9401D798CBA00E0F549 /* TaterRater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaterRater.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79F8F94A1D798CBA00E0F549 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		79F8F94D1D798CBA00E0F549 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		79F8F94F1D798CBA00E0F549 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		79F8F9551D798CCE00E0F549 /* PotatoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotatoTableViewController.swift; sourceTree = "<group>"; };
 		79F8F9561D798CCE00E0F549 /* Potatoes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Potatoes.txt; sourceTree = "<group>"; };
-		79F8F9571D798CCE00E0F549 /* TaterRater.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaterRater.xcdatamodel; sourceTree = "<group>"; };
 		79F8F9581D798CCE00E0F549 /* PotatoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotatoViewController.swift; sourceTree = "<group>"; };
-		79F8F95E1D798DB700E0F549 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		79F8F95E1D798DB700E0F549 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		79F8F9601D798DD800E0F549 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		79F8F9621D798FD200E0F549 /* PotatoDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotatoDataStack.swift; sourceTree = "<group>"; };
 		79F8F9641D79AE1500E0F549 /* NoteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -51,7 +51,9 @@
 				79F8F9421D798CBA00E0F549 /* TaterRater */,
 				79F8F9411D798CBA00E0F549 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		79F8F9411D798CBA00E0F549 /* Products */ = {
 			isa = PBXGroup;
@@ -79,8 +81,8 @@
 			isa = PBXGroup;
 			children = (
 				79F8F9561D798CCE00E0F549 /* Potatoes.txt */,
-				79F8F9571D798CCE00E0F549 /* TaterRater.xcdatamodel */,
-				79F8F9621D798FD200E0F549 /* PotatoDataStack.swift */,
+				79B3BC7A1D7DBFCE00927F31 /* TaterRater.xcdatamodeld */,
+				792359721D81A11500686DFA /* PotatoTasks.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -169,9 +171,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				79F8F9651D79AE1500E0F549 /* NoteViewController.swift in Sources */,
+				792359731D81A11500686DFA /* PotatoTasks.swift in Sources */,
+				79B3BC7C1D7DBFCE00927F31 /* TaterRater.xcdatamodeld in Sources */,
 				79F8F95C1D798CCE00E0F549 /* PotatoViewController.swift in Sources */,
-				79F8F9631D798FD200E0F549 /* PotatoDataStack.swift in Sources */,
-				79F8F95B1D798CCE00E0F549 /* TaterRater.xcdatamodel in Sources */,
 				79F8F9591D798CCE00E0F549 /* PotatoTableViewController.swift in Sources */,
 				79F8F95F1D798DB700E0F549 /* AppDelegate.swift in Sources */,
 			);
@@ -330,6 +332,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		79B3BC7A1D7DBFCE00927F31 /* TaterRater.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				79B3BC7B1D7DBFCE00927F31 /* TaterRater.xcdatamodel */,
+			);
+			currentVersion = 79B3BC7B1D7DBFCE00927F31 /* TaterRater.xcdatamodel */;
+			path = TaterRater.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 79F8F9381D798CBA00E0F549 /* Project object */;
 }

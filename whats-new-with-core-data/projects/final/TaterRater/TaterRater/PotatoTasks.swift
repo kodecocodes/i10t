@@ -20,28 +20,32 @@
  * THE SOFTWARE.
  */
 
-import UIKit
+import CoreData
 
-class NoteViewController: UIViewController {
+extension NSPersistentContainer {
   
-  var potato: Potato!
-  
-  @IBOutlet weak var textView: UITextView!
-  
-  @IBAction func save(_ sender: AnyObject) {
-    potato.notes = textView.text
-    dismiss(animated: true, completion: nil)
+  func importPotatoes() {
+    performBackgroundTask { context in
+      let request: NSFetchRequest<Potato> = Potato.fetchRequest()
+      do {
+        if try context.count(for: request) == 0 {
+          // Import some spuds
+          sleep(3)
+          guard let spudsURL = Bundle.main.url(forResource: "Potatoes", withExtension: "txt") else { return }
+          let spuds = try String(contentsOf: spudsURL)
+          let spudList = spuds.components(separatedBy: .newlines)
+          for spud in spudList {
+            let potato = Potato(context: context)
+            potato.variety = spud
+            potato.crowdRating = Float(arc4random_uniform(50)) / Float(10)
+          }
+          
+          try context.save()
+        }
+      } catch {
+        print("Error importing potatoes: \(error.localizedDescription)")
+      }
+    }
   }
   
-  @IBAction func cancel(_ sender: AnyObject) {
-    dismiss(animated: true, completion: nil)
-  }
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    textView.text = potato.notes
-    textView.becomeFirstResponder()
-    navigationItem.title = potato.variety
-  }
 }
