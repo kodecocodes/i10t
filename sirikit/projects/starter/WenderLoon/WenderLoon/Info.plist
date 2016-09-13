@@ -24,8 +24,6 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>WenderLoon wants to see where you are</string>
-	<key>NSSiriUsageDescription</key>
-	<string>WenderLoon wants to listen to what you say</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
