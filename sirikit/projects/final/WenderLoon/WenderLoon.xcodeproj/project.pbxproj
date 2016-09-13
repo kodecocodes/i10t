@@ -23,10 +23,6 @@
 		228449C11D48F523003CAADE /* Mic.png in Resources */ = {isa = PBXBuildFile; fileRef = 228449BD1D48F523003CAADE /* Mic.png */; };
 		228449C21D48F523003CAADE /* Ray.png in Resources */ = {isa = PBXBuildFile; fileRef = 228449BE1D48F523003CAADE /* Ray.png */; };
 		228449C31D48F523003CAADE /* Vicki.png in Resources */ = {isa = PBXBuildFile; fileRef = 228449BF1D48F523003CAADE /* Vicki.png */; };
-		228449C51D4905E3003CAADE /* Driver+RideIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228449C41D4905E3003CAADE /* Driver+RideIntent.swift */; };
-		228449C71D4905EE003CAADE /* Balloon+RideIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228449C61D4905EE003CAADE /* Balloon+RideIntent.swift */; };
-		228449C91D490793003CAADE /* UIImage+INImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228449C81D490793003CAADE /* UIImage+INImage.swift */; };
-		229BB5111D493D6D005824F4 /* WenderLoonSimulator+INRideOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229BB5101D493D6D005824F4 /* WenderLoonSimulator+INRideOption.swift */; };
 		22A47F7A1D48A5EE004E4156 /* CLLocation+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A47F791D48A5EE004E4156 /* CLLocation+Random.swift */; };
 		22F33A221D4626FE00836D54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F33A211D4626FE00836D54 /* AppDelegate.swift */; };
 		22F33A241D4626FE00836D54 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F33A231D4626FE00836D54 /* ViewController.swift */; };
@@ -87,10 +83,6 @@
 		228449BD1D48F523003CAADE /* Mic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mic.png; sourceTree = "<group>"; };
 		228449BE1D48F523003CAADE /* Ray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ray.png; sourceTree = "<group>"; };
 		228449BF1D48F523003CAADE /* Vicki.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vicki.png; sourceTree = "<group>"; };
-		228449C41D4905E3003CAADE /* Driver+RideIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Driver+RideIntent.swift"; sourceTree = "<group>"; };
-		228449C61D4905EE003CAADE /* Balloon+RideIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Balloon+RideIntent.swift"; sourceTree = "<group>"; };
-		228449C81D490793003CAADE /* UIImage+INImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+INImage.swift"; sourceTree = "<group>"; };
-		229BB5101D493D6D005824F4 /* WenderLoonSimulator+INRideOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WenderLoonSimulator+INRideOption.swift"; sourceTree = "<group>"; };
 		22A47F791D48A5EE004E4156 /* CLLocation+Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocation+Random.swift"; sourceTree = "<group>"; };
 		22C146831D759F26003D34BD /* WenderLoon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WenderLoon.entitlements; sourceTree = "<group>"; };
 		22F33A1E1D4626FE00836D54 /* WenderLoon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WenderLoon.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -173,10 +165,6 @@
 			isa = PBXGroup;
 			children = (
 				22A47F791D48A5EE004E4156 /* CLLocation+Random.swift */,
-				228449C41D4905E3003CAADE /* Driver+RideIntent.swift */,
-				228449C61D4905EE003CAADE /* Balloon+RideIntent.swift */,
-				228449C81D490793003CAADE /* UIImage+INImage.swift */,
-				229BB5101D493D6D005824F4 /* WenderLoonSimulator+INRideOption.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -354,14 +342,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				220B8F6F1D47BBBC00FD0A84 /* Balloon.swift in Sources */,
-				228449C51D4905E3003CAADE /* Driver+RideIntent.swift in Sources */,
 				220B8F6A1D47B89F00FD0A84 /* WenderLoonSimulator.swift in Sources */,
-				229BB5111D493D6D005824F4 /* WenderLoonSimulator+INRideOption.swift in Sources */,
 				22A47F7A1D48A5EE004E4156 /* CLLocation+Random.swift in Sources */,
 				220B8F731D48998100FD0A84 /* Motion.swift in Sources */,
 				220B8F6D1D47B90300FD0A84 /* Driver.swift in Sources */,
-				228449C91D490793003CAADE /* UIImage+INImage.swift in Sources */,
-				228449C71D4905EE003CAADE /* Balloon+RideIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
