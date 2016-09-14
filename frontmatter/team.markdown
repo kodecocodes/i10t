@@ -20,7 +20,7 @@ $[#tb]
 
 ![portrait](images/Rich.jpg)
 
-**Rich Turton** is an iOS developer for MartianCraft, prolific Stack Overflow participant and author of a development blog, Command Shift. When he's not in front of a computer he is usually building Lego horse powered spaceships (don't ask!) with his daughter.
+**Rich Turton** Rich Turton is an iOS developer for MartianCraft, prolific Stack Overflow participant and author of a development blog, Command Shift. When he's not in front of a computer he is usually building Lego horse powered spaceships (don't ask!) with his daughters.
 
 $[tb#]
 

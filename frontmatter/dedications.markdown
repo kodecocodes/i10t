@@ -8,6 +8,6 @@
 
 — _Jeff Rames_
 
-"To myself, for I am awesome."
+"To my wife and daughters, who had to (or is that “got to”?) spend many summer evenings without me."
 
 — _Rich Turton_
