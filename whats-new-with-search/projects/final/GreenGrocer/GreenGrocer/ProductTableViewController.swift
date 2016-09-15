@@ -52,8 +52,7 @@ class ProductTableViewController: UITableViewController, DataStoreOwner {
   }
   
   var isFilterActive: Bool {
-    return (searchController.isActive &&
-      searchController.searchBar.text != "")
+    return (searchController.searchBar.text != "")
   }
   
   // MARK: - Table view data source
