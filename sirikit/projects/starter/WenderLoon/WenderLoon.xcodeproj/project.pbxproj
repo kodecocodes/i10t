@@ -176,7 +176,9 @@
 				22F33A1F1D4626FE00836D54 /* Products */,
 				22619B8D1D48E59E008F5AF6 /* Frameworks */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		22F33A1F1D4626FE00836D54 /* Products */ = {
 			isa = PBXGroup;

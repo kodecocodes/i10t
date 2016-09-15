@@ -21,6 +21,7 @@
  */
 
 import UIKit
+import Intents
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -28,7 +29,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    requestAuthorisation()
     return true
+  }
+  
+  fileprivate func requestAuthorisation() {
+    INPreferences.requestSiriAuthorization { status in
+      if status == .authorized {
+        print("Hey, Siri!")
+      } else {
+        print("Nay, Siri!")
+      }
+    }
   }
 
 }

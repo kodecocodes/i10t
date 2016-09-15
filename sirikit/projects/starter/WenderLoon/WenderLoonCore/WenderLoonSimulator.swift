@@ -59,11 +59,27 @@ extension WenderLoonSimulator {
     }
     return .none
   }
+  
+  public func checkNumberOfPassengers(_ number: Int) -> Bool {
+    return (1...4).contains(number)
+  }
+  
+  public func pickupWithinRange(_ pickup: CLLocation) -> Bool {
+    if let closestBalloon = closestAvailableBalloon(location: pickup) {
+      return closestBalloon.location.distance(from: pickup) < 50000
+    }
+    return false
+  }
+  
 }
 
 extension WenderLoonSimulator {
   static public func imageForDriver(name: String) -> UIImage? {
     return UIImage(named: name, in: Bundle(for: WenderLoonCore.self), compatibleWith: .none)
+  }
+  static public func imageForBallon(driverName: String) -> UIImage? {
+    let simulator = WenderLoonSimulator(renderer: nil)
+    return (simulator.balloons.filter { $0.driver.name == driverName }).first?.image
   }
 }
 

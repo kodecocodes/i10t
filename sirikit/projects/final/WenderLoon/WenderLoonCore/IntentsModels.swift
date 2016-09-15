@@ -19,22 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import Intents
 
-import CoreLocation
+public extension UIImage {
+  public var inImage: INImage {
+    return INImage(imageData: UIImagePNGRepresentation(self)!)
+  }
+}
 
-public extension CLLocation {
-  public func randomPointWithin(radius: CLLocationDistance) -> CLLocation {
-    // Well, I think this is correct. But it's highly likely that I'm wrong
-    let radiusInDegrees = radius / 111_000 // Approx
-    
-    let randomRadius = sqrt(drand48()) * radiusInDegrees
-    let randomAngle = drand48() * .pi * 2
-    
-    let x = randomRadius * cos(randomAngle)
-    let y = randomRadius * sin(randomAngle)
-    
-    let xAdjustedForYShrinking = x / cos(coordinate.longitude)
-    
-    return CLLocation(latitude: coordinate.latitude + y, longitude: coordinate.longitude + xAdjustedForYShrinking)
+public extension Driver {
+  public var rideIntentDriver: INRideDriver {
+    return INRideDriver(personHandle: INPersonHandle(value: name, type: .unknown),
+                        nameComponents: .none,
+                        displayName: name,
+                        image: picture.inImage,
+                        rating: rating.toString,
+                        phoneNumber: .none)
+  }
+}
+
+public extension Balloon {
+  public var rideIntentVehicle: INRideVehicle {
+    let vehicle = INRideVehicle()
+    vehicle.location = location
+    vehicle.manufacturer = "Hot Air Balloon"
+    vehicle.registrationPlate = "B4LL 00N"
+    vehicle.mapAnnotationImage = image.inImage
+    return vehicle
   }
 }
