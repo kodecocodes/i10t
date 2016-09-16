@@ -22,8 +22,8 @@
 
 import CoreLocation
 
-extension CLLocation {
-  func randomPointWithin(radius: CLLocationDistance) -> CLLocation {
+public extension CLLocation {
+  public func randomPointWithin(radius: CLLocationDistance) -> CLLocation {
     // Well, I think this is correct. But it's highly likely that I'm wrong
     let radiusInDegrees = radius / 111_000 // Approx
     

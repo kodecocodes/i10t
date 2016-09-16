@@ -351,7 +351,7 @@ This creates a vehicle based on the balloon's properties.
 
 With that bit of model work in place you can build the framework (hit Command-B to do that) then switch back to the ride request extension scheme. 
 
-Open **RideRequestHandler.swift** and replace the implementation of _ with the following:
+Open **RideRequestHandler.swift** and replace the implementation of `handle(intent:completion:)` with the following:
 
 ```swift
 // 1
