@@ -219,7 +219,7 @@ if let asciiified = figlet.render(input: selectedText) {
 
 Here’s a detailed look at what this does:
 
-1. The FIGlet renderer method `render(input:)` takes a `selectedText` you obtained earlier returns its ASCII art version.
+1. The FIGlet renderer method `render(input:)` takes the `selectedText` you obtained earlier and returns its ASCII art version.
 2. Using the newline character as a separator, this code breaks the resulting `String` into the array `newLines`. It then sets `startLine` to the first line of the `selection`. Because you’ve guarded against multi-line selections, the first line is the only line.
 3. This removes the originally selected line from the `buffer`, replacing it with those in `newLines`. The insertion range for `newLines` is from the original selection’s `startLine` through the number of lines being inserted.
 
