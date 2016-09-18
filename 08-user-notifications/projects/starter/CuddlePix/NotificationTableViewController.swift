@@ -65,7 +65,7 @@ extension NotificationTableViewController {
       let cellProvider = sectionProvider.cellProvider(at: indexPath.row)
       else { return cell }
     
-    cell = cellProvider.prepare(cell: cell)
+    cell = cellProvider.prepare(cell)
     
     return cell
   }

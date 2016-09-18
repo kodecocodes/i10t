@@ -37,7 +37,7 @@ Tap the **+** bar button, and you'll see an interface for scheduling multiple lo
 Take a few minutes and explore the below items in the starter project:
 
 - **NotificationTableViewController.swift** contains the table view controller and displays a sectioned table using a datasource built from a struct and protocol found in **TableSection.swift**.
-- **ConfigurationViewController.swift** manages the view that schedules notifications, centered around a mostly stubbed-out method `scheduleRandomNotification(inSeconds:completion:)` that will ultimately create and schedule notifications.
+- **ConfigurationViewController.swift** manages the view that schedules notifications, centered around a mostly stubbed-out method `scheduleRandomNotification(in:completion:)` that will ultimately create and schedule notifications.
 - **Main.storyboard** defines the simple UI you've already seen in full while testing the app.
 - **Utilities** contains some helpers you'll use during this tutorial.
 - **Supporting Files** contains artwork attributions, the plist, and images you'll display in your notifications.
