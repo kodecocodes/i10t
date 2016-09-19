@@ -7,7 +7,7 @@ title: "Chapter 3: Xcode 8 Source Editor Extensions"
 ```
 # Chapter 3: Xcode 8 Source Editor Extensions
 
-Source editor extensions, new to Xcode 8, are the first official way to extend the capabilities of Xcode. As the name implies, they rely on the extension architecture that has gained increasing prevalence on Apple’s platforms recently.
+New in Xcode 8, Apple has provided the first official way to extend the capabilities of Xcode: source editor extensions. As the name implies, they rely on the extension architecture that has gained increasing prevalence on Apple’s platforms recently.
 
 The scope is limited to performing operations on text. This means you cannot customize Xcode’s UI or modify settings — your interface is via menu items, and only text passes between Xcode and the extension.
 
@@ -28,21 +28,37 @@ In this chapter, you’ll build an extension called **Asciiify**, based on an ex
 
 ## Getting started
 
-Open **Asciiify.xcodeproj**In the starter project folder.
+Open **Asciiify.xcodeproj** in the starter project folder.
 
-Take a look around the source. You’ll be working on a source editor extension, which isn’t included in the starter project, but you will leverage some code included here:
+Before you can build and run, you need to set up signing with your team information.
+
+Select the **Asciiify** project from the navigator and then the **Asciiify** target. From the **General** tab, select your team name from the **Team** dropdown:
+
+![width=100% bordered](./images/select-team-asciiify.png)
+
+Build and run the **Asciiify** scheme and type some text into the top text field. Your asciiified output will show up in the label below.
+
+![width=70% bordered](./images/asciiify-demo2.png)
+
+Take a look around the source, which includes some helper files you'll use to build the source editor extension:
 
 - The **Figlet** group consists of **FigletRenderer.swift**, a Swift wrapper around a JavaScript FIGlet implementation by Scott González. A FIGlet is a program that makes ASCII art representations of text. You’ll use this, but you don’t need to know how it works in detail. 
 - **Main.storyboard** contains a simple view with a text field and label. This view is for the macOS app, not your extension. However, it will help demonstrate what the library does.
 - **AsciiTransformer.swift** transforms `String` input to a FIGlet and is used by the Asciiify macOS app.
 
-### Why source editor extensions?
+## Why source editor extensions?
 
-Source editor extensions are fully asynchronous and run under their own process, minimizing any performance impacts to the IDE. Using an officially supported interface, they’re also less likely to break with each Xcode release. Finally, the extension model provides a clean interface to Xcode that makes it quite easy to generate tools.
+Your goal is to take this functionality and build it into Xcode itself. But before you begin, you might be wondering why source code extensions are useful at all, considering the community has been able to develop Xcode plugins without an official method provided by Apple for some time.
 
-Xcode plugins have been available with fewer restrictions for some time, thanks to the developer community and the package manager [Alcatraz](http://alcatraz.io). They [TODO: FPE: Who is "they" — extensions?] are able to modify Xcode’s UI and behavior anywhere — not just within a single source file. However, these rely on private frameworks, introduce security and stability risks, and depend on frequent updates to keep them working.
+Xcode 8 source editor extensions bring several benefits:
 
-Xcode 8 uses runtime library validation to improve security. With this change, the time for updating plugins has come to an end, as the mechanism they used to run under in Xcode is now closed off. It’s a brave new world: Developers will be working within Apple’s ecosystem to create new tools.
+  * They are fully asynchronous and run under their own process, minimizing any performance impacts to the IDE. 
+  * Using an officially supported interface, they’re also less likely to break with each Xcode release. 
+  * Finally, the extension model provides a clean interface to Xcode that makes it quite easy to generate tools.
+
+It's true that Xcode plugins have been available with fewer restrictions for some time, thanks to the developer community and the package manager [Alcatraz](http://alcatraz.io). These community extensions are able to modify Xcode’s UI and behavior anywhere — not just within a single source file. However, these rely on private frameworks, introduce security and stability risks, and depend on frequent updates to keep them working.
+
+Xcode 8 uses runtime library validation to improve security. With this change, the time for updating plugins has come to an end, as the mechanism they used to run under in Xcode is now closed off. It’s a brave new world: for better or worse, developers will be working within Apple’s ecosystem to create new tools.
 
 The new source extensions are fairly limited compared to Xcode plugins of old — but here are a few ideas of what you *can* do:
 
@@ -57,19 +73,9 @@ You’ll likely come up with a half dozen more off the top of your head. Even wi
 
 While this is a book about iOS 10, keep in mind that source editor extensions are actually macOS applications. That being said, you’ll be working primarily with Foundation, so even if this is your first foray into macOS, there aren’t any pre-requisites.
 
-### Setting up the extension
+## Creating a new extension
 
-Before you can build and run, you need to set up signing with your team information.
-
-Select the **Asciiify** project from the navigator and then the **Asciiify** target. From the **General** tab, select your team name from the **Team** dropdown:
-
-![width=100% bordered](./images/select-team-asciiify.png)
-
-Build and run the **Asciiify** scheme and type some text into the top text field. Your asciiified output will show up in the label below.
-
-![width=70% bordered](./images/asciiify-demo.png)
-
-Your goal is to implement this same asciiification within Xcode’s source editor. To do this, you’ll create a source editor extension that leverages the Figlet framework in the same way this macOS application does.
+Back to your goal: to implement this same asciiification within Xcode’s source editor. To do this, you’ll create a source editor extension that leverages the Figlet framework in the same way this macOS application does.
 
 Navigate to **File\New\Target** and under the **macOS** tab select **Xcode Source Editor Extension**.
 
@@ -91,9 +97,9 @@ Select the AsciiifyComment build scheme, then build and run. When prompted to ch
 
 ![width=70% bordered](./images/test-xcode-splash.png)
 
-This instance of Xcode is meant for testing your extensions. Once launched, select one of your recent projects or simply create a new playground, as all you’ll be doing is adding comments.
+This instance of Xcode is meant for testing your extensions. Once launched, create a new playground, as all you’ll be doing is adding comments. Make sure that the new playground is open in the test instance of Xcode, not the original version of Xcode.
 
-Next, navigate to **Editor\Asciiify Comment\Source Editor Command** in the test Xcode instance. If you don’t see the menu item, *don’t panic*. As of this writing, Xcode 8’s release notes indicate an extra step required to run editor extensions under El Capitan.
+With the cursor in your test playground, navigate to **Editor\Asciiify Comment\Source Editor Command**. If you don’t see the menu item, *don’t panic*. As of this writing, Xcode 8’s release notes indicate an extra step required to run editor extensions under El Capitan.
 
 Execute the following command in the terminal:
 
@@ -119,7 +125,7 @@ For the first array item, change the value for key `XCSourceEditorCommandName` t
 
 Take a moment to check out the other keys found in the **Item 0** dictionary that help Xcode determine what code to execute for a given command. `XCSourceEditorCommandIdentifier` is a unique ID Xcode will use to look up this command in the dictionary. `XCSourceEditorCommandClassName` then points to the source editor command class responsible for performing this command.
 
-Build and run the extension, open any project or playground in the test Xcode and you’ll now be able to navigate to **Editor\Asciiify Comment\Asciiify Comment**:
+Build and run the extension, open your test playground from earlier, and  you’ll now be able to navigate to **Editor\Asciiify Comment\Asciiify Comment**:
 
 ![width=80% bordered](./images/extension-menu-item-new-name.png)
 
@@ -127,15 +133,15 @@ Now the name looks the way you’d expect, but it still doesn’t do anything. Y
 
 ### Exploring the command invocation
 
-Select a menu command associated with your extension will call `perform(with:completionHandler:)` in the `SourceEditorCommand` implementation. In addition to the completion handler, it’s passed an **XCSourceEditorCommandInvocation**.
+Selecting a menu command associated with your extension will call `perform(with:completionHandler:)` in the `SourceEditorCommand` implementation. In addition to the completion handler, it’s passed an `XCSourceEditorCommandInvocation`.
 
-Inside the `XCSourceEditorCommandInvocation` you’ll find the text buffer and everything you need to identify the selections. Here’s a quick overview of its properties:
+This class contains the text buffer and everything you need to identify the selections. Here’s a quick overview of its properties:
 
 - **commandIdentifier** is a unique identifier for the invoked command, used to determine what processing should be done. The identifier comes from the `XCSourceEditorCommandIdentifier` key in the command definition found in **Info.plist**.
 - **buffer** is of type `XCSourceTextBuffer` and is a mutable representation of the buffer and its properties to act upon. You’ll get into more detail about its makeup below.
 - **cancellationHandler** is invoked by Xcode when the user cancels the extension command. Cancellation can be done via a banner that appears within Xcode during processing by a source editor extension. Extensions block other operations, including typing in the IDE itself, to avoid merge issues.
 
->**Note** The cancellation handler brings up an important point: Your extensions need to be fast, because they block the user [TODO: FPE: Do we mean block the main UI thread?]. Any type of network activity or processor-intensive operations should be done at launch whenever possible.
+>**Note** The cancellation handler brings up an important point: Your extensions need to be fast, because they block the main UI thread. Any type of network activity or processor-intensive operations should be done at launch whenever possible.
 
 The `buffer` is the most interesting item in the `XCSourceEditorCommandInvocation`, as it contains the data to act upon. Here’s an overview of the `XCSourceTextBuffer` class’ notable properties:
 
@@ -223,7 +229,7 @@ Here’s a detailed look at what this does:
 2. Using the newline character as a separator, this code breaks the resulting `String` into the array `newLines`. It then sets `startLine` to the first line of the `selection`. Because you’ve guarded against multi-line selections, the first line is the only line.
 3. This removes the originally selected line from the `buffer`, replacing it with those in `newLines`. The insertion range for `newLines` is from the original selection’s `startLine` through the number of lines being inserted.
 
-Build and run, attach to Xcode and open any code file you like. Select a piece of text and then select **Editor\Asciiify Comment\Asciiify Comment** to kick off the extension. And then you’ll see...
+Build and run, attach to Xcode and open the Playground from earlier. Select a piece of text and then select **Editor\Asciiify Comment\Asciiify Comment** to kick off the extension. And then you’ll see...
 
 ![width=40%](./images/xcode-quit-ragecomic.png)
 
