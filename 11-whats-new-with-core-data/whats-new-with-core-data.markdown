@@ -1,9 +1,9 @@
 ```metadata
 author: "By Rich Turton"
 number: "11"
-title: "Chapter 11: What's new with Core Data"
+title: "Chapter 11: What's New with Core Data"
 ```
-# Chapter 11: What's new with Core Data
+# Chapter 11: What's New with Core Data
 
 You know what nobody likes? Nobody likes typing boilerplate code. But there's another typing of typing nobody likes as well - explicit typing, when Swift's implicit typing will do.
 
