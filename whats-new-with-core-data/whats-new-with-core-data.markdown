@@ -5,17 +5,22 @@ title: "Chapter 11: What's new with Core Data"
 ```
 # Chapter 11: What's new with Core Data
 
-## Introduction
+You know what nobody likes? Nobody likes typing boilerplate code. But there's another typing of typing nobody likes as well - explicit typing, when Swift's implicit typing will do.
 
-You know what nobody likes? Nobody likes typing. Nobody likes Typing, either. This years's Core Data updates involve less of both. You can do less typing, because there are new convenience methods, classes and code generations. And you can do less Typing, because Generic Fairy Dust™ has been sprinkled over fetch requests and fetched results controllers, so the compiler now knows what class of managed object you're dealing with. 
+The new Core Data updates in iOS 10 involve less of both kinds of typing:
+
+  * **You can do less typing of boilerplate code**, because there are new convenience methods, classes and code generations. 
+  * **You can do less explicit typing**, because Generic Fairy Dust™ has been sprinkled over fetch requests and fetched results controllers, so the compiler now knows what class of managed object you're dealing with. 
 
 There are also some useful new features at the managed object context and persistent store coordinator level, which may change the way you're structuring your code. 
 
-If the previous two paragraphs made no sense to you, then check out our Core Data By Tutorials book. If you're already familiar with Core Data, then read on to find out what's new! 
+If the previous two paragraphs made no sense to you, then check out our Core Data By Tutorials book to learn the basics of using Core Data first. If you're already familiar with Core Data, then read on to find out what's new! 
 
-In this chapter you're going to take an app and convert it to use Core Data. The app is called TaterRater. It's for rating and making notes about your favorite varieties of potato. Later, you'll make a greater TaterRater using Core Data. I make no apologies for the fact that that sentence does not sound as good if you don't speak with a British accent :] 
+In this chapter, you're going to take an app and convert it to use Core Data, using some of the handy new Core Data features in iOS 10. Let's get typing! :]
 
-## He who pays the Maris Piper, calls the tune
+## Getting started
+
+The app you'll be working with in this chapter is called TaterRater. It's for rating and making notes about your favorite varieties of potato. Later, you'll make a greater TaterRater using Core Data. I make no apologies for the fact that that sentence does not sound as good if you don't speak with a British accent :] 
 
 Open the starter project and build and run, then take a look around. 
 
@@ -44,11 +49,11 @@ Call the file **TaterRater.xcdatamodeld**. When the model editor opens, add a ne
 
 The model editor should look like this:
 
-![bordered width=60%](images/PotatoEntityAttributes.png)
+![bordered width=100%](images/PotatoEntityAttributes.png)
 
 The `Potato` entity is going to replace the `Potato` class that currently exists in the app. You've created and typed the properties so that they match the existing class, so the existing code will still compile. Delete the **Potato.swift** file from the **Model** group. 
 
-Still in the model editor, with the **Potato** entity selected, open the Data Model Inspector. Fill in the **Name** field to say **Potato**.
+Still in the model editor, with the **Potato** entity selected, open the Data Model Inspector. Fill in the **Name** field to say **Potato**, if it's not already.
 
 There are some new options in the **Class** section. Take a look at the **Codegen** field. There are three options here which control how the code for that particular entity will be created. 
 
@@ -56,9 +61,15 @@ There are some new options in the **Class** section. Take a look at the **Codege
 - **Class Definition** - a full class definition will be created.
 - **Category / Extension** - An extension with the core data attributes declared in it will be created.
 
-Choose **Class Definition**, then Build and Run your project. It will crash, but at runtime. Does that surprise you? You removed the **Potato.swift** file and you haven't generated an `NSManagedObject` subclass file yet, but your app built just fine. What's happening?
+Choose **Class Definition**: 
 
-Xcode now automatically generates the code to implement your subclasses. It puts the generated files into the Derived Data folder for the project, to further underline the idea that you're not supposed to be editing them yourself. It does this every time you change the model file. You can see what has been created by finding some code that uses your entity (for example, in **AppDelegate.swift**, then command-clicking on the `Potato` type, to see the class definition: 
+![bordered width=40%](images/CDTSettings.png)
+
+Now build and run your project. It will crash, but at runtime. Does that surprise you? You removed the **Potato.swift** file and you haven't generated an `NSManagedObject` subclass file yet, but your app built just fine. What's happening?
+
+Xcode now automatically generates the code to implement your subclasses. It puts the generated files into the Derived Data folder for the project, to further underline the idea that you're not supposed to be editing them yourself. It does this every time you change the model file. 
+
+See for yourself what has been created by finding some code that uses your entity (for example, in **AppDelegate.swift**, then command-clicking on the `Potato` type, to see the class definition: 
 
 ```swift
 import Foundation
@@ -70,7 +81,7 @@ public class Potato: NSManagedObject {
 }
 ```
 
-Command-click on one of the properties, such as `variety`, to see how the properties are implemented:
+Back in **AppDelegate.swift**, command-click on one of the properties, such as `variety`, to see how the properties are implemented:
 
 ```swift
 import Foundation
@@ -102,7 +113,7 @@ Setting up the core data "stack" used to be quite a bit of work. You'd need to c
 
 The new `NSPersistentContainer` class now wraps up all of that tedious work for you, as well as offering some handy new features. 
 
-Open **AppDelegate.swift** and, at the top of the file, add this line:
+Open **AppDelegate.swift** and add this line to the top of the file:
 
 ```swift
 import CoreData
@@ -145,7 +156,7 @@ coreDataStack.loadPersistentStores {
 
 This code creates the SQL files if they aren't there already. It performs any lightweight migrations that may be required. These are the things that normally happen using `addPersistentStore...` on the persistent store coordinator.
 
-Because you haven't told the persistent container to set its stores up asynchronously, this method blocks until the work is complete. With asynchronous setup, execution continues, so  you'd have to load some sort of waiting UI at launch, then in the completion block above perform a segue to show your actual UI. The completion block is called on the calling thread. 
+Because you haven't told the persistent container to set its stores up asynchronously, this method blocks until the work is complete. With asynchronous setup, execution continues, so you'd have to load some sort of waiting UI at launch, then in the completion block above perform a segue to show your actual UI. The completion block is called on the calling thread. 
 
 Find the line later on in the same method where each `Potato` is created. Replace the empty initializer `let potato = Potato()` with this:
 
@@ -201,7 +212,7 @@ Here's the breakdown:
 
 1. Here you use the `fetchRequest()` method that is part of the generated managed object subclass code you saw earlier. Unfortunately this seems to clash with the new, magically typed `fetchRequest()` that has been added to `NSManagedObject`. If you don't use the type annotation, then the compiler doesn't know which method you want to use and will give you an error. Hopefully the file generation will be fixed in a future version so that the new method can be used directly. 
 2. The new `#keyPath` syntax prevents you from mistyping keys when creating sort descriptors. You should definitely use it.
-3. The sort descriptor is added to the fetch request
+3. The sort descriptor is added to the fetch request.
 4. Creating the fetched results controller and performing the fetch hasn't changed. 
 
 Now replace the implementations of the datasource methods. Change `numberOfSections(in:)` to this:
@@ -325,7 +336,7 @@ extension NSPersistentContainer {
 
 Here's the breakdown: 
 
-1. `performBackgroundTask(_:)` takes a block with a managed object context as a parameter, does some work with it and then disposes of the context. The context is confined to a private queue. There's also a method to get a background context directly if you want to manage the object yourself.
+1. `performBackgroundTask(_:)` is a built-in method on `NSPersistentContainer` that takes a block with a managed object context as a parameter, does some work with it and then disposes of the context. The context is confined to a private queue. There's also a method to get a background context directly if you want to manage the object yourself.
 2. This is the same code to generate a typed fetch request that you've already seen.
 3. This is another new method, this time on the context itself. `count(for:)` is a throwing version of `countForFetchRequest(_: error:)`. 
 
