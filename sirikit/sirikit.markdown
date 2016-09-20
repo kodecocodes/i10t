@@ -33,7 +33,9 @@ Within each domain is a set of _intents_, which represent the specific tasks tha
 
 Each intent is represented by an `INIntent` subclass, and has associated with it a handler protocol and a specific `INIntentResponse` subclass for you to talk back to SiriKit.
 
-Language processing in your app boils down to SiriKit deciding which intent and app the user is asking for, and your code checking that what the user is asking makes sense or can be done, and then doing it. There is lots of great detail about the available domains and intents in the documentation. [TODO: FPE: Linky to the docs?]
+Language processing in your app boils down to SiriKit deciding which intent and app the user is asking for, and your code checking that what the user is asking makes sense or can be done, and then doing it. 
+
+> **Note**: For a full list of the available domains and intents, check out the Intents Domains section in the SiriKit programming guide at: [apple.co/2d2yUb8](http://apple.co/2d2yUb8)
 
 ## Would you like to ride in my beautiful balloon?
 
@@ -43,7 +45,7 @@ Open up the sample project. Before you can start, you’ll need to amend the bun
 
 Select the **WenderLoon** project in the project navigator, then select the **WenderLoon** target. Change the **Bundle identifier** from `com.razeware.WenderLoon` to something unique; I’d suggest replacing `razeware` with something random.
 
-![width=60%](images/ChangeBundleIdentifier.png) 
+![width=100% bordered](images/ChangeBundleIdentifier.png) 
 
 In the **Signing** section choose a development team.
 
@@ -51,7 +53,7 @@ Select the **WenderLoonCore** framework target and change the bundle identifier 
 
 Connect a device running iOS 10 and build and run to confirm that everything is working: 
 
-![iPhone](images/FirstRun.png)
+![iPhone bordered](images/FirstRun.png)
 
 You’ll see some balloons drifting somewhere over London. The app doesn’t do very much else — in fact, you’ll be doing the rest of your work in an extension. 
 
@@ -59,7 +61,7 @@ Add a new target using the plus button at the bottom of the target list, or by c
 
 Choose the **iOS/Application Extension/Intents Extension** template:
 
-![width=60%](images/IntentsExtensionTemplate.png) 
+![width=60% bordered](images/IntentsExtensionTemplate.png) 
 
 On the next screen, enter **RideRequestExtension** for the product name. Don’t check the **Include UI Extension** box. If you’re prompted to activate a new scheme, say yes. 
 
@@ -123,7 +125,7 @@ Open **Info.plist** inside the **RideRequestExtension** group and find the **NSE
 
 Delete those intents and add in an **INRequestRideIntent** line: 
 
-![width=80% bordered](images/EditingPlist.png)
+![width=100% bordered](images/EditingPlist.png)
 
 There are a few more hoops to jump through before you can use Siri. First, you need to ask the user’s permission. Open **AppDelegate.swift** in the main **WenderLoon** group, and you’ll see a stub method called `requestAuthorisation()`.
 
@@ -149,7 +151,7 @@ Permission requests now come with usage strings which are displayed to the user 
 
 Add a new entry there, for **Privacy - Siri Usage Description** (it should autocomplete) and enter a usage string:
 
-![width=80% bordered](images/SiriUsageDescription.png)
+![width=100% bordered](images/SiriUsageDescription.png)
 
 Finally, you need to add the Siri entitlement to the app. Select the project, then the **WenderLoon** target, then the **Capabilities** tab. Switch on Siri: 
 
@@ -167,13 +169,15 @@ Here’s a summary of the steps required to add Siri to your app:
 
 After all that, select the **WenderLoon** scheme (not the extension) and build and run. You’ll get asked to enable Siri:
 
-![iPhone](images/EnableSiri.png)
+![iPhone bordered](images/EnableSiri.png)
 
-After all that effort, you really want to make sure you tap **OK**. Now the real fun begins. 
+After all that effort, you really want to make sure you tap **OK**. If all works well, you should see "Hey, Siri!" printed in the console.
 
-Back in Xcode, change to the **RideRequestExtension** scheme. Build and run, and choose **Siri** from the list of applications. Siri will start on your device and you can start having the first of many fun conversations: 
+Now the real fun begins. Back in Xcode, change to the **RideRequestExtension** scheme. Build and run, and choose **Siri** from the list of applications. Siri will start on your device and you can start having the first of many fun conversations. 
 
-![width=80%](images/SiriRoundOne.png)
+Try saying "Book a ride using WenderLoon from Heathrow airport", and if Siri can understand you, you should see something like the following:
+
+![width=80% bordered](images/SiriRoundOne.png)
 
 That’s the basic setup complete. Remember, at the moment you’re always returning a response saying that there’s no service in the area, which is what you can see above. In the next sections you’ll work through the detail of handling an intent properly. 
 
@@ -195,8 +199,6 @@ Each parameter comes with a related method in the handler protocol. Remember tha
 
 The resolution result tells Siri what to do next, or if everything is OK, it moves on to the next parameter. That all sounds a little abstract, so here’s a diagram: 
 
-[TODO: FPE: I'd suggest another diagram that brings down the color level of the nodes; they're hard to read.]
-
 ![width=100%](images/Resolution.png)
 
 Open **RideRequestHandler.swift** and add the following method: 
@@ -215,7 +217,7 @@ This method resolves the pickup location. The completion block takes a `INPlacem
 
 Build and run the app, and ask Siri to book you a ride using WenderLoon, giving no extra information: 
 
-![iPhone](images/AskForPickup.png)
+![iPhone bordered](images/AskForPickup.png)
 
 You supplied no pickup information in the original intent, so the resolution method tells Siri to ask for more data. If you then say a location, the resolution method is called again. The resolution method will get called multiple times until you end up with a success or a failure.
 
@@ -287,7 +289,7 @@ func resolvePartySize(forRequestRide intent: INRequestRideIntent, with completio
 
 This will ask for a number of passengers if the intent doesn’t already contain that information. If the number of passengers is known, it is validated against the rules held in the `WenderLoonSimulator` object. The maximum number of passengers is four. Build and run and see what happens with different party sizes: 
 
-![iPhone](images/TooManyPassengers.png)
+![iPhone bordered](images/TooManyPassengers.png)
 
 You’ve seen that the resolution stage works by dealing with a single parameter at a time. In the next stage, you can handle the final intent with all of the parameters resolved. 
 
@@ -314,6 +316,8 @@ Here you use a method from the simulator to check that the pickup location is in
 Sure, you could have performed this check when resolving the pickup location. But then you wouldn’t have seen any implementation at all! :] You can also use this method to ensure that you had connectivity to your services, so the booking could go ahead. This method is called just before the confirmation dialog is shown to the user. 
 
 Try to book a ride with a pickup location more than 50 km away from London, and you’ll receive an error telling you there is no service in the area. 
+
+> **Note**: If you don't live near London, edit WenderLoonCore > WenderLoonSimulator.swift > `pickupWithinRange(_:)` and add a few more zeros to the radius.
 
 You’ve dealt with the first two phases of a Siri interaction: resolution and confirmation. The final phase is where you actually take that intent and convert it into something actionable. 
 
@@ -423,7 +427,7 @@ Here’s the breakdown:
 
 Build and run; book a ride for three passengers, pickup somewhere in London, then confirm the request. You’ll see the final screen: 
 
-![iPhone](images/ConfirmedDefaultScreen.png)
+![iPhone bordered](images/ConfirmedDefaultScreen.png)
 
 Hmmm. That’s quite lovely, but it isn’t very balloon-ish. In the final part, you’ll create custom UI for this stage! 
 
@@ -504,7 +508,7 @@ Here’s the breakdown:
 
 Build and run and request a valid ride. Your new UI appears in the Siri interface at the confirmation and handle stages: 
 
-![width=80%](images/CustomUI1.png)
+![width=80% bordered](images/CustomUI1.png)
 
 Notice that your new stuff is sandwiched in between all of the existing Siri stuff. There isn’t a huge amount you can do about that. If your view controller implements the `INUIHostedViewSiriProviding` protocol then you can tell Siri not to display maps (which would turn off the map in the confirm step), messages (which only affects extensions in the Messages domain) or payment transactions.
 
