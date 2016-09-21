@@ -25,9 +25,9 @@ The Speech Recognition framework doesn't work in the simulator, so be sure to us
 
 Open **Gangstribe.xcodeproj** in the starter project folder for this chapter. Select the project file, the **Gangstribe** target and then the **General** tab. Choose your development team from the drop-down.
 
-![width=50%](./images/select-team.png)
+![bordered width=75%](./images/select-team.png)
 
-Connect an iOS 10 device and select it as the active scheme. Build and run and you'll see the bones of the app.
+Connect an iOS 10 device and select it as your run destination in Xcode. Build and run and you'll see the bones of the app.
 
 From the master controller, you can select a song. The detail controller will then let you play the audio file, recited by none other than our very own DJ Sammy D!
 

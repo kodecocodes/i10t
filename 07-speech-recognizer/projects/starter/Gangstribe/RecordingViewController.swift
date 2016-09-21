@@ -25,7 +25,7 @@ import AVFoundation
 
 class RecordingViewController: UIViewController {
   
-  private var player: AVPlayer?
+  fileprivate var player: AVPlayer?
   
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var subtitleLabel: UILabel!
@@ -44,7 +44,7 @@ class RecordingViewController: UIViewController {
     faceReplaceButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)
     
     if let recording = recording {
-      updateForRecording(recording: recording)
+      updateForRecording(recording)
     } else {
       contentStackView.isHidden = true
     }
@@ -73,12 +73,12 @@ class RecordingViewController: UIViewController {
   var recording: Recording? {
     didSet {
       if let recording = recording {
-        updateForRecording(recording: recording)
+        updateForRecording(recording)
       }
     }
   }
   
-  private func updateForRecording(recording: Recording) {
+  fileprivate func updateForRecording(_ recording: Recording) {
     contentStackView?.isHidden = false
     titleLabel?.text = recording.title
     subtitleLabel?.text = recording.subtitle
@@ -97,7 +97,7 @@ extension RecordingViewController {
   @IBAction func handleTranscribeButtonTapped(_ sender: BorderedButton) {
   }
   
-  private func updateUIForTranscriptionInProgress() {
+  fileprivate func updateUIForTranscriptionInProgress() {
     DispatchQueue.main.async { [unowned self] in
       self.transcribeButton.isEnabled = false
       self.activityIndicator.startAnimating()
@@ -107,7 +107,7 @@ extension RecordingViewController {
     }
   }
   
-  private func updateUIWithCompletedTranscription(_ transcription: String) {
+  fileprivate func updateUIWithCompletedTranscription(_ transcription: String) {
     DispatchQueue.main.async { [unowned self] in
       self.transcriptionTextView.text = transcription
       UIView.animate(withDuration: 0.5, animations: {

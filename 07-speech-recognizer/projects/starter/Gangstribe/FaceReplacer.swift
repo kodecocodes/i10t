@@ -39,10 +39,10 @@ class FaceReplacer: NSObject {
     }
   }
   
-  private var newFaceCI: CIImage?
-  private let eaglContext = EAGLContext(api: .openGLES2)
+  fileprivate var newFaceCI: CIImage?
+  fileprivate let eaglContext = EAGLContext(api: .openGLES2)
   fileprivate let context: CIContext
-  private let detector: CIDetector
+  fileprivate let detector: CIDetector
   
   init(imageView: GLKView) {
     self.imageView = imageView
@@ -53,7 +53,7 @@ class FaceReplacer: NSObject {
     imageView.context = eaglContext!
   }
   
-  private let captureSession = AVCaptureSession()
+  fileprivate let captureSession = AVCaptureSession()
   fileprivate var cameraImage: CIImage?
   
   
@@ -97,17 +97,13 @@ class FaceReplacer: NSObject {
     captureSession.sessionPreset = AVCaptureSessionPresetPhoto
     let cameraError = NSError(domain: "facereplace", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to access front camera"])
     
-    guard let frontCamera = (AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo) as! [AVCaptureDevice])
-      .filter({ $0.position == .front })
-      .first else
-    {
-      throw cameraError
+    guard let discoverySession = AVCaptureDeviceDiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: AVCaptureDevicePosition.front),
+      let frontCamera = discoverySession.devices.first else {
+        throw cameraError
     }
-    
     do
     {
       let input = try AVCaptureDeviceInput(device: frontCamera)
-      
       captureSession.addInput(input)
     }
     
