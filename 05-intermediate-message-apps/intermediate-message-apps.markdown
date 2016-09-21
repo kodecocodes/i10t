@@ -513,7 +513,7 @@ Here's the play-by-play:
 3. You stitch everything together into the caption for the message
 4. You create and send the message using the same convenience method as before.
 
-> **Note:** In the current iOS 10 Beta (3), the local participant identifier is the same for all sides of the conversation on a simulator, so the UUID might not convert to the correct text. 
+> **Note:** The local participant identifier is the same for all sides of the conversation when running on a simulator, so the UUID might not convert to the correct text. 
 
 Change `instantiateGuessViewController(game:)` to set the delegate property:
 
