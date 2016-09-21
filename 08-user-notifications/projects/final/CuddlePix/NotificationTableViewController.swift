@@ -48,11 +48,9 @@ class NotificationTableViewController: UITableViewController {
           print(error?.localizedDescription)
         }
     }
-    
     NotificationCenter.default.addObserver(self, selector: #selector(handleNotificationReceived), name: userNotificationReceivedNotificationName, object: .none)
   }
 }
-
 
 // MARK: - Table view data source
 extension NotificationTableViewController {
@@ -75,7 +73,7 @@ extension NotificationTableViewController {
       let cellProvider = sectionProvider.cellProvider(at: indexPath.row)
       else { return cell }
     
-    cell = cellProvider.prepare(cell: cell)
+    cell = cellProvider.prepare(cell)
     
     return cell
   }
@@ -97,25 +95,20 @@ extension NotificationTableViewController {
   }
   
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-    
     guard let section =
-      NotificationTableSection(rawValue: indexPath.section)
-      , editingStyle == .delete && section == .pending else { return }
+      NotificationTableSection(rawValue: indexPath.section),
+      editingStyle == .delete && section == .pending else { return }
     
-    // 2
     guard let provider = tableSectionProviders[.pending]
       as? PendingNotificationsTableSectionProvider else { return }
-    
     let request = provider.requests[indexPath.row]
     
-    // 3
     UNUserNotificationCenter.current()
       .removePendingNotificationRequests(withIdentifiers:
         [request.identifier])
     loadNotificationData(callback: {
       self.tableView.deleteRows(at: [indexPath], with: .automatic)
     })
-    
   }
 }
 
@@ -128,18 +121,14 @@ extension NotificationTableViewController {
   func loadNotificationData(callback: (() -> ())? = .none) {
     let group = DispatchGroup()
     
-    // 1
     let notificationCenter = UNUserNotificationCenter.current()
     let dataSaveQueue = DispatchQueue(label:
       "com.raywenderlich.CuddlePix.dataSave")
     
-    // 2
     group.enter()
-    // 3
     notificationCenter.getNotificationSettings { (settings) in
       let settingsProvider = SettingTableSectionProvider(settings:
         settings, name: "Notification Settings")
-      // 4
       dataSaveQueue.async(execute: {
         self.tableSectionProviders[.settings] = settingsProvider
         group.leave()
@@ -156,6 +145,7 @@ extension NotificationTableViewController {
         group.leave()
       })
     }
+    
     group.enter()
     notificationCenter.getDeliveredNotifications { (notifications) in
       let deliveredNotificationsProvider =

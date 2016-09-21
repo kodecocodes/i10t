@@ -24,7 +24,7 @@ import UIKit
 import UserNotifications
 
 protocol TableSectionCellProvider {
-  func prepare(cell: UITableViewCell) -> UITableViewCell
+  func prepare(_ cell: UITableViewCell) -> UITableViewCell
 }
 
 protocol TableSectionProvider {
@@ -85,7 +85,7 @@ struct PendingNotificationsTableSectionProvider: TableSectionProvider {
   struct PendingNotificationCellProvider: TableSectionCellProvider {
     let request: UNNotificationRequest
     
-    func prepare(cell: UITableViewCell) -> UITableViewCell {
+    func prepare(_ cell: UITableViewCell) -> UITableViewCell {
       cell.textLabel?.text = request.content.title
       if let trigger = request.trigger as? UNTimeIntervalNotificationTrigger {
         cell.detailTextLabel?.text = "Scheduled: \(trigger.nextTriggerDate()!)"
@@ -110,7 +110,7 @@ struct DeliveredNotificationsTableSectionProvider: TableSectionProvider {
   struct DeliveredNotificationCellProvider: TableSectionCellProvider {
     let notification: UNNotification
     
-    func prepare(cell: UITableViewCell) -> UITableViewCell {
+    func prepare(_ cell: UITableViewCell) -> UITableViewCell {
       cell.textLabel?.text = notification.request.content.title
       cell.detailTextLabel?.text = "Delivered: \(notification.date)"
       return cell
@@ -123,7 +123,7 @@ struct BooleanCellProvider: TableSectionCellProvider {
   let name: String
   let value: Bool
   
-  func prepare(cell: UITableViewCell) -> UITableViewCell {
+  func prepare(_ cell: UITableViewCell) -> UITableViewCell {
     cell.textLabel?.text = name
     cell.detailTextLabel?.text = .none
     cell.accessoryType = value ? .checkmark: .none
