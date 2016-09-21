@@ -40,7 +40,7 @@ class ConfigurationViewController: UIViewController {
         delegate?.configurationCompleted(newNotifications: false)
         return
     }
-    scheduleRandomNotifications(number: selectedNumber) {
+    scheduleRandomNotifications(selectedNumber) {
       DispatchQueue.main.async(execute: {
         self.delegate?.configurationCompleted(newNotifications: selectedNumber > 0)
       })
@@ -48,7 +48,7 @@ class ConfigurationViewController: UIViewController {
   }
   
   @IBAction func handleCuddleMeNow(_ sender: UIButton) {
-    scheduleRandomNotification(inSeconds: 5) { success in
+    scheduleRandomNotification(in: 5) { success in
       DispatchQueue.main.async(execute: {
         self.delegate?.configurationCompleted(newNotifications: success)
       })
@@ -58,7 +58,7 @@ class ConfigurationViewController: UIViewController {
 
 // MARK: - Notification Scheduling
 extension ConfigurationViewController {
-  func scheduleRandomNotifications(number: Int, completion: @escaping () -> ()) {
+  func scheduleRandomNotifications(_ number: Int, completion: @escaping () -> ()) {
     guard number > 0  else {
       completion()
       return
@@ -69,7 +69,7 @@ extension ConfigurationViewController {
     for _ in 0..<number {
       let randomTimeInterval = TimeInterval(arc4random_uniform(3600))
       group.enter()
-      scheduleRandomNotification(inSeconds: randomTimeInterval, completion: {_ in 
+      scheduleRandomNotification(in: randomTimeInterval, completion: {_ in
         group.leave()
       })
     }
@@ -79,7 +79,7 @@ extension ConfigurationViewController {
     }
   }
   
-  func scheduleRandomNotification(inSeconds: TimeInterval, completion: @escaping (_ success: Bool) -> ()) {
+  func scheduleRandomNotification(in seconds: TimeInterval, completion: @escaping (_ success: Bool) -> ()) {
     let randomImageName = "hug\(arc4random_uniform(12) + 1)"
     guard let imageURL = Bundle.main.url(forResource: randomImageName, withExtension: "jpg") else {
       completion(false)
@@ -89,30 +89,27 @@ extension ConfigurationViewController {
     let attachment = try! UNNotificationAttachment(identifier:
       randomImageName, url: imageURL, options: .none)
     
-    // 1
     let content = UNMutableNotificationContent()
-    content.categoryIdentifier = newCuddlePixCategoryName
     content.title = "New cuddlePix!"
     content.subtitle = "What a treat"
-    content.body = "Cheer yourself up with a hug 🤗"
+    content.body = "Cheer yourself up with a hug 🤗 "
     content.attachments = [attachment]
+    content.categoryIdentifier = newCuddlePixCategoryName
     
-    // 2
     let trigger = UNTimeIntervalNotificationTrigger(
-      timeInterval: inSeconds, repeats: false)
+      timeInterval: seconds, repeats: false)
     
-    // 1
     let request = UNNotificationRequest(
       identifier: randomImageName, content: content, trigger: trigger)
     
-    // 2
-    UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error) in
-      if let error = error {
-        print(error)
-        completion(false)
-      } else {
-        completion(true)
-      }
+    UNUserNotificationCenter.current().add(request, withCompletionHandler:
+      { (error) in
+        if let error = error {
+          print(error)
+          completion(false)
+        } else {
+          completion(true)
+        }
     })
   }
 }
