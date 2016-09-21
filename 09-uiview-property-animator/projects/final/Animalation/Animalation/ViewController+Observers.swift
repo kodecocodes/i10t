@@ -23,38 +23,22 @@
 import UIKit
 
 extension ViewController {
-  func removeAnimatorObservers(animator: UIViewPropertyAnimator?) {
-    guard let animator = animator else { return }
-    animator.removeObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.state))
-    animator.removeObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.isRunning))
-    animator.removeObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.isReversed))
-  }
-  
-  func addAnimatorObservers(animator: UIViewPropertyAnimator?) {
-    guard let animator = animator else { return }
-    animator.addObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.state), options: .new, context: nil)
-    animator.addObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.isRunning), options: .new, context: nil)
-    animator.addObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.isReversed), options: .new, context: nil)
-  }
-  
-  override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-    switch keyPath {
-    case .some(#keyPath(UIViewPropertyAnimator.state)):
-      stateSegment.selectedSegmentIndex = imageMoveAnimator?.state.rawValue ?? 0
-    case .some(#keyPath(UIViewPropertyAnimator.isRunning)):
-      if imageMoveAnimator?.isRunning == true {
-        runningSegment.selectedSegmentIndex = 1
-      } else {
-        runningSegment.selectedSegmentIndex = 0
-      }
-    case .some(#keyPath(UIViewPropertyAnimator.isReversed)):
-      if imageMoveAnimator?.isReversed == true {
-        reversedSegment.selectedSegmentIndex = 1
-      } else {
-        reversedSegment.selectedSegmentIndex = 0
-      }
-    default:
-      break
+    func removeAnimatorObservers(animator: UIViewPropertyAnimator?) {
+        guard let animator = animator else { return }
+        animator.removeObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.state))
     }
-  }
+    
+    func addAnimatorObservers(animator: UIViewPropertyAnimator?) {
+        guard let animator = animator else { return }
+        animator.addObserver(self, forKeyPath: #keyPath(UIViewPropertyAnimator.state), options: .new, context: nil)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        switch keyPath {
+        case .some(#keyPath(UIViewPropertyAnimator.state)):
+            stateSegment.selectedSegmentIndex = imageMoveAnimator?.state.rawValue ?? 0
+        default:
+            break
+        }
+    }
 }

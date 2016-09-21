@@ -38,8 +38,6 @@ class ViewController: UIViewController {
   // IBOutlets
   @IBOutlet weak var progressSlider: UISlider!
   @IBOutlet weak var stateSegment: UISegmentedControl!
-  @IBOutlet weak var runningSegment: UISegmentedControl!
-  @IBOutlet weak var reversedSegment: UISegmentedControl!
   @IBOutlet weak var imageContainer: UIView!
   @IBOutlet weak var animalImageView: UIImageView!
   @IBOutlet weak var stopButton: UIButton!

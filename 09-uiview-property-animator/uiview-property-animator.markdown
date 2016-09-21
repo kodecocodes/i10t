@@ -245,17 +245,15 @@ Taking each numbered comment in turn:
 
 Build and run and fling the frog about — you will see that the animation takes your initial gesture into account.
 
-> **Note**: At the time of writing this chapter, there appears to be a bug in Xcode 8 beta 4 where the Y-component of the initial vector isn't taken into account.
-
 ## Inspecting in-progress animations
 
-What else can you get out of a Property Animator, besides fancy timing curves? Well, you can query or observe what’s happening at any point in the animation. The Property Animator has the following  properties that tell you what’s happening:
+What else can you get out of a Property Animator, besides fancy timing curves? Well, you can query what’s happening at any point in the animation. The Property Animator has the following  properties that tell you what’s happening:
 
 - `state`: This is `.inactive`, `.active` or `.stopped`.
 - `isRunning`: This is a `Bool` telling you if the animation is running or not.
 - `isReversed`: This is a `Bool` telling you if the animation is reversed or not.
 
-These properties are all observable via key-value-observing (KVO). KVO is quite tedious to set up, so that work has been done for you in **ViewController+Observers.swift**. 
+The `state` property is also observable via key-value-observing (KVO). KVO is quite tedious to set up, so that work has been done for you in **ViewController+Observers.swift**. 
 
 Let's try it out. Add this line to the start of `animateAnimalTo(location:initialVelocity:)`:
 
@@ -269,9 +267,7 @@ And this line just above where you call `startAnimation()`:
 addAnimatorObservers(animator: imageMoveAnimator)
 ```
 
-These lines link up the segmented controls at the bottom of the app to the current state of the animator. Build and run, start an animation and keep an eye on the segmented controls. You can see `state` and `isRunning` change before your eyes:
-
-> **Note**: At the time of writing this chapter, there appears to be a bug in Xcode 8 beta 4 where `isRunning` never seems to change.
+These lines link up the segmented control at the bottom of the app to the current state of the animator. Build and run, start an animation and keep an eye on the segmented control. You can see `state` change before your eyes:
 
 ![ipad](images/Animalation2.png)
 
@@ -327,7 +323,7 @@ Build and run the app and try to tap the frog while it’s moving:
 
 ![ipad](images/Animalation3.png)
 
-You can see the slider appear, the **isRunning** segment change value and the animation stop. Moving the slider back and forth moves the frog along its path — but note that it follows the straight point-to-point path, rather than the overshooting and oscillation coming from the spring. That’s because the slider moves the animation along the **progress** axis of those charts from earlier, not the **time** axis.
+You can see the slider appear and the animation stop. Moving the slider back and forth moves the frog along its path — but note that it follows the straight point-to-point path, rather than the overshooting and oscillation coming from the spring. That’s because the slider moves the animation along the **progress** axis of those charts from earlier, not the **time** axis.
 
 It’s important to note here that _pausing_ an animation isn’t the same as _stopping_ one. Notice that the **state** indicator stays on `.active` when you’ve paused the animation.
 
@@ -680,4 +676,4 @@ Build and run the project, show the animals view, then have fun interrupting you
 
 Congratulations! You’ve had a good exploration of the new powers available to you now that you can use Property Animators! Go forth and fill your apps with interruptible, interactive animations, including an extra level of awesomeness in your view controller transitions.
 
-There’s a lot more detail on Property Animators in our excellent book, _iOS Animations By Tutorials_; check it out! The WWDC video, 2016 session 216, available at [https://developer.apple.com/videos/play/wwdc2016/216/](https://developer.apple.com/videos/play/wwdc2016/216/) is also full of useful information.
+The WWDC video, 2016 session 216, available at [https://developer.apple.com/videos/play/wwdc2016/216/](https://developer.apple.com/videos/play/wwdc2016/216/) is full of useful information.
