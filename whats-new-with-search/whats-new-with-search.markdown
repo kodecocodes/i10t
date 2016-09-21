@@ -9,11 +9,11 @@ Search frameworks gain some hefty new features with iOS 10. Most notable is the 
 
 Another great new feature is the ability to continue Spotlight searches in your app. If a search yields results for your app, you can enable an annotation that launches your app and passes in the search string for further searching.
 
-![width=35%](./images/search-in-app-annotation.png)
+![width=50%](./images/search-in-app-annotation.png)
 
-Proactive suggestions, which share user activities with search functions, have learned some exciting new tricks. By adding location data to your user activities, addresses displayed in your app can be made available throughout iOS. Features and apps such as QuickType, Siri and Maps will now have direct access to your data, while giving your app credit as the source.
+In addition, proactive suggestions have learned some exciting new tricks. By adding location data to your user activities, addresses displayed in your app can be made available throughout iOS. Features and apps such as QuickType, Siri and Maps will now have direct access to your data, while giving your app credit as the source.
 
-![width=35%](./images/proactive-location-suggestion-example.png)
+![width=50%](./images/proactive-location-suggestion-example.png)
 
 All of these changes continue the trend of increasing your app’s reach outside of its own little world. iOS 10 gives you more ways to entice users into launching your app — and more opportunities to remind users how useful your app can be.
 
@@ -32,16 +32,21 @@ In this chapter, you’ll update an existing app called Green Grocer. It display
 In the starter folder, open **GreenGrocer.xcodeproj** and take a look around. There’s quite a lot in the project, but here’s a quick overview of the important files:
 
 - **AppDelegate.swift** does two things of note already. In `application(_:didFinishLaunchingWithOptions:)` it calls `dataStore?.indexContent()` which indexes all products in Core Spotlight. `application(_:continue:restorationHandler:)` is currently set up to restore state when the user launches the app by tapping a product that Core Spotlight matched.
-- **Product.swift** is the model object for the `Product` class. This represents one of the produce items central to Green Grocer. **SearchableExtensions.swift** contains an extension to `Product` that generates `CSSearchableItem` and `CSSearchableItemAttributeSet` objects used when indexing to Core Spotlight.
+- **Product.swift** is the model object for the `Product` class. This represents one of the produce items central to Green Grocer. 
+- **SearchableExtensions.swift** contains an extension to `Product` that generates `CSSearchableItem` and `CSSearchableItemAttributeSet` objects used when indexing to Core Spotlight.
 - **ProductTableViewController.swift** is the root controller in the **Products** tab. It displays a table view of produce and includes a `UISearchController` for filtering the content. Filtering happens in `filterContentForSearchText(searchText:)` which triggers each time content in the search bar changes.
 - **ProductViewController.swift** is the detail controller for produce, which displays when the user selects a cell in the `ProductTableViewController`. It configures the view with data from the passed Product and creates a `NSUserActivity` to index the activity.
 - **StoreViewController.swift** controls the view displayed in the **Store** tab that contains contact info for Ray’s Fruit Emporium. It also contains a map view for displaying the location of the store — something you’ll leverage when implementing proactive suggestions.
 
-Green Grocer already enables Spotlight search via Core Spotlight and NSUserActivity indexing. You’ll start by implementing search continuation to feed Spotlight search queries to the search filter found in `ProductTableViewController`. Then you’ll refactor the existing in-app search to use the Core Spotlight Search API. Finally, you’ll modify the `StoreViewController` so that it provides activity information necessary to enable location based proactive suggestions.
+Green Grocer already enables Spotlight search via Core Spotlight and NSUserActivity indexing. In this chapter, you will make three modifications:
+
+1. You’ll start by implementing search continuation to feed Spotlight search queries to the search filter found in `ProductTableViewController`. 
+2. Next, you’ll refactor the existing in-app search to use the Core Spotlight Search API. 
+3. Finally, you’ll modify the `StoreViewController` so that it provides activity information necessary to enable location based proactive suggestions.
 
 Enough talk — the future of Ray’s Fruit Emporium depends on you! Head on in to the next section to get started.
 
-## Search continuation
+## Enabling search continuation
 
 Spotlight search helps users quickly find what they’re looking for. A user could enter the word *apple* into Spotlight and be one tap away from seeing the price on the Ray’s Fruit Emporium product page. Spotlight fits that model quite well.
 
@@ -51,7 +56,7 @@ This is where **search continuation** steps into the, er, spotlight. It lets Spo
 
 Open **Info.plist** and add a Boolean key named **CoreSpotlightContinuation** and set it to **YES**.
 
-![width=50%](./images/search-continuation-plist.png)
+![width=70%](./images/search-continuation-plist.png)
 
 This key tells Spotlight to display an annotation in the upper right of Green Grocer search results to indicate the search can be continued in-app.
 
@@ -64,6 +69,8 @@ Build and run, then background the app with the home button or **Shift+Command+H
 Tap **Search in App**, and Green Grocer will launch to the Products table — but it won’t kick off a search. This shouldn’t come as a surprise, considering you haven’t written any code to accept the query from Spotlight and act on it!
 
 You’ll take care of that next.
+
+## Implementing search continuation
 
 Open **AppDelegate.swift** and add the following near the top of the file with the other `import`:
 
@@ -163,7 +170,7 @@ Before refactoring your code, you’ll do well to walk through the following ove
 
 Spotlight handles the indexing of your data and provides a powerful query language for use with its speedy search engine. This lets you use your own search interface — backed by the power of Spotlight.
 
-If you’ve already indexed content with Core Spotlight, leveraging the Search API results in consistency between in-app searches and those completed in Spotlight. It also protects user privacy as an app can only search its own indexed data.
+If you’ve already indexed content with Core Spotlight, using the Search API means you'll have more consistency between in-app searches and those completed in Spotlight. It also protects user privacy as an app can only search its own indexed data.
 
 To complete a search, you first create a **CSSearchQuery** that defines what and how you want to search. The initializer for `CSSearchQuery` requires two things:
 
@@ -183,7 +190,7 @@ Note these names are for illustration and not associated with the format syntax.
 3. **value** is the literal value you’re comparing against. For the title example, the value might be *fruit*.
 4. **modifiers** consist of four different character values that represent modifications to how the comparison is applied. See the table below for detail on the available modifiers.
 
-![bordered width=90%](./images/modifier-table.png)
+![bordered width=100%](./images/modifier-table.png)
 
 The existing Green Grocer in-app search does a case-insensitive compare for product names that contain the search query. Assuming the user searched for *apple*, and *title* was passed as an attribute, a comparable Spotlight search query would look like this:
 
