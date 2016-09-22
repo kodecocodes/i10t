@@ -46,13 +46,13 @@ $[tb#]
 
 $[#tb]
 
-$[#tb]
-
 ![portrait](images/Chris.png)
 
 **Chris Belanger** is the editor of this book. Chris Belanger is the Book Team Lead and Lead Editor for raywenderlich.com. If there are words to wrangle or a paragraph to ponder, he‘s on the case. When he kicks back, you can usually find Chris with guitar in hand, looking for the nearest beach, or exploring the lakes and rivers in his part of the world in a canoe.
 
 $[tb#]
+
+$[#tb]
 
 ![portrait](images/Ray.jpg)
 
