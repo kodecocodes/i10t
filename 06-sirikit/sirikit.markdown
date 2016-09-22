@@ -169,7 +169,7 @@ Here’s a summary of the steps required to add Siri to your app:
 
 After all that, select the **WenderLoon** scheme (not the extension) and build and run. You’ll get asked to enable Siri:
 
-![iPhone bordered](images/EnableSiri.png)
+![iphone bordered](images/EnableSiri.png)
 
 After all that effort, you really want to make sure you tap **OK**. If all works well, you should see "Hey, Siri!" printed in the console.
 

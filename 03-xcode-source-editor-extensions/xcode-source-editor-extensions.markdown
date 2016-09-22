@@ -65,6 +65,9 @@ The new source extensions are fairly limited compared to Xcode plugins of old �
 - Generate a documentation block for a method containing all parameters and the return type based on its signature
 - Convert non localized `String` definitions within a file to the localized version
 - Convert color and image definitions to the new color and image literals in Xcode 8 (demoed in the WWDC session on source editor extensions)
+
+$[=s=]
+
 - Create comment MARKs above an extension block using the name of a protocol it extends
 - Generate a print statement with debugging info on a highlighted property
 - Clean up whitespace formatting of a file; for instance, you might enforce a single line between each method by deleting or adding lines to the file
@@ -79,7 +82,7 @@ Back to your goal: to implement this same asciiification within Xcode’s source
 
 Navigate to **File\New\Target** and under the **macOS** tab select **Xcode Source Editor Extension**.
 
-![width=90% bordered](./images/create-extension.png)
+![width=80% bordered](./images/create-extension.png)
 
 Click **Next**, use **AsciiifyComment** for the Project Name, ensure Swift is selected and click **Finish**.
 
@@ -149,6 +152,8 @@ The `buffer` is the most interesting item in the `XCSourceEditorCommandInvocatio
 - **selections** is an array of `XCSourceTextRange` objects that identify start and end positions in the text buffer. Generally a single item will be present, representing the user’s selection or cursor position in absence of selection. Multiple selections are also possible with macOS using *Shift+Command*, and are supported here.
 
 It’s also important to understand `XCSourceTextPosition`, the class used to represent the start and end of selections. `XCSourceTextPosition` uses a zero-based coordinate system and defines `column` and `line` indexes to represent buffer position.
+
+$[=s=]
 
 The diagram below illustrates the relation between a buffer, its lines and selections.
 
@@ -366,7 +371,7 @@ If `newSelections` contains any ranges, it’s used to set the buffer’s `selec
 
 If nothing was inserted, there is no selection. In that case, this code falls back to the old method of setting an insertion at the top of the file.
 
-Build and run, select some text in the editor, and launch the extension. This time, you’ll see the new text ends up selected;
+Build and run, select some text in the editor, and launch the extension. This time, you’ll see the new text ends up selected:
 
 ![width=80% bordered](./images/successful-figlet-test.png)
 
@@ -397,6 +402,8 @@ Fortunately, source editor extensions allow an alternate, dynamic means to defin
 You’ll implement this property and use it to pull available fonts from the FIGlet library.
 
 Open **SourceEditorExtension.swift** and delete the commented template code inside `SourceEditorExtension`.
+
+$[=s=]
 
 Add the following import above the class:
 

@@ -32,7 +32,9 @@ Open the starter project for this chapter, and set your team in the CuddlePix Ta
 
 Tap the **+** bar button, and you'll see an interface for scheduling multiple local notifications over the next hour, or scheduling a single one in five seconds' time. These don't do anything at present - that's where you come in.
 
-![width=90%](./images/cuddlePix-starter.png)
+![width=80%](./images/cuddlePix-starter.png)
+
+$[=s=]
 
 Take a few minutes and explore the below items in the starter project:
 
@@ -41,8 +43,6 @@ Take a few minutes and explore the below items in the starter project:
 - **Main.storyboard** defines the simple UI you've already seen in full while testing the app.
 - **Utilities** contains some helpers you'll use during this tutorial.
 - **Supporting Files** contains artwork attributions, the plist, and images you'll display in your notifications.
-
-$[=s=]
 
 ## The User Notifications framework
 
@@ -108,7 +108,9 @@ Here's what you're doing in the code above:
 1. You create a `UNMutableNotificationContent`, which defines what is displayed on the notification — in this case, you're setting a `title`, `subtitle` and `body`. This is also where you'd set things like badges, sounds and attachments. As the comment teases, you'll add an attachment here a bit later in the tutorial.
 2. A `UNTimeIntervalNotificationTrigger` needs to know when to fire and if it should repeat. You're passing through the `seconds` parameter for the delay, and creating a one-time notification. You can also trigger user notifications via location or calendar triggers.
 
-Next up, you need to create the notification request and schedule it. Replace the `completion()` call with the following:
+Next up, you need to create the notification request and schedule it.
+
+Replace the `completion()` call with the following:
 
 ```swift
 // 1
@@ -162,7 +164,7 @@ Here you're setting `attachments` to the single image attachment wrapped in an a
 
 Build and run, initiate a notification with **Cuddle me now!** then return to the home screen as you did before. You'll be greeted with a notification containing a random cactus picture on the right side of the banner. Force tap, or select and drag down on the banner, and you'll be treated to an expanded view of the huggable cactus.
 
-![width=90%](./images/notification-attachment.png)
+![width=70%](./images/notification-attachment.png)
 
 ### Foreground notifications
 
@@ -208,6 +210,8 @@ You've probably experienced the frustration of clearing out countless missed and
 The accessor methods of **UNUserNotificationCenter** let you read an app's user notification settings (the user permissions) so you can stay up-to-date on changes. But more excitingly, the _delete_ accessors let you programmatically remove pending and delivered notifications to free your users from a wall of unnecessary notifications.
 
 Finally, the accessor methods let you read and and set notification categories – you'll learn about those a little later in this chapter.
+
+$[=s=]
 
 ### Querying Notification Center
 
@@ -371,7 +375,7 @@ Open **MainInterface.storyboard** and take a look; you'll see a single view cont
 
 For cuddlePix, your goal is to create something similar to the default expanded view, but just a tad more cuddly. A cactus picture with a hug emoji in the corner should do quite nicely! :]
 
-To start, delete the existing label and change the view's background color to white. Set the view height to **320** to give yourself more room to work. Add an Image View and pin it to the edges of the superview as pictured below:
+To start, delete the existing label and change the view's background color to white. Set the view height to **320** to give yourself more room to work. Add an Image View and pin it to the edges of the superview:
 
 ![width=35% bordered](./images/imageview-constraints.png)
 
@@ -687,6 +691,8 @@ Build and run on a device, and check the debug console for your device token, pr
    }
 }
 ```
+
+$[=s=]
 
 Your setup should now look like this:
 

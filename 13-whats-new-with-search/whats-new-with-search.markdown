@@ -134,9 +134,9 @@ Here’s some detail on what happens when you hit a search continuation activity
 3. The selected tab in `tabBarViewController` contains a navigation controller. You get a reference to it here, then call `popViewController(animated:)` with no animation to get to the root controller. The root is the `ProductTableViewController`, which `productTableVC` now points to.
 4. `search(with:)` is a method in `ProductTableViewController` that kicks off the in-app product search using the passed parameter. It’s called here with the `searchQuery`, followed by `return true` to indicate Green Grocer was able to handle the incoming search request.
 
-Build and run, background the app, then search for **apple** in Spotlight. Tap the **Search in App** annotation by the Green Grocer results. This time, your new restoration handler code will trigger and you’ll be brought straight to search results!
+Build and run, background the app, then search for **apple** in Spotlight. Tap the **Search in App** annotation by the Green Grocer results. This time, your new restoration handler code will trigger and you’ll be brought straight to the search results!
 
-![width=85%](./images/search-continuation-working.png)
+![width=75%](./images/search-continuation-working.png)
 
 Of course, doing a search continuation for *apple* doesn’t make much sense. Before you tapped **Search in App**, you already knew there would be only a single match, because Spotlight would have shown at least a few if there were more. Beyond that, the custom search result cells in Green Grocer actually provides less information than Spotlight does!
 

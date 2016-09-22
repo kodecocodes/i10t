@@ -36,7 +36,7 @@ You're done! No, seriously – you're done.
 
 Build and run your "app", and you'll see that Xcode now offers you a choice of host applications to run. Select **Messages**, since that's what your sticker pack is designed for:
 
-![bordered width=60%](images/ChooseHostApp.png)
+![bordered width=50%](images/ChooseHostApp.png)
 
 The iOS simulator now contains a working Messages app, where you can view both sides of a conversation. This lets you test and develop Messages apps with ease.
 
@@ -130,7 +130,7 @@ let stickerNames = ["CandyCane", "Caramel", "ChocolateBar",
 
 These names all correspond to images that have been supplied for you in the starter materials for this chapter. Find the **candy** folder and drag it into the **MessagesExtension** group in Xcode:
 
-![bordered width=40%](images/CandyImageAdded.png)
+![bordered width=35%](images/CandyImageAdded.png)
 
 Add the following extension to **CandyStickerBrowserViewController.swift**, below the class declaration:
 

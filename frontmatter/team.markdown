@@ -28,14 +28,6 @@ $[tb#]
 
 $[#tb]
 
-![portrait](images/Chris.png)
-
-**Chris Belanger** is the editor of this book. Chris Belanger is the Book Team Lead and Lead Editor for raywenderlich.com. If there are words to wrangle or a paragraph to ponder, he‘s on the case. When he kicks back, you can usually find Chris with guitar in hand, looking for the nearest beach, or exploring the lakes and rivers in his part of the world in a canoe.
-
-$[tb#]
-
-$[#tb]
-
 ![portrait](images/Zolo.jpg)
 
 **Zoltán Matók** is a tech editor of this book. Zoltán is an iOS and OS X developer from Hungary. While he is not working or fiddling with new stuff, he likes to read insightful articles from around the development world. https://medium.com/@quinnnorton ftw.
@@ -53,6 +45,14 @@ $[#tb]
 $[tb#]
 
 $[#tb]
+
+$[#tb]
+
+![portrait](images/Chris.png)
+
+**Chris Belanger** is the editor of this book. Chris Belanger is the Book Team Lead and Lead Editor for raywenderlich.com. If there are words to wrangle or a paragraph to ponder, he‘s on the case. When he kicks back, you can usually find Chris with guitar in hand, looking for the nearest beach, or exploring the lakes and rivers in his part of the world in a canoe.
+
+$[tb#]
 
 ![portrait](images/Ray.jpg)
 

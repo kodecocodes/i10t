@@ -601,11 +601,11 @@ Setting up and building interactive transitions is a complex topic outside the s
 
 First, take a look at the existing transition. Open **Main.storyboard**, find the **Animals** button on the bottom right of the main view controller and make it visible by unchecking the **Hidden** box. Build and run the project and tap the button:
 
-![ipad bordered](images/Animals1.png)
+![width=80% bordered](images/Animals1.png)
 
 To dismiss the controller interactively, pull down:
 
-![ipad bordered](images/Animals2.png)
+![width=80% bordered](images/Animals2.png)
 
 Once you’ve let go, the animation will either return to the top or complete. If you try and grab the screen as it’s disappearing (the transition is super slow to help you with this!), nothing will happen.
 
