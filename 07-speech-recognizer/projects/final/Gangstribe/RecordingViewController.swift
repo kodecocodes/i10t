@@ -26,7 +26,7 @@ import Speech
 
 class RecordingViewController: UIViewController {
   
-  private var player: AVPlayer?
+  fileprivate var player: AVPlayer?
   
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var subtitleLabel: UILabel!
@@ -45,7 +45,7 @@ class RecordingViewController: UIViewController {
     faceReplaceButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)
     
     if let recording = recording {
-      updateForRecording(recording: recording)
+      updateForRecording(recording)
     } else {
       contentStackView.isHidden = true
     }
@@ -74,12 +74,12 @@ class RecordingViewController: UIViewController {
   var recording: Recording? {
     didSet {
       if let recording = recording {
-        updateForRecording(recording: recording)
+        updateForRecording(recording)
       }
     }
   }
   
-  private func updateForRecording(recording: Recording) {
+  fileprivate func updateForRecording(_ recording: Recording) {
     contentStackView?.isHidden = false
     titleLabel?.text = recording.title
     subtitleLabel?.text = recording.subtitle
@@ -94,34 +94,6 @@ class RecordingViewController: UIViewController {
 
 // MARK: - Transcription management
 extension RecordingViewController {
-  
-  private func transcribeFile(url: URL, locale: Locale?) {
-    let locale = locale ?? Locale.current
-    guard let recognizer = SFSpeechRecognizer(locale: locale) else {
-      print("Speech recognition not available for specified locale")
-      return
-    }
-    if !recognizer.isAvailable {
-      print("Speech recognition not currently available")
-      return
-    }
-    
-    updateUIForTranscriptionInProgress()
-    let request = SFSpeechURLRecognitionRequest(url: url)
-    
-    recognizer.recognitionTask(with: request) {
-      [unowned self] (result, error) in
-      guard let result = result else {
-        print("There was an error transcribing that file")
-        return
-      }
-
-      if result.isFinal {
-        self.updateUIWithCompletedTranscription(
-          result.bestTranscription.formattedString)
-      }
-    }
-  }
   
   @IBAction func handleTranscribeButtonTapped(_ sender: BorderedButton) {
     SFSpeechRecognizer.requestAuthorization {
@@ -141,7 +113,7 @@ extension RecordingViewController {
     }
   }
   
-  private func updateUIForTranscriptionInProgress() {
+  fileprivate func updateUIForTranscriptionInProgress() {
     DispatchQueue.main.async { [unowned self] in
       self.transcribeButton.isEnabled = false
       self.activityIndicator.startAnimating()
@@ -151,7 +123,7 @@ extension RecordingViewController {
     }
   }
   
-  private func updateUIWithCompletedTranscription(_ transcription: String) {
+  fileprivate func updateUIWithCompletedTranscription(_ transcription: String) {
     DispatchQueue.main.async { [unowned self] in
       self.transcriptionTextView.text = transcription
       UIView.animate(withDuration: 0.5, animations: {
@@ -161,6 +133,34 @@ extension RecordingViewController {
           self.activityIndicator.stopAnimating()
           self.transcribeButton.isEnabled = true
       })
+    }
+  }
+  
+  fileprivate func transcribeFile(url: URL, locale: Locale?) {
+    let locale = locale ?? Locale.current
+    guard let recognizer = SFSpeechRecognizer(locale: locale) else
+    {
+      print("Speech recognition not available for specified locale")
+      return
+    }
+    if !recognizer.isAvailable {
+      print("Speech recognition not currently available")
+      return
+    }
+
+    updateUIForTranscriptionInProgress()
+    let request = SFSpeechURLRecognitionRequest(url: url)
+    recognizer.recognitionTask(with: request) {
+      [unowned self] (result, error) in
+      guard let result = result else {
+        print("There was an error transcribing that file")
+        return
+      }
+      
+      if result.isFinal {
+        self.updateUIWithCompletedTranscription(
+          result.bestTranscription.formattedString)
+      }
     }
   }
 }

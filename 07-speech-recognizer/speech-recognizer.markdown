@@ -25,9 +25,9 @@ The Speech Recognition framework doesn't work in the simulator, so be sure to us
 
 Open **Gangstribe.xcodeproj** in the starter project folder for this chapter. Select the project file, the **Gangstribe** target and then the **General** tab. Choose your development team from the drop-down.
 
-![width=50%](./images/select-team.png)
+![bordered width=75%](./images/select-team.png)
 
-Connect an iOS 10 device and select it as the active scheme. Build and run and you'll see the bones of the app.
+Connect an iOS 10 device and select it as your run destination in Xcode. Build and run and you'll see the bones of the app.
 
 From the master controller, you can select a song. The detail controller will then let you play the audio file, recited by none other than our very own DJ Sammy D!
 
@@ -137,7 +137,7 @@ Of course nothing happens after you provide authorization — you haven't yet s
 Back in **RecordingViewController.swift**, find the `RecordingViewController` extension at the bottom of the file. Add the following method to transcribe a file found at the passed `url`:
 
 ```swift
-private func transcribeFile(url: URL) {
+fileprivate func transcribeFile(url: URL) {
 
   // 1
   guard let recognizer = SFSpeechRecognizer() else {
@@ -203,14 +203,14 @@ But you don't need to book a flight overseas to fix this. When creating a recogn
 Still in **RecordingViewController.swift**, find `transcribeFile(url:)` and replace the following two lines:
 
 ```swift
-private func transcribeFile(url: URL) {
+fileprivate func transcribeFile(url: URL) {
   guard let recognizer = SFSpeechRecognizer() else {
 ```
 
 with the code below:
 
 ```swift
-private func transcribeFile(url: URL, locale: Locale?) {
+fileprivate func transcribeFile(url: URL, locale: Locale?) {
   let locale = locale ?? Locale.current
   
   guard let recognizer = SFSpeechRecognizer(locale: locale) else {
@@ -352,7 +352,7 @@ There is one last thing to do before you can kick off a recording — ask for us
 
 ![width=90% bordered](./images/microphone-privacy-setting.png) 
 
-Build and run, then select **Face Replace** from the navigation bar. You'll immediately be greeted with a prompt requesting permission to use the microphone. Hit **OK** so that Gangstribe can eventually transcribe what you say:
+Build and run, choose a recording, then select **Face Replace** from the navigation bar. You'll immediately be greeted with a prompt requesting permission to use the microphone. Hit **OK** so that Gangstribe can eventually transcribe what you say:
 
 ![iPhone bordered](./images/microphone-permission.png)
 
@@ -440,7 +440,7 @@ fileprivate func updateUIWithTranscription(_ transcription: SFTranscription) {
     lastSegment.duration > mostRecentlyProcessedSegmentDuration {
     mostRecentlyProcessedSegmentDuration = lastSegment.duration
     // 3
-    faceSource.selectFace(string: lastSegment.substring)
+    faceSource.selectFace(lastSegment.substring)
   }
 }
 ```
@@ -448,7 +448,7 @@ Here's what this code does:
 
 1. This defines a new method that accepts an `SFTranscription` and uses it to update the UI with results. First, it updates the transcription label at the bottom of the screen with the results; this will soon replace similar code found in `startRecording()`.
 2. This unwraps the `last` segment from the passed `transcription`. It then checks that the segment's duration is higher than the `mostRecentlyProcessedSegmentDuration` to avoid an older segment being processed if it returns out of order. The new duration is then saved in `mostRecentlyProcessedSegmentDuration`.
-3. `selectFace(string:)`, part of the Face Replace code, accepts the `substring` of this new transcription, and completes a face replace if it matches one of the emoji names.
+3. `selectFace()`, part of the Face Replace code, accepts the `substring` of this new transcription, and completes a face replace if it matches one of the emoji names.
 
 In `startRecording()`, replace the following line:
 
