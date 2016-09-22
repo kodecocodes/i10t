@@ -229,13 +229,13 @@
                 <splitViewController id="H1p-Uh-vWS" sceneMemberID="viewController">
                     <toolbarItems/>
                     <connections>
-                        <outlet property="delegate" destination="kCb-Rk-EsF" id="APK-Qq-ch0"/>
+                        <outlet property="delegate" destination="Wox-z9-NH7" id="nM1-cx-7MI"/>
                         <segue destination="RMx-3f-FxP" kind="relationship" relationship="masterViewController" id="BlO-5A-QYV"/>
                         <segue destination="vC3-pB-5Vb" kind="relationship" relationship="detailViewController" id="Tll-UG-LXB"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cZU-Oi-B1e" sceneMemberID="firstResponder"/>
-                <customObject id="kCb-Rk-EsF" customClass="AppDelegate" customModule="Gangstribe" customModuleProvider="target"/>
+                <customObject id="Wox-z9-NH7" customClass="AppDelegate" customModule="Gangstribe" customModuleProvider="target"/>
             </objects>
             <point key="canvasLocation" x="-856" y="-330"/>
         </scene>

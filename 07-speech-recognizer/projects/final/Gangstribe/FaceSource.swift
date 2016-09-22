@@ -44,7 +44,7 @@ class FaceSource: NSObject {
 }
 
 extension FaceSource {
-  func selectFace(string: String) {
+  func selectFace(_ string: String) {
     if let index = replacements.index(where: { string.lowercased().contains($0.name) }),
       let collectionView = collectionView {
       let indexPath = IndexPath(item: index, section: 0)
@@ -53,8 +53,6 @@ extension FaceSource {
     }
   }
 }
-
-
 
 extension FaceSource: UICollectionViewDataSource {
   func numberOfSections(in collectionView: UICollectionView) -> Int {

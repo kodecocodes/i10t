@@ -74,7 +74,7 @@ class LiveTranscribeViewController: UIViewController {
 extension LiveTranscribeViewController {
   fileprivate func startRecording() throws {
     self.transcriptionOutputLabel.text = ""
-    self.mostRecentlyProcessedSegmentDuration = 0
+    mostRecentlyProcessedSegmentDuration = 0
     
     guard let node = audioEngine.inputNode else {
       print("Couldn't get an input node!")
@@ -129,9 +129,9 @@ extension LiveTranscribeViewController {
     self.transcriptionOutputLabel.text = transcription.formattedString
     
     if let lastSegment = transcription.segments.last,
-      lastSegment.duration > self.mostRecentlyProcessedSegmentDuration {
-      self.mostRecentlyProcessedSegmentDuration = lastSegment.duration
-      faceSource.selectFace(string: lastSegment.substring)
+      lastSegment.duration > mostRecentlyProcessedSegmentDuration {
+      mostRecentlyProcessedSegmentDuration = lastSegment.duration
+      faceSource.selectFace(lastSegment.substring)
     }
   }
 }

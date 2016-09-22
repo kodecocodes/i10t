@@ -34,7 +34,7 @@ class BorderedButton: UIButton {
     sharedInit()
   }
   
-  private func sharedInit() {
+  fileprivate func sharedInit() {
     layer.borderColor = currentTitleColor.cgColor
     layer.borderWidth = 1
     layer.cornerRadius = 5
