@@ -9,7 +9,7 @@ Search frameworks gain some hefty new features with iOS 10. Most notable is the 
 
 Another great new feature is the ability to continue Spotlight searches in your app. If a search yields results for your app, you can enable an annotation that launches your app and passes in the search string for further searching.
 
-![width=50%](./images/search-in-app-annotation.png)
+![width=50%](./images/search-in-app-annotation.jpg)
 
 In addition, proactive suggestions have learned some exciting new tricks. By adding location data to your user activities, addresses displayed in your app can be made available throughout iOS. Features and apps such as QuickType, Siri and Maps will now have direct access to your data, while giving your app credit as the source.
 
@@ -64,7 +64,7 @@ This is where things gets scary. As of the initial public release of iOS 10, upd
 
 Build and run, then background the app with the home button or **Shift+Command+H** in the simulator. Drag down to reveal Spotlight search and enter **apple**. Note the **Search in App** annotation that appears to the right of **GREENGROCER** in the section header:
 
-![iphone](./images/search-annotation.png)
+![width=50%](./images/search-annotation.jpg)
 
 Tap **Search in App**, and Green Grocer will launch to the Products table — but it won’t kick off a search. This shouldn’t come as a surprise, considering you haven’t written any code to accept the query from Spotlight and act on it!
 
@@ -136,7 +136,7 @@ Here’s some detail on what happens when you hit a search continuation activity
 
 Build and run, background the app, then search for **apple** in Spotlight. Tap the **Search in App** annotation by the Green Grocer results. This time, your new restoration handler code will trigger and you’ll be brought straight to search results!
 
-![width=75%](./images/search-continuation-working.png)
+![width=85%](./images/search-continuation-working.png)
 
 Of course, doing a search continuation for *apple* doesn’t make much sense. Before you tapped **Search in App**, you already knew there would be only a single match, because Spotlight would have shown at least a few if there were more. Beyond that, the custom search result cells in Green Grocer actually provides less information than Spotlight does!
 
@@ -144,7 +144,9 @@ A search with a result set too large to display completely in Spotlight would be
 
 Background Green Grocer again and complete a Spotlight search for **fruit**. Only three results will display; a mere sample of what Green Grocer contains. Tap **Search in App** to see the in-app results for *fruit*.
 
-![width=75%](./images/mismatched-fruit-search.png)
+>**Note** Keep in mind your results, especially for a generic term like fruit, may vary from those presented here. This is dependent on what you have indexed on your device, what Spotlight brings from the web, and on Spotlight's ranking algorithms. You can learn more about best practices for search ranking in the resources at the end of this chapter.
+
+![width=85%](./images/mismatched-fruit-search.png)
 
 Green Grocer successfully launches and presents a search result for *fruit* — but where are all the matches?
 
