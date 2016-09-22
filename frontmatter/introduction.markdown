@@ -21,7 +21,7 @@ Get ready for your own private tour through the amazing new features of iOS 10. 
 
 Sit back, relax and prepare for some high quality tutorials!
 
-## Early Access
+## Early access
 
 By purchasing this book early, you get early access to this book while it is in development.
 
@@ -88,7 +88,7 @@ This book comes with the Swift source code for each chapter – it's shipped wit
 
 We've also set up an official forum for the book at [raywenderlich.com/forums](http://www.raywenderlich.com/forums). This is a great place to ask questions about the book, discuss making apps with iOS 10 in general, share challenge solutions, or to submit any errors you may find.
 
-## Book Updates
+## Book updates
 
 Great news: since you purchased the PDF version of this book, you'll receive free updates of the content in this book!
 
@@ -116,5 +116,9 @@ We would like to thank many people for their assistance in making this possible:
 - __Our families:__ For bearing with us in this crazy time as we worked all hours of the night to get this book ready for publication!
 - __Everyone at Apple:__ For developing an amazing operating system and set of APIs, for constantly inspiring us to improve our apps and skills, and for making it possible for many developers to have their dream jobs!
 - __And most importantly, the readers of raywenderlich.com — especially you!__ Thank you so much for reading our site and purchasing this book. Your continued readership and support is what makes all of this possible!
+
+## About the cover
+
+The clownfish, also known as the anemonefish, lives inside the sea anemone in a symbiotic arrangement. The tentacles of the anemone protect the clownfish from other predators, while the clownfish eats the parasites that would otherwise attack the anemone. It's a lot like being an iOS developer: Apple creates great environments for our apps, and iOS developers create amazing apps (and file annoying Radar bug reports) for those environments. There's nothing fishy about that! :]
 
 

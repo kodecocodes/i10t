@@ -516,7 +516,7 @@ animateRandomAnimalChange()
 
 Build and run and hit the animate button, and you’ll see the image cross-fade while it moves:
 
-![ipad](images/Animalation4.png)
+![width=90%](images/Animalation4.png)
 
 > **Note:** The animal won’t always change. Sometimes the randomly selected animal is the same as the one that’s already there!
 

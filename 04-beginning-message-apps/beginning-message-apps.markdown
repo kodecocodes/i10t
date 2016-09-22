@@ -2,8 +2,8 @@
 author: "By Rich Turton"
 number: "4"
 title: "Chapter 4: Beginning Message Apps"
-
 ```
+
 # Chapter 4: Beginning Message Apps
 
 iOS 10 brought some fun features to iMessage – and also opened up the app to third party developers. This means you can create and sell things to use in iMessage such as applications and sticker packs, and unlike other extension points, Messages apps don't need to have a "standard" iOS app to work.
@@ -201,13 +201,13 @@ You're about to introduce a special **Chocoholic** mode for those _special_ time
 
 To start, open **MainInterface.storyboard**. Select the container view and use the resizing handle to drag down the top of the view by about 70 points to give yourself some room to work:
 
-![bordered width=60%](images/Chocoholic1.png)
+![bordered width=70%](images/Chocoholic1.png)
 
 Select the top orange constraint and delete it. Drag a switch and a label into the space you've created, and set the label's text to **Chocoholic Mode**.
 
 Select the label and the switch, then use the **Stack** button to embed them in a horizontal stack view:
 
-![bordered width=60%](images/Chocoholic2.png)
+![bordered width=70%](images/Chocoholic2.png)
 
 With the stack view selected, change the **Spacing** in the Attributes Inspector to **5**. Using the **Pin** menu, add constraints from the stack view to its top, leading and bottom neighbors:
 
@@ -407,7 +407,7 @@ This is quite similar to the previous `loadStickers` method. Here's a breakdown:
 5. You then convert each dictionary entry to a `StickerGroup` struct.
 6. Finally, you sory the array of sticker groups by name, since dictionaries don't have a guaranteed ordering.
 
-Modify `viewDidLoad()` as shown below to call your new method and set up a few things:
+Modify `viewDidLoad()` to call your new method and set up a few things:
 
 ```swift
 override func viewDidLoad() {

@@ -114,7 +114,7 @@ Then and you’ll see a graph appear in the editor. This graph illustrates a ret
 
 The graphs may vary slightly among instances, but all will show the core retain cycle. In some cases, you may see a triangle-like graph: 
 
-![width=60% bordered](./images/malloc-example.png)
+![width=50% bordered](./images/malloc-example.png)
 
 Ultimately, the point of interest is the arrow pointing both ways, including a retain in both directions.
 
@@ -310,7 +310,11 @@ The code above does the following:
 
 It looks like Ray was trying to improve efficiency by letting the coloji data store operations run concurrently. Concurrent code, coupled with random results, is a strong indicator a race condition is at play.
 
-Fortunately, the new Thread Sanitizer makes it easy to track down race conditions. Like the Memory Graph and View Debuggers, it provides runtime feedback right in the Issue navigator. Here’s an example of what it looks like (note this will not appear for you yet):
+Fortunately, the new Thread Sanitizer makes it easy to track down race conditions. Like the Memory Graph and View Debuggers, it provides runtime feedback right in the Issue navigator.
+
+$[=s=]
+
+Here’s an example of what it looks like (note this will not appear for you yet):
 
 ![width=60% bordered](./images/tsan-issue-navigator-preview.png)
 
@@ -338,7 +342,7 @@ Edit the **Coloji** scheme, select the Run action and select the Diagnostics tab
 
 Build and run. As soon as the table view loads, Thread Sanitizer will start notifying you of threading issues via the workspace toolbar and the Issue navigator. Open the Issue navigator, ensure you have **Runtime** selected, and you should see a number of data races on display.
 
-The screenshot below focuses on a single data race. In it, you can see a read operation on thread 6 is at odds with a write on thread 13. Each of these operations shows a stack trace, where you’ll see they conflicted on a line within `append()` inside `ColojiDataStore`:
+The following image focuses on a single data race. In it, you can see a read operation on thread 6 is at odds with a write on thread 13. Each of these operations shows a stack trace, where you’ll see they conflicted on a line within `append()` inside `ColojiDataStore`:
 
 ![width=90% bordered](./images/thread-sanitizer-issues.png)
 
@@ -438,7 +442,7 @@ In the Debug navigator, enter **ColojiLabel** in the filter. This will show the 
 
 Select any of the labels, and take a look at the Size Inspector. In the Constraints section, you’ll see all the currently active constraints for the label. Looking over the constraints, you’ll notice immediately that something looks wrong:
 
-![width=40% bordered](./images/label-constraint-zeroes.png)
+![width=50% bordered](./images/label-constraint-zeroes.png)
 
 A 0 height and width certainly explains an invisible label! It’s time to investigate what has gone wrong with the code that sets the constraints.
 

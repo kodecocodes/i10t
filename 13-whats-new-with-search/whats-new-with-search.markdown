@@ -148,6 +148,8 @@ Background Green Grocer again and complete a Spotlight search for **fruit**. Onl
 
 ![width=85%](./images/mismatched-fruit-search.png)
 
+$[=s=]
+
 Green Grocer successfully launches and presents a search result for *fruit* — but where are all the matches?
 
 ![width=25%](./images/why-hide-produce.png)

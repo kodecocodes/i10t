@@ -266,7 +266,7 @@ In the results sidebar in the playground, the numbers are often displayed with l
 
 > **Note:** Unlike date and number formatters, measurement formatters are one-way. You can’t use them to take a string like "1 kWh" and turn it into a `Measurement`.
 
-## It’s getting hot in here
+### It’s getting hot in here
 
 Open a new playground to start exploring measurement formatters.
 
@@ -317,7 +317,7 @@ You’ll see that the formatter is using Celsius again, even though it is still 
 
 The third option doesn’t relate to temperatures. You’ll look at that in the next section.
 
-## I would walk 500 miles
+### I would walk 500 miles
 
 Remember earlier, when you added miles to yards to nautical miles to kilometers, and the answer was given in meters? 
 

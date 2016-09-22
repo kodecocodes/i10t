@@ -130,7 +130,7 @@ Take a moment to check out the other keys found in the **Item 0** dictionary tha
 
 Build and run the extension, open your test playground from earlier, and  you’ll now be able to navigate to **Editor\Asciiify Comment\Asciiify Comment**:
 
-![width=80% bordered](./images/extension-menu-item-new-name.png)
+![width=50% bordered](./images/extension-menu-item-new-name.png)
 
 Now the name looks the way you’d expect, but it still doesn’t do anything. Your next step will be to implement the functionality, but first you need to learn a bit more about the data model used by source editor extensions.
 
@@ -153,11 +153,11 @@ The `buffer` is the most interesting item in the `XCSourceEditorCommandInvocatio
 
 It’s also important to understand `XCSourceTextPosition`, the class used to represent the start and end of selections. `XCSourceTextPosition` uses a zero-based coordinate system and defines `column` and `line` indexes to represent buffer position.
 
-$[=s=]
-
 The diagram below illustrates the relation between a buffer, its lines and selections.
 
 ![height=35%](./images/buffer-diagram.png)
+
+$[=s=]
 
 Now that you have a better understanding of the model involved, it’s time to dive in and handle a request.
 

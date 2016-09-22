@@ -215,6 +215,8 @@ func resolvePickupLocation(forRequestRide intent: INRequestRideIntent, with comp
 
 This method resolves the pickup location. The completion block takes a `INPlacemarkResolutionResult` parameter, which is the specific subclass for dealing with location values in the Intents framework. Here you accept any pickup location that arrives with the intent. If there is no pickup location, you tell Siri that a value is required.
 
+$[=s=]
+
 Build and run the app, and ask Siri to book you a ride using WenderLoon, giving no extra information: 
 
 ![iPhone bordered](images/AskForPickup.png)
