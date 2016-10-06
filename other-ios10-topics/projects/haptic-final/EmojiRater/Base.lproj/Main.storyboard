@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="KaK-d7-LS6">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--EmojiCollection-->
+        <scene sceneID="9I3-Hd-T5N">
+            <objects>
+                <collectionViewController title="EmojiCollection" id="KaK-d7-LS6" customClass="EmojiCollectionViewController" customModule="EmojiRater" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="4vG-vS-WfA">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="19" minimumInteritemSpacing="19" id="hQ0-6L-iRk">
+                            <size key="itemSize" width="160" height="160"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="18" minY="24" maxX="18" maxY="18"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EmojiCell" id="7TH-gA-cxh" customClass="EmojiCollectionViewCell" customModule="EmojiRater" customModuleProvider="target">
+                                <rect key="frame" x="18" y="24" width="160" height="160"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🐍" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h8f-CF-han">
+                                            <fontDescription key="fontDescription" type="system" pointSize="140"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="👍" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QLU-zc-QUB">
+                                            <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                            <size key="shadowOffset" width="-2" height="-3"/>
+                                        </label>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="3cy-ah-8Gd"/>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="3cy-ah-8Gd" firstAttribute="centerY" secondItem="7TH-gA-cxh" secondAttribute="centerY" id="9A7-0d-eEN"/>
+                                    <constraint firstAttribute="bottom" secondItem="QLU-zc-QUB" secondAttribute="bottom" constant="8" id="KJ4-Ia-9Yq"/>
+                                    <constraint firstItem="h8f-CF-han" firstAttribute="leading" secondItem="7TH-gA-cxh" secondAttribute="leading" constant="4" id="LkW-YA-Yly"/>
+                                    <constraint firstItem="3cy-ah-8Gd" firstAttribute="centerX" secondItem="7TH-gA-cxh" secondAttribute="centerX" id="RtF-4U-7CY"/>
+                                    <constraint firstAttribute="trailing" secondItem="h8f-CF-han" secondAttribute="trailing" constant="4" id="c6o-ga-V06"/>
+                                    <constraint firstItem="h8f-CF-han" firstAttribute="top" secondItem="7TH-gA-cxh" secondAttribute="top" constant="4" id="fd6-MP-Eqe"/>
+                                    <constraint firstAttribute="trailing" secondItem="QLU-zc-QUB" secondAttribute="trailing" constant="8" id="guF-Uk-rnn"/>
+                                    <constraint firstAttribute="bottom" secondItem="h8f-CF-han" secondAttribute="bottom" constant="4" id="p5Q-Hm-LZw"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="emojiLabel" destination="h8f-CF-han" id="ijH-Ju-BbL"/>
+                                    <outlet property="loadingIndicator" destination="3cy-ah-8Gd" id="cO1-K9-F8w"/>
+                                    <outlet property="ratingLabel" destination="QLU-zc-QUB" id="cuU-Us-e4N"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="KaK-d7-LS6" id="ewM-PL-hfj"/>
+                            <outlet property="delegate" destination="KaK-d7-LS6" id="4p0-Oo-8Yt"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Dxu-FE-FfH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="265" y="541"/>
+        </scene>
+    </scenes>
+</document>
