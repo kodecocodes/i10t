@@ -5,15 +5,15 @@ title: "Chapter 1: What’s New in Swift 3"
 ```
 # Chapter 1: What’s New in Swift 3
 
-**tl;dr: Almost everything.**
+**(tl;dr: Almost _everything_.)**
 
 ## Introduction
 
-Swift 3 contains the biggest (and hopefully the biggest ever, we can’t go through this again!) changes to the language. But on the bright side, the changes do leave you with _much_ nicer code. It finally feels like you're writing UIKit apps in Swift, rather than forcing a Swift peg into an Objective-C (or even just C) shaped hole. 
+Swift 3 contains the biggest (and hopefully the biggest ever, we can’t go through this again!) set of changes to the language. But on the bright side, the changes do leave you with _much_ nicer code. It finally feels like you're writing UIKit apps in Swift, rather than forcing a Swift peg into an Objective-C (or even just C) shaped hole. 
 
 If you take a reasonably-sized project written in Swift 2, and let Xcode migrate it to Swift 3, you're in for a shock. It's a big bang, and almost everything has changed.
 
-The noisiest part of the big bang is what Apple have called the Grand Renaming. This is a huge review of _all_ of the first-party frameworks, redefining types and method signatures to match a set of solid naming guidelines. 
+The noisiest part of the upgrade is what Apple refers to as the Grand Renaming. This is a huge review of _all_ of the first-party frameworks, and redefines types and method signatures to match a set of solid naming guidelines. 
 
 On top of this, lots of Foundation `NS` types have been swallowed up by more “Swifty” value types, making them clearer to work with and more accessible to non-Apple platforms. 
 
@@ -21,7 +21,7 @@ Some of the low-level C APIs have also been thoroughly worked over, making worki
 
 Finally, there have been some language-level changes to Swift itself, which will probably affect the code you’ve written up to now. 
 
-If you’re new to Swift, congratulations and welcome - it’s a great language. If you’ve got existing Swift code you want to keep working on, get yourself ready for a few days of grunt work. Let’s get started. 
+If you’re new to Swift, congratulations and welcome — it’s a great language. If you’ve got existing Swift code you want to keep working on, get yourself ready for a few days of grunt work. Let’s get started. 
 
 ## The Grand Renaming
 
@@ -40,7 +40,7 @@ That’s two “table views”, three “cells” and two “indexPaths”. Here
 let cell = tableView.cellForRowAtIndexPath(indexPath)
 ```
 
-Type inference lets us drop a “table view” and a “cell”, but we still have two “index paths”, because who _doesn’t_ call a temporary local variable holding an index path `indexPath`?
+Type inference lets us drop a “table view” and a “cell”, but we still have two “index paths” — because who _doesn’t_ call a temporary local variable holding an index path `indexPath`?
 
 And finally in Swift 3:
 
@@ -52,9 +52,9 @@ Now, the only repeated word is “cell”, and that’s acceptable, because one 
 
 This evolution of the method name follows the three key principles guiding the Grand Renaming:
 
-1. **Clarity at the call site** - method calls should read as much like English sentences as possible.
-2. **Assume common patterns and naming conventions** - as in the assumption that the `indexPath` variable would be so named.
-3. **Avoid repeated words** - allowing the “index path” to be removed from the parameter name.
+1. **Clarity at the call site**: Method calls should read as much like English sentences as possible.
+2. **Assume common patterns and naming conventions**: As in the assumption that the `indexPath` variable would be so named.
+3. **Avoid repeated words**: Allowing the “index path” to be removed from the parameter name.
 
 You'll find that many UIKit and Foundation methods have similarly shrunk. In particular, methods that would name the type of the first argument have had that part of the name removed:
 
@@ -98,19 +98,21 @@ func engage(_ fluxCapacitor: FluxCapacitor)
 timeMachine.engage(fluxCapacitor)
 ```
 
-When migrating your existing projects you’ll have to decide if it’s worth the effort to Grandly Rename your own APIs. The bizarre and continuing lack of refactoring support for Swift in Xcode probably means that for most projects, you probably won’t bother. But for new code, you really should. 
+When migrating your existing projects, you’ll have to decide if it’s worth the effort to Grandly Rename your own APIs. The bizarre and continuing lack of refactoring support for Swift in Xcode probably means that for most projects, you probably won’t bother. But for new code, you really should. 
 
 In addition to the three principles above, there are some more specific guidelines:
 
 ### Overloading
 
-If you remove the type name from the method name and don't use a label for the first argument, then you may end up in a situation where you have multiple methods with the same name, that differ only in the type of argument. You should only do this if the methods are doing semantically the same thing - for example, if you’re adding a single item or multiple items to a list, you could have two `add(_:)` methods, one which takes an array, and one which takes an individual item. Otherwise, you should use the argument label or rename the methods so that it is clear from the call site what is happening. 
+If you remove the type name from the method name and don't use a label for the first argument, then you may end up in a situation where you have multiple methods with the same name, that differ only in the type of argument. You should only do this if the methods are doing semantically the same thing.
+
+For example, if you’re adding a single item or multiple items to a list, you could have two `add(_:)` methods, one which takes an array, and one which takes an individual item. Otherwise, you should use the argument label or rename the methods so that it is clear from the call site what is happening. 
 
 As an example, consider a `VideoLoader` class. This class could have `VideoRequest` objects which deal with getting video data from the internet, and `VideoOutputHandler` objects which deal with playing the video. 
 
 It isn’t right to have two `add(_:)` methods, one for adding requests, and one for adding output handlers, because those methods are doing completely different things. You should have an `addLoader(_:)` and `addOutput(_:)` method in this case.
 
-### Grammatical Rules
+### Grammatical rules
 
 The examples in this section will all be methods on a made-up struct called `WordList`, which as you may have guessed, holds a list of words. 
 
@@ -168,9 +170,9 @@ The final grammatical rule relates to `Bool` properties. These should be prefixe
 var isSortedAlphabetically: Bool
 ```
 
-## Foundation Value Types
+## Foundation value types
 
-Many Foundation types have now adapted value semantics, rather than reference semantics, in Swift 3. What does that mean? 
+Many Foundation types have now adapted value semantics rather than reference semantics in Swift 3. What does that mean? 
 
 Value types are types that can be identified by their _value_. As the simplest example, an `Int` of `1` can be considered identical to any other `Int` of `1`. When you assign a value type to another variable, the properties are copied: 
 
@@ -198,23 +200,25 @@ person2.name = "Mic"
 
 Swift classes are all reference types.
 
-Value and reference types both have their advantages and disadvantages, and this isn’t the place to get into that argument, but in Objective-C, the only value types available were structs and primitives, which had no functionality beyond holding information. 
+Value and reference types both have their advantages and disadvantages. This isn’t the place to get into that argument, but the only value types available in Objective-C were structs and primitives, which had no functionality beyond holding information. 
 
 This limitation meant that anything with any functionality became a class, and was therefore a reference type. The main problem with reference types is that you have no idea who else is also holding a reference, and what they might do with it. 
 
 Immutability or mutability in Foundation types was implemented by having two separate classes, like `NSString` and `NSMutableString`. Anything that holds a mutable reference type property runs the risk of the meaning of that property being changed by something else that shares the reference. This is the source of a lot of hard-to-detect bugs, and it’s why experienced Objective-C programmers do things like declare `NSString` properties as `copy`. 
 
-In Swift 3, lots of Foundation classes are now wrapped in Swift value types. You can declare immutability or mutability by using `var` or `let` declarations. This was already the case with the `String` type, but now it has gone much further. In most cases this is indicated by a disappearing `NS` prefix - `NSDate` is now `Date`, and so on.
+In Swift 3, lots of Foundation classes are now wrapped in Swift value types. You can declare immutability or mutability by using `var` or `let` declarations. This was already the case with the `String` type, but now it has gone much further. In most cases, this is indicated by a disappearing `NS` prefix: `NSDate` is now `Date`, and so on.
 
-What’s happening under the hood is quite interesting. You might be panicking about copies of objects being made all over the place and eating up all of your memory, but this doesn’t happen. These value type wrappers use a mechanism called _copy on write_. Copy on write means that the underlying reference type is shared between everything that cares about it, _until something tries to change it_. At that point, a new copy is made, just for the thing that made the changes, with the new values applied. This optimization lets you get the benefits of value and reference types at the same time :]
+What’s happening under the hood is quite interesting. You might be panicking about copies of objects being made all over the place and eating up all of your memory, but this doesn’t happen. These value type wrappers use a mechanism called _copy on write_. 
 
-## Working With C APIs
+Copy on write means that the underlying reference type is shared between everything that cares about it, _until something tries to change it_. At that point, a new copy is made, just for the thing that made the changes, with the new values applied. This optimization lets you get the benefits of value and reference types at the same time :]
+
+## Working with C APIs
 
 If you’ve spent much time developing iOS apps, there are two C APIs you've probably encountered: Grand Central Dispatch (GCD) and Core Graphics. Like all C APIs, they are notable by their use of free functions (meaning, top-level functions rather than methods defined on instances or classes).  
 
 Free functions are no fun, because they are essentially all in a massive bucket. Autocomplete can do nothing to help you. To counter these problems, free functions all end up with long, wordy names that include identifying text (everything relating to a core graphics context begins with `CGContext`, for example), and you need to pass in the basic values you’re working with (like the graphics context) to every single operation. This results in code that is tedious to read and tedious to write.
 
-Here’s some great news: As of Swift 3, you will not realise that you’re dealing with C any more! 
+Here’s some great news: As of Swift 3, you will no longer realize you’re dealing with C! 
 
 ### Grand Central Dispatch
 
@@ -254,9 +258,9 @@ DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
 
 ### Core Graphics
 
-Core Graphics is a very useful framework, particularly in these days of multiple scale-factor, multiple screen size support. It can often be easier to draw some of your assets in code than supply and update 15 PNG files of the same image. But the Core Graphics code is written in C, and it used to look pretty clunky. Now, it's kind of nice. 
+Core Graphics is a very useful framework, particularly in these days of multiple scale-factor, multiple screen size support. It can often be easier to draw some of your assets in code than supply and update 15 PNG files of the same image. But the Core Graphics code is written in C, and it used to look pretty clunky. Now, it’s kind of nice. 
 
-Consider transforms. When creating beautiful animations or transitions, you often want to stack up several transitions - a scale, a translation, a rotation. In Swift 3, you can do this:
+Consider transforms. When creating beautiful animations or transitions, you often want to stack up several transitions, such as a scale, a translation and a rotation. In Swift 3, you can do this:
 
 ```swift
 let transform = CGAffineTransform.identity
@@ -265,7 +269,7 @@ let transform = CGAffineTransform.identity
   .rotated(by: .pi / 4)
 ```
 
-If you’re not doing the screaming face emoji in real life right now, then you’ve probably never written `CGAffineTransform` code before. It gets better! When dealing with a `CGContext`, there are a variety of things you can set on the context to affect the next lot of drawing you could do - the stroke color, shadow offset and so forth. That code now looks like this: 
+If you’re not doing the screaming face emoji in real life right now, then you’ve probably never written `CGAffineTransform` code before. It gets better! When dealing with a `CGContext`, there are a variety of things you can set on the context to affect the next lot of drawing you could do — the stroke color, shadow offset and so forth. That code now looks like this: 
 
 ```swift
 let rectangle = CGRect(x: 5, y: 5, width: 200, height: 200)
@@ -299,7 +303,7 @@ If, like me, you can never remember which order these things happen in, now you 
 
 ### C-Style for loops
 
-Also gone! A C-Style for loop was one written like this:
+Also gone! A C-Style for-loop was written like this:
 
 ```swift
 for var i = 0; i < 10; i++ {
@@ -318,11 +322,11 @@ Or, if you’re iterating through a collection, a `for...in` loop, which you rea
 
 ### Currying syntax
 
-If you’re one of the few people who actually understood the Swift currying syntax, or one of the even fewer people who actually used it, you might be upset by this one, and you’ve probably already followed the proposal and comments and know the new way of doing things. If you’ve never used it, congratulations, you don't have to unlearn anything! 
+If you’re one of the few people who actually understood the Swift currying syntax (or one of the even fewer people who actually used it) you might be upset by this one, and you’ve probably already followed the proposal and comments and know the new way of doing things. If you’ve never used it, congratulations, you don't have to unlearn anything! 
 
 That’s all the main things that have gone from the language. Now, onto the new stuff, which is much more fun. 
 
-### Key Paths
+### Key paths
 
 This is a super addition to the language. Key paths and key-value coding are somewhat frowned upon because they introduce what's called “stringly typed” code, where you use literal strings to access properties. However they can be extremely useful, for example when setting up key value observers or creating predicates.
 
@@ -338,7 +342,7 @@ timeMachine.value(forKey: #keyPath(TimeMachine.currentYear))
 // gives 2016
 ```
 
-This works with autocomplete as well. The `#keyPath` expression is converted into a `String`. Because of the way key-value coding works, this technique can only be used on classes, and furthermore only on those properties that are implemented using the Objective-C runtime. In practical terms, this means that any classes inheriting from `NSObject` are fine, any “pure” swift classes must have the property marked as `dynamic`: 
+This works with autocomplete as well. The `#keyPath` expression is converted into a `String`. Because of the way key-value coding works, this technique can only be used on classes, and furthermore only on those properties that are implemented using the Objective-C runtime. In practical terms, this means that any classes inheriting from `NSObject` are fine, and any “pure” swift classes must have the property marked as `dynamic`: 
 
 ```swift
 class TimeMachine {
@@ -352,7 +356,7 @@ class TimeMachine {
 
 Key-value coding doesn’t work on non-`NSObject` classes anyway, so key paths aren’t as useful for these types of objects.
 
-### Access Control
+### Access control
 
 Swift 2 had `public`, `internal` (the default, so you didn’t see that one often) and `private` modifiers that controlled the visibility of your code across files and modules. 
 
@@ -364,7 +368,7 @@ In Swift 3 the meaning of `public` and `private` have changed, and there are two
 - `fileprivate`: The code is visible from anywhere within the file.
 - `private`: The code is only visible from within the enclosing declaration.
 
-The single largest impact this will have on your code is that anything you’d marked as `private` but accessed within an extension in the same file will now not compile until you change the declaration: 
+The single largest impact this will have on your code is that anything you’d marked as `private`, but accessed within an extension in the same file, will now not compile until you change the declaration: 
 
 ```swift
 class PotatoListViewController: UIViewController {
@@ -379,15 +383,15 @@ extension PotatoListViewController: PotatoSelectionDelegate {
 }
 ```
 
-In the example above, `potatoes` is not accessible in the extension. If the variable is declared as `fileprivate` instead, it is. This redefinition of an existing, commonly used keyword, coupled with the fact that extensions are encouraged as a way of dividing up functionality within a file, means that when you migrate to Swift 3 you will spend a lot of time correcting access control issues like this. 
+In the example above, `potatoes` is not accessible in the extension. If the variable is declared as `fileprivate` instead, then it will be accessible. This redefinition of an existing, commonly used keyword, coupled with the fact that extensions are encouraged as a way of dividing up functionality within a file, means that when you migrate to Swift 3 you will spend a lot of time correcting access control issues like this. 
 
-The difference between `open` and `public` is mainly of interest to framework developers. The use of `open` indicates that you have explicitly considered and encouraged inheritance of the classes included in your framework. So far, all UIKit and Foundation classes are `open`. 
+The difference between `open` and `public` is mainly of interest to framework developers. The use of `open` indicates that you have explicitly considered and encouraged inheritance of the classes included in your framework. So far, all UIKit and Foundation classes are `open`.
 
 The remainder of this section talks about changes to existing language features. 
 
 ### Enums
 
-An enum case is an instance, and instances should begin with lower case letters. That’s now a standard and all of the framework enums have been amended to match: 
+An enum case is an instance, and instances should begin with lower case letters. That’s now a standard, and all of the framework enums have been amended to match: 
 
 ```swift
 // Swift 2
@@ -463,13 +467,9 @@ doSomething {
 	finished = true
 }
 ```
- 
 
 ## Where to go from here? 
 
 There is a full and detailed explanation of the naming guidelines at [https://swift.org/documentation/api-design-guidelines/](https://swift.org/documentation/api-design-guidelines/), which is really worth reading. 
 
 Swift is an open source language! To review proposed and implemented changes to Swift, or to submit your own, visit [https://github.com/apple/swift-evolution](https://github.com/apple/swift-evolution). All of the changes discussed in this chapter are discussed in far greater detail on that repo. 
-
-
-	
