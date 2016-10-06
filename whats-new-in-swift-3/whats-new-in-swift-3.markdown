@@ -438,12 +438,32 @@ In Swift 3, that assumption has reversed. Now, all closures passed in to functio
 
 ```swift
 func doSomethingWith(_ this: Thing, then: @escaping (Thing) -> ()) {
-  self.completion = thing
+  self.completion = then
   ... do stuff in the background ...
 }
 ```
 
 The migrator should either fix this for you, or offer it as a change. It tries to detect if additional references to the closure are made within the function body. 
+
+This also means that you don't have to put `self` in closure bodies by default anymore:
+
+```swift
+func doSomething(_ then: () -> ()) {
+    // do something
+    then()
+}
+    
+// Swift 2
+doSomething {
+	self.finished = true
+}
+
+// Swift 3
+doSomething {
+	finished = true
+}
+```
+ 
 
 ## Where to go from here? 
 
