@@ -65,9 +65,6 @@ The new source extensions are fairly limited compared to Xcode plugins of old �
 - Generate a documentation block for a method containing all parameters and the return type based on its signature
 - Convert non localized `String` definitions within a file to the localized version
 - Convert color and image definitions to the new color and image literals in Xcode 8 (demoed in the WWDC session on source editor extensions)
-
-$[=s=]
-
 - Create comment MARKs above an extension block using the name of a protocol it extends
 - Generate a print statement with debugging info on a highlighted property
 - Clean up whitespace formatting of a file; for instance, you might enforce a single line between each method by deleting or adding lines to the file
@@ -98,19 +95,11 @@ You’ll now notice a new target and a new group in the navigator, both named **
 
 Select the AsciiifyComment build scheme, then build and run. When prompted to choose an app to run, select Xcode (version 8 or above) and then click **Run**. A version of Xcode will launch with a dark icon, activity viewer, and splash screen icon as seen below:
 
-![width=70% bordered](./images/test-xcode-splash.png)
+![width=40% bordered](./images/test-xcode-splash.png)
 
 This instance of Xcode is meant for testing your extensions. Once launched, create a new playground, as all you’ll be doing is adding comments. Make sure that the new playground is open in the test instance of Xcode, not the original version of Xcode.
 
-With the cursor in your test playground, navigate to **Editor\Asciiify Comment\Source Editor Command**. If you don’t see the menu item, *don’t panic*. As of this writing, Xcode 8’s release notes indicate an extra step required to run editor extensions under El Capitan.
-
-Execute the following command in the terminal:
-
-```/usr/libexec/xpccachectl```
-
-Then restart your Mac. Once this is done, run the AsciiifyComment build scheme and attempt to navigate to the extension again.
-
-Clicking the command does nothing at present:
+With the cursor in your test playground, navigate to **Editor\Asciiify Comment\Source Editor Command**. Clicking the command does nothing at present:
 
 ![width=80% bordered](./images/extension-menu-item.png)
 
@@ -130,7 +119,7 @@ Take a moment to check out the other keys found in the **Item 0** dictionary tha
 
 Build and run the extension, open your test playground from earlier, and  you’ll now be able to navigate to **Editor\Asciiify Comment\Asciiify Comment**:
 
-![width=50% bordered](./images/extension-menu-item-new-name.png)
+![width=45% bordered](./images/extension-menu-item-new-name.png)
 
 Now the name looks the way you’d expect, but it still doesn’t do anything. Your next step will be to implement the functionality, but first you need to learn a bit more about the data model used by source editor extensions.
 
@@ -156,8 +145,6 @@ It’s also important to understand `XCSourceTextPosition`, the class used to re
 The diagram below illustrates the relation between a buffer, its lines and selections.
 
 ![height=35%](./images/buffer-diagram.png)
-
-$[=s=]
 
 Now that you have a better understanding of the model involved, it’s time to dive in and handle a request.
 
@@ -201,6 +188,8 @@ buffer.selections.forEach({ selection in
     with: startIndex..<line.index(after: endIndex))
   // TODO: asciiify the text
 })
+// 4
+completionHandler(.none)
 ```
 
 This code does some validation and then examines `XCSourceEditorCommandInvocation` to get the selected `String` and its location in the buffer. Here’s how this happens:
@@ -236,15 +225,13 @@ Here’s a detailed look at what this does:
 
 Build and run, attach to Xcode and open the Playground from earlier. Select a piece of text and then select **Editor\Asciiify Comment\Asciiify Comment** to kick off the extension. And then you’ll see...
 
-![width=40%](./images/xcode-quit-ragecomic.png)
+![width=35%](./images/xcode-quit-ragecomic.png)
 
-Sigh. This probably looks quite familiar if you’ve used Xcode more than once or twice. Select **Report** on the alert:
-
-![width=70% bordered](./images/xcode-quit.png)
+Sigh. This probably looks quite familiar if you’ve used Xcode more than once or twice. 
 
 In the report window that appears, scroll until you see **Application Specific Information** followed by a backtrace.
 
-![width=100% bordered](./images/xcode-problem-report.png)
+![width=95% bordered](./images/xcode-problem-report.png)
 
 For once it’s not Xcode being flaky. It’s you!
 
@@ -268,7 +255,7 @@ Here you create an `XCSourceTextPosition` at the first line and column of the bu
 
 Build and run, and launch the extension as you’ve done before. This time, you’ll see your asciiified text! As expected, the cursor appears at the start of the file.
 
-![width=80% bordered](./images/figlet-starting-insertion.png)
+![width=90% bordered](./images/figlet-starting-insertion.png)
 
 ### Adding some polish
 
@@ -305,7 +292,7 @@ var newSelections = [XCSourceTextRange]()
 
 This will be used to save the position of the FIGlet you create so you can select it in the buffer before returning.
 
-Add the following code to the bottom of the body, below `if let asciiified`:
+Add the following code to the bottom of the body of `if let asciiified`:
 
 ```swift
 // 1
@@ -403,8 +390,6 @@ You’ll implement this property and use it to pull available fonts from the FIG
 
 Open **SourceEditorExtension.swift** and delete the commented template code inside `SourceEditorExtension`.
 
-$[=s=]
-
 Add the following import above the class:
 
 ```swift
@@ -413,7 +398,7 @@ import Figlet
 
 You’ll use the `Figlet` library to pull over a list of available fonts.
 
-Now add the following method to `SourceEditorExtension`:
+Now add the following property definition to `SourceEditorExtension`:
 
 ```swift
 var commandDefinitions: [[XCSourceEditorCommandDefinitionKey: Any]] {
