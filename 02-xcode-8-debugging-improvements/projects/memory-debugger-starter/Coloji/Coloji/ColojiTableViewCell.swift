@@ -27,12 +27,12 @@ class ColojiTableViewCell: UITableViewCell {
   var coloji: Coloji? {
     didSet {
       if let coloji = coloji {
-        addLabel(coloji: coloji)
+        addLabel(coloji)
       }
     }
   }
   
-  private func addLabel(coloji: Coloji) {
+  fileprivate func addLabel(_ coloji: Coloji) {
     let label = ColojiLabel()
     label.coloji = coloji
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -50,12 +50,12 @@ private class ColojiLabel: UILabel {
   var coloji: Coloji? {
     didSet {
       if let coloji = coloji {
-        display(coloji: coloji)
+        display(coloji)
       }
     }
   }
   
-  private func display(coloji: Coloji) {
+  fileprivate func display(_ coloji: Coloji) {
     font = UIFont.systemFont(ofSize: 50)
     textAlignment = .center
     switch coloji {

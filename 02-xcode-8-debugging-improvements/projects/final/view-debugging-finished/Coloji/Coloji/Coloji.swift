@@ -25,7 +25,7 @@ import UIKit
 class ColojiCellFormatter {
   let coloji: Coloji
   
-  private let massiveWasteOfMemory = Data(bytes: [UInt8](repeatElement(0, count: 10 * 1024)))
+  fileprivate let massiveWasteOfMemory = Data(bytes: [UInt8](repeatElement(0, count: 10 * 1024)))
   
   lazy var configureCell: (UITableViewCell) -> () = {
     [unowned self] cell in
@@ -45,12 +45,12 @@ enum Coloji {
 }
 
 
-func createColoji(color: UIColor) -> Coloji {
+func createColoji(_ color: UIColor) -> Coloji {
   usleep(100_000)
   return Coloji.color(color)
 }
 
-func createColoji(emoji: String) -> Coloji {
+func createColoji(_ emoji: String) -> Coloji {
   usleep(100_000)
   return Coloji.emoji(emoji)
 }

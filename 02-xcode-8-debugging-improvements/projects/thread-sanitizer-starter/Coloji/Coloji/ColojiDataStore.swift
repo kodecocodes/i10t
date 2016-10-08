@@ -25,11 +25,11 @@ import Foundation
 class ColojiDataStore {
   var data = [Coloji]()
   
-  func colojiAt(index: Int) -> Coloji {
+  func colojiAt(_ index: Int) -> Coloji {
     return data[index]
   }
   
-  func append(coloji: Coloji) {
+  func append(_ coloji: Coloji) {
     data = data + [coloji]
   }
   

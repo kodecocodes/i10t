@@ -32,22 +32,22 @@ class ColojiViewController: UIViewController {
     createLayout()
   }
   
-  private func createLayout() {
+  fileprivate func createLayout() {
     guard let coloji = coloji else { return }
     
     switch coloji {
     case .color(let color):
-      layoutFor(color: color)
+      layoutFor(color)
     case .emoji(let emoji):
-      layoutFor(emoji: emoji)
+      layoutFor(emoji)
     }
   }
   
-  private func layoutFor(color: UIColor) {
+  fileprivate func layoutFor(_ color: UIColor) {
     view.backgroundColor = color
   }
   
-  private func layoutFor(emoji: String) {
+  fileprivate func layoutFor(_ emoji: String) {
     view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     
     let emojiLabel = UILabel()

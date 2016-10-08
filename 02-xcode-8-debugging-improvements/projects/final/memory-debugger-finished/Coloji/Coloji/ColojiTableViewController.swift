@@ -51,7 +51,7 @@ class ColojiTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "colojiCell", for: indexPath)
     
-    let coloji = colojiStore.colojiAt(index: indexPath.row)
+    let coloji = colojiStore.colojiAt(indexPath.row)
     
     let cellFormatter = ColojiCellFormatter(coloji: coloji)
     cellFormatter.configureCell(cell)
@@ -63,7 +63,7 @@ class ColojiTableViewController: UITableViewController {
     if let destVC = segue.destination as? ColojiViewController,
       let selectedIndex = tableView.indexPathForSelectedRow
     {
-      destVC.coloji = colojiStore.colojiAt(index: selectedIndex.row)
+      destVC.coloji = colojiStore.colojiAt(selectedIndex.row)
     }
   }
   
@@ -77,8 +77,8 @@ extension ColojiTableViewController {
     for color in colors {
       group.enter()
       queue.async {
-        let coloji = createColoji(color: color)
-        self.colojiStore.append(coloji: coloji)
+        let coloji = createColoji(color)
+        self.colojiStore.append(coloji)
         group.leave()
       }
     }
@@ -86,8 +86,8 @@ extension ColojiTableViewController {
     for emoji in emoji {
       group.enter()
       queue.async {
-        let coloji = createColoji(emoji: emoji)
-        self.colojiStore.append(coloji: coloji)
+        let coloji = createColoji(emoji)
+        self.colojiStore.append(coloji)
         group.leave()
       }
     }

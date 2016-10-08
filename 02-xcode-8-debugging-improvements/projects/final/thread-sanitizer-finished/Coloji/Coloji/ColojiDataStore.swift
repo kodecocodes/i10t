@@ -24,20 +24,19 @@ import Foundation
 
 class ColojiDataStore {
   var data = [Coloji]()
-  let dataAccessQueue = DispatchQueue(label: "com.raywenderlich.coloji.datastore")
+  let dataAccessQueue = DispatchQueue(label:
+    "com.raywenderlich.coloji.datastore")
   
-  func colojiAt(index: Int) -> Coloji {
+  func colojiAt(_ index: Int) -> Coloji {
     return dataAccessQueue.sync {
       return data[index]
     }
   }
-
-  func append(coloji: Coloji) {
+  func append(_ coloji: Coloji) {
     dataAccessQueue.async {
       self.data = self.data + [coloji]
     }
   }
-
   var count: Int {
     return dataAccessQueue.sync {
       return data.count

@@ -23,18 +23,17 @@
 import UIKit
 
 class ColojiTableViewCell: UITableViewCell {
-  
   private let label = ColojiLabel()
   
   var coloji: Coloji? {
     didSet {
       if let coloji = coloji {
-        addLabel(coloji: coloji)
+        addLabel(coloji)
       }
     }
   }
   
-  private func addLabel(coloji: Coloji) {
+  fileprivate func addLabel(_ coloji: Coloji) {
     label.coloji = coloji
     if label.superview == .none {
       label.translatesAutoresizingMaskIntoConstraints = false
@@ -57,12 +56,12 @@ private class ColojiLabel: UILabel {
   var coloji: Coloji? {
     didSet {
       if let coloji = coloji {
-        display(coloji: coloji)
+        display(coloji)
       }
     }
   }
   
-  private func display(coloji: Coloji) {
+  fileprivate func display(_ coloji: Coloji) {
     font = UIFont.systemFont(ofSize: 50)
     textAlignment = .center
     switch coloji {

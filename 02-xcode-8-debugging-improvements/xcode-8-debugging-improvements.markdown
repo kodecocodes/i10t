@@ -108,7 +108,7 @@ Select one of the instances of a `ColojiCellFormatter` leak:
 
 ![width=30% bordered](./images/select-instance.png)
 
-Then and you’ll see a graph appear in the editor. This graph illustrates a retain cycle, where the `ColojiCellFormatter` references `Closure captures`, that is, a closure, and the closure has a reference to the `ColojiCellFormatter`.
+Then and you’ll see a graph appear in the editor. This graph illustrates a retain cycle, where the `ColojiCellFormatter` references `Closure captures` (a closure) and the closure has a reference to the `ColojiCellFormatter`.
 
 ![width=60% bordered](./images/retain-cycle-graph-2.png)
 
@@ -167,7 +167,7 @@ You’ve specified an unowned reference to self via the capture list, removing t
 
 Build and run, restart the Memory Debugger, and navigate back to the Issue navigator to confirm the leak warnings are gone.
 
-![width=50% bordered](./images/cleared-memory-leaks.png)
+![width=40% bordered](./images/cleared-memory-leaks.png)
 
 You just identified and tracked down a leak with just a few clicks. Feels pretty good, doesn’t it?
 
@@ -193,7 +193,7 @@ On the graph, select the **ColojiLabel** and then select the top active line in 
 
 ![width=50% bordered](./images/select-this-line-backtrace.png)
 
-This should take you to `addLabel(coloji:)` in **ColojiTableViewCell.swift**, where you create the `ColojiLabel`. The contents of the method looks like this:
+This should take you to `addLabel(_:)` in **ColojiTableViewCell.swift**, where you create the `ColojiLabel`. The contents of the method looks like this:
 
 ```swift
 let label = ColojiLabel()
@@ -222,7 +222,7 @@ private let label = ColojiLabel()
 
 Here you initialize a label that will be retained by the cell and updated when content changes.
 
-Next, modify the contents of `addLabel(coloji:)` to match the following:
+Next, modify the contents of `addLabel(_:)` to match the following:
 
 ```swift
 label.coloji = coloji
@@ -280,8 +280,8 @@ for color in colors {
     qos: .background,
     flags: DispatchWorkItemFlags(),
     execute: {
-      let coloji = createColoji(color: color)
-      self.colojiStore.append(coloji: coloji)
+      let coloji = createColoji(color)
+      self.colojiStore.append(coloji)
   })
 }
 
@@ -291,8 +291,8 @@ for emoji in emoji {
     qos: .background,
     flags: DispatchWorkItemFlags(),
     execute: {
-      let coloji = createColoji(emoji: emoji)
-      self.colojiStore.append(coloji: coloji)
+      let coloji = createColoji(emoji)
+      self.colojiStore.append(coloji)
   })
 }
 
@@ -340,13 +340,17 @@ Edit the **Coloji** scheme, select the Run action and select the Diagnostics tab
 
 >**Note**: You can also check **Pause on issues** under Thread Sanitizer to have execution pause each time a race is detected. Although you won’t do this in this chapter, this will break on the problem line and display a message describing the issue.
 
-Build and run. As soon as the table view loads, Thread Sanitizer will start notifying you of threading issues via the workspace toolbar and the Issue navigator. Open the Issue navigator, ensure you have **Runtime** selected, and you should see a number of data races on display.
+Build and run. As soon as the table view loads, Thread Sanitizer will start notifying you of threading issues via the workspace toolbar and the Issue navigator. You'll also see logging in the console spitting out detail on the issues. It looks like DEFCON 1 here!
 
-The following image focuses on a single data race. In it, you can see a read operation on thread 6 is at odds with a write on thread 13. Each of these operations shows a stack trace, where you’ll see they conflicted on a line within `append()` inside `ColojiDataStore`:
+>**Note**: In this tutorial, you'll use the Issue navigator to hunt down issues. The console provides similar info, but isn't quite as user friendly. However, it is handy if you want to save some logging on an issue.
+
+Open the Issue navigator, ensure you have **Runtime** selected, and you should see a number of data races on display.
+
+The following image focuses on a single data race. In it, you can see a read operation on thread 6 is at odds with a write on thread 12. Each of these operations shows a stack trace, where you’ll see they conflicted on a line within `append()` inside `ColojiDataStore`:
 
 ![width=90% bordered](./images/thread-sanitizer-issues.png)
 
-Select `ColojiDataStore.append(coloji : Coloji) -> ()` in either trace, and you’ll be taken straight to the problematic code in the editor:
+Select `ColojiDataStore.append(Coloji) -> ()` in either trace, and you’ll be taken straight to the problematic code in the editor:
 
 ```swift
 data = data + [coloji]
@@ -367,13 +371,13 @@ You’ll use the serial queue `dataAccessQueue` to control access to the data st
 Now, replace the three methods in this class with the following:
 
 ```swift
-func colojiAt(index: Int) -> Coloji {
+func colojiAt(_ index: Int) -> Coloji {
   return dataAccessQueue.sync {
     return data[index]
   }
 }
 
-func append(coloji: Coloji) {
+func append(_ coloji: Coloji) {
   dataAccessQueue.async {
     self.data = self.data + [coloji]
   }
@@ -386,7 +390,7 @@ var count: Int {
 }
 ```
 
-You’ve wrapped each data access call in a queue operation to ensure no operation can happen concurrently. Note that `colojiAt(index:)` and `count` are run synchronously, because the caller is waiting on them to return data. `append(coloji:)` is done asynchronously, because it doesn’t need to return anything.
+You’ve wrapped each data access call in a queue operation to ensure no operation can happen concurrently. Note that `colojiAt(_:)` and `count` are run synchronously, because the caller is waiting on them to return data. `append(_:)` is done asynchronously, because it doesn’t need to return anything.
 
 Build and run, and you should see all your colojis appear:
 
@@ -394,7 +398,7 @@ Build and run, and you should see all your colojis appear:
 
 The order can vary since your data requests run asynchronously, but all the cells make it to the data source. Looks like you may have solved the issue.
 
-To further confirm you’ve solved the race conditions, take a look at the Issue navigator where you should see 0 issues:
+To further confirm you’ve solved the race conditions, take a look at the Issue navigator where you should see no issues:
 
 ![width=40% bordered](./images/fixed-race-condition-issue-navigator.png)
 
@@ -412,7 +416,7 @@ The View Debugger is a great tool to investigate each of these issues. You’ll 
 
 Prior versions of the View Debugger already displayed run time constraints of your views in the Size Inspector. The biggest improvement in the View Debugger under Xcode 8 is that you can now see constraint warnings, similar to those you see at design time in Interface Builder. Below is an example of such a warning in the Size Inspector:
 
-![width=50%](./images/runtime-constraint-warning.png)
+![width=50% bordered](./images/runtime-constraint-warning.png)
 
 Because the table view constraints in Coloji are all set in code, the only way you could view constraint warnings before Xcode 8 was via difficult-to-discern console output. These new visual constraint warnings will make debugging constraint issues in Coloji much easier.
 
@@ -424,9 +428,9 @@ It’s time to try out a few of these new features as you determine what happene
 
 First, open **ColojiTableViewCell.swift** to see how the layout of the cell is defined.
 
-You’ll see a setter for the `coloji` property that calls `addLabel(coloji:)`, passing the newly set coloji. `addLabel(coloji:)` sets the cell’s `ColojiLabel` with the given coloji. If the label is not already on the cell’s `contentView`, this code places it there and positions it with Auto Layout.
+You’ll see a setter for the `coloji` property that calls `addLabel(_:)`, passing the newly set coloji. `addLabel(_:)` sets the cell’s `ColojiLabel` with the given coloji. If the label is not already on the cell’s `contentView`, this code places it there and positions it with Auto Layout.
 
-In this same file, you can see the definition of `ColojiLabel` which is a UILabel subclass. When it gets set, as `addLabel(coloji:)` does, it uses the provided coloji either to color its background or to set its text with the emoji.
+In this same file, you can see the definition of `ColojiLabel` which is a UILabel subclass. When it gets set, as `addLabel(_:)` does, it uses the provided coloji either to color its background or to set its text with the emoji.
 
 Since you don’t see the `ColojiLabel`, the only view that should be in the cell’s content view, that’s a good place to focus your questions. Is the label actually in the content view? If so, what size is it and where does it sit within the content view?
 
@@ -452,7 +456,7 @@ Back in the debug navigator, move up the label’s hierarchy a bit until you get
 
 ![width=40% bordered](./images/source-jump.png)
 
-Now inside **ColojiTableViewCell.swift**, find `addLabel(coloji:)` where the `label` is added to the `contentView` and constrained to its parent. It looks like this:
+Now inside **ColojiTableViewCell.swift**, find `addLabel(_:)` where the `label` is added to the `contentView` and constrained to its parent. It looks like this:
 
 ```swift
 label.coloji = coloji
@@ -503,7 +507,7 @@ Select the warning and then go to the Size Inspector to see a little more inform
 
 It’s pretty easy to see why the vertical layout is ambiguous. The height of the label is defined, but it has no y-position.
 
-Open **ColojiViewController.swift** and find `layoutFor(emoji:)`, where the label constraints are defined. Modify the array passed to `NSLayoutConstraint.activate` so that it looks like this:
+Open **ColojiViewController.swift** and find the `layoutFor(_:)` that accepts an emoji String. This is where the label constraints are defined. Modify the array passed to `NSLayoutConstraint.activate` so that the call looks like this:
 
 ```swift
 NSLayoutConstraint.activate([
