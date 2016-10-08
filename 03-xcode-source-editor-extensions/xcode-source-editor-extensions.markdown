@@ -65,6 +65,9 @@ The new source extensions are fairly limited compared to Xcode plugins of old �
 - Generate a documentation block for a method containing all parameters and the return type based on its signature
 - Convert non localized `String` definitions within a file to the localized version
 - Convert color and image definitions to the new color and image literals in Xcode 8 (demoed in the WWDC session on source editor extensions)
+
+$[=s=]
+
 - Create comment MARKs above an extension block using the name of a protocol it extends
 - Generate a print statement with debugging info on a highlighted property
 - Clean up whitespace formatting of a file; for instance, you might enforce a single line between each method by deleting or adding lines to the file
@@ -95,7 +98,7 @@ You’ll now notice a new target and a new group in the navigator, both named **
 
 Select the AsciiifyComment build scheme, then build and run. When prompted to choose an app to run, select Xcode (version 8 or above) and then click **Run**. A version of Xcode will launch with a dark icon, activity viewer, and splash screen icon as seen below:
 
-![width=40% bordered](./images/test-xcode-splash.png)
+![width=70% bordered](./images/test-xcode-splash.png)
 
 This instance of Xcode is meant for testing your extensions. Once launched, create a new playground, as all you’ll be doing is adding comments. Make sure that the new playground is open in the test instance of Xcode, not the original version of Xcode.
 
@@ -119,7 +122,7 @@ Take a moment to check out the other keys found in the **Item 0** dictionary tha
 
 Build and run the extension, open your test playground from earlier, and  you’ll now be able to navigate to **Editor\Asciiify Comment\Asciiify Comment**:
 
-![width=45% bordered](./images/extension-menu-item-new-name.png)
+![width=50% bordered](./images/extension-menu-item-new-name.png)
 
 Now the name looks the way you’d expect, but it still doesn’t do anything. Your next step will be to implement the functionality, but first you need to learn a bit more about the data model used by source editor extensions.
 
@@ -141,6 +144,7 @@ The `buffer` is the most interesting item in the `XCSourceEditorCommandInvocatio
 - **selections** is an array of `XCSourceTextRange` objects that identify start and end positions in the text buffer. Generally a single item will be present, representing the user’s selection or cursor position in absence of selection. Multiple selections are also possible with macOS using *Shift+Command*, and are supported here.
 
 It’s also important to understand `XCSourceTextPosition`, the class used to represent the start and end of selections. `XCSourceTextPosition` uses a zero-based coordinate system and defines `column` and `line` indexes to represent buffer position.
+$[=s=]
 
 The diagram below illustrates the relation between a buffer, its lines and selections.
 
@@ -225,7 +229,7 @@ Here’s a detailed look at what this does:
 
 Build and run, attach to Xcode and open the Playground from earlier. Select a piece of text and then select **Editor\Asciiify Comment\Asciiify Comment** to kick off the extension. And then you’ll see...
 
-![width=35%](./images/xcode-quit-ragecomic.png)
+![width=40%](./images/xcode-quit-ragecomic.png)
 
 Sigh. This probably looks quite familiar if you’ve used Xcode more than once or twice. 
 
@@ -255,7 +259,7 @@ Here you create an `XCSourceTextPosition` at the first line and column of the bu
 
 Build and run, and launch the extension as you’ve done before. This time, you’ll see your asciiified text! As expected, the cursor appears at the start of the file.
 
-![width=90% bordered](./images/figlet-starting-insertion.png)
+![width=80% bordered](./images/figlet-starting-insertion.png)
 
 ### Adding some polish
 
@@ -389,6 +393,8 @@ Fortunately, source editor extensions allow an alternate, dynamic means to defin
 You’ll implement this property and use it to pull available fonts from the FIGlet library.
 
 Open **SourceEditorExtension.swift** and delete the commented template code inside `SourceEditorExtension`.
+
+$[=s=]
 
 Add the following import above the class:
 
