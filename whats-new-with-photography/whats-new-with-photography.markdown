@@ -8,13 +8,15 @@ title: "Chapter 12: What’s New with Photography"
 
 ## Introduction
 
-TODO
+iOS 10 brings several improvements in editing and taking photos and videos. For the first time your apps can take and edit live photos, and there is a new photo capture pipeline which allows you to give rich UI responses for various stages of image capture and processing. 
+
+In this chapter you’ll learn about the new photo capturing methods by creating a selfie-taking app. You’ll then level up by adding live photo capabilities, and finally editing of live photos. You’ll be building the app from scratch, so you’ll also find out about lots of pre-existing `AVFoundation` goodies involved in photography. 
 
 ## Smile, you’re on camera! 
 
-You’re going to start by making a basic camera app. For this project, you’ll need to run on a device with a front-facing camera — there's no camera on the simulator. RayWenderlich.com readers are a good-looking bunch of people, so this app will only allow you to use the front camera — when you look this good, why would you want to take pictures in the other direction? For the later sections, you’ll also need a device that supports Live Photos. 
+For this project, you’ll need to run on a device with a front-facing camera — there's no camera on the simulator. RayWenderlich.com readers are a good-looking bunch of people, so this app will only allow you to use the front camera — when you look this good, why would you want to take pictures in the other direction? For the later sections, you’ll also need a device that supports Live Photos. 
 
-Create a new Xcode project using the **Single View Application** template, called **PhotoMe**. Make it for **iPhone** only. Leave the Core Data, Unit Tests and UI Tests boxes unchecked. Choose your team in the **Signing** section in the target’s **General** settings tab to allow you to run on a device, and untick all of the **Device Orientation** options except **Portrait**. This is just to keep things simple for the purposes of this demo.
+Create a new Xcode project using the **Single View Application** template, called **PhotoMe**. Make it for **iPhone** only. Leave the Core Data, Unit Tests and UI Tests boxes unchecked. Choose your team in the **Signing** section in the target’s **General** settings tab to allow you to run on a device, and untick all of the **Device Orientation** options except **Portrait**. A single orientation keeps things simple for the demo.
 
 Right-click on **Info.plist** and choose **Open As > Source Code**. Paste the following values just above the final `</dict>` tag:
 
@@ -194,7 +196,7 @@ In this section you’ve created an **input**, which represents the front camera
 
 ## Taking a photo
 
-New in iOS10 is the `AVCapturePhotoOutput` class. This replaces `AVCaptureStillImageOutput`, which is deprecated in iOS 10. Learning about the cool new features of this class takes up pretty much the rest of this chapter. Add a new property to **ViewController.swift** to hold an output object:
+New in iOS10 is the `AVCapturePhotoOutput` class. This replaces `AVCaptureStillImageOutput`, which is deprecated in iOS 10. Learning about the cool new features of this class takes up the next few sections of this chapter. Add a new property to **ViewController.swift** to hold an output object:
 
 ```swift
 fileprivate let photoOutput = AVCapturePhotoOutput()
@@ -854,3 +856,49 @@ Here’s the breakdown:
 Build and run, take a live photo and hit that comicify button. See, I told you it was a real word:
 
 ![iPhone](images/EditedLivePhoto.png)
+
+`prepareLivePhotoForPlayback` only renders a low-resolution version of the edited photo, for previewing. To edit the actual live photo and save the edits to the library, you need to do a little more work. Add the following code to `comicifyImage()`, at the end of the completion block for `prepareLivePhotoForPlayback`. 
+
+```swift
+// 1
+let output = PHContentEditingOutput(contentEditingInput: input)
+// 2
+output.adjustmentData = PHAdjustmentData(
+  formatIdentifier: "PhotoMe", 
+  formatVersion: "1.0", 
+  data: "Comicify".data(using: .utf8)!)
+// 3
+editingContext?.saveLivePhoto(to: output, options: nil) {
+  success, error in
+  if !success {
+    print("Rendering error \(error)")
+    return
+  }
+  // 4
+  PHPhotoLibrary.shared().performChanges({
+    let request = PHAssetChangeRequest(for: asset)
+    request.contentEditingOutput = output
+    }, completionHandler: { (success, error) in
+      print("Saved \(success), error \(error)")
+  })
+}
+```
+
+The code is placed into that completion block because it needs to wait until the preview is rendered, otherwise saving the photo cancels the preview rendering. In a full app you’d have a separate save button once the user was happy with the preview. Here’s the breakdown:
+
+1. The content editing output acts as a destination for the editing operation. For live photos, it’s configured using the content editing input object you requested earlier. 
+2. Despite the adjustment data property being optional, you _must_ set it, otherwise the photo can’t be saved. This information allows your edits to be reverted. 
+3. `saveLivePhoto(to: options:)` re-runs the editing context’s frame processor, but for the full-size video and still.
+4. Once rendering is complete, you save the changes to the photo library in the standard manner, by creating requests inside a photo library’s changes block. 
+
+Build and run, go through the motions and now, when you hit Comicify, you'll get a system prompt asking for permission to modify the photo:
+
+![iPhone](images/PermissionToEdit.png)
+
+If you don’t hit that Modify button after all this work, you and I can’t be friends any more. 
+
+## Where to go from here?
+
+Congratulations! That was a marathon session, but you built an entire live-selfie filtering app! It’s easy to imagine building on that foundation with a wider range of filters and options to come up with a really nice product. 
+
+There’s more information on the new photography capabilities in WWDC16 sessions 501, 505 and 511, including RAW capture and processing. The Photos framework itself was introduced in iOS 8 and is covered in our iOS8 By Tutorials book. 
