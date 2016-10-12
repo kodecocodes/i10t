@@ -51,7 +51,7 @@ For large data sources with content that is time consuming to prepare, implement
 
 In this section, you'll add data source prefetching to EmojiRater. If you haven't worked with collection views in the past, you'll want to check out our UICollectionView Tutorial series first: [bit.ly/2d2njWi](http://bit.ly/2d2njWi)
 
-The folder titled **prefetch-starter** contains the starter project for this section. Open **EmojiRater.xcodeproj** and get ready to super charge your a collection view!
+The folder titled **prefetch-starter** contains the starter project for this section. Open **EmojiRater.xcodeproj** and get ready to super charge your collection view!
 
 ### Implementing UICollectionViewDataSourcePrefetching
 
@@ -481,7 +481,7 @@ If you completed the section on preview interactions, you can continue with that
 
 ### Implementing UIFeedbackGenerator
 
-Open **EmojiCollectionViewController.swift** and the following method to the `EmojiCollectionViewController` extension indicated with a `UICollectionViewDelegate` mark:
+Open **EmojiCollectionViewController.swift** and add the following method to the `EmojiCollectionViewController` extension indicated with a `UICollectionViewDelegate` mark:
 
 ```swift
 override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
