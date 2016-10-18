@@ -5,15 +5,13 @@ title: "Chapter 1: What’s New in Swift 3"
 ```
 # Chapter 1: What’s New in Swift 3
 
-**(tl;dr: Almost _everything_.)**
+Swift 3 brings a tremendous set of changes to the language. In fact, the changes are so big, that I hope this is the biggest set of changes we'll ever see; as developers, we can’t go through this kind of pain again! :]
 
-## Introduction
-
-Swift 3 contains the biggest (and hopefully the biggest ever, we can’t go through this again!) set of changes to the language. But on the bright side, the changes do leave you with _much_ nicer code. It finally feels like you're writing UIKit apps in Swift, rather than forcing a Swift peg into an Objective-C (or even just C) shaped hole. 
+But on the bright side, the changes do leave you with _much_ nicer code. It finally feels like you're writing UIKit apps in Swift, rather than forcing a Swift peg into an Objective-C (or even just C) shaped hole. 
 
 If you take a reasonably-sized project written in Swift 2, and let Xcode migrate it to Swift 3, you're in for a shock. It's a big bang, and almost everything has changed.
 
-The noisiest part of the upgrade is what Apple refers to as the Grand Renaming. This is a huge review of _all_ of the first-party frameworks, and redefines types and method signatures to match a set of solid naming guidelines. 
+The noisiest part of the upgrade is what Apple refers to as the Grand Renaming. This is a huge review of _all_ of the first-party frameworks, and redefines types and method signatures to match a set of solid naming guidelines. As third-party developers, we're also encouraged to follow these naming guidelines in our own code.
 
 On top of this, lots of Foundation `NS` types have been swallowed up by more “Swifty” value types, making them clearer to work with and more accessible to non-Apple platforms. 
 
@@ -34,7 +32,9 @@ UITableViewCell *cell =
   [tableView cellForRowAtIndexPath: indexPath];
 ```
 
-That’s two “table views”, three “cells” and two “indexPaths”. Here it is in Swift 2:
+Take a close look at this line of code, and look to see if you can find any words that are repeated.
+
+I count two “table views”, three “cells” and two “indexPaths”. Here's what this same line looks like in Swift 2:
 
 ```swift
 let cell = tableView.cellForRowAtIndexPath(indexPath)
@@ -50,7 +50,7 @@ let cell = tableView.cellForRowAt(indexPath)
 
 Now, the only repeated word is “cell”, and that’s acceptable, because one of them is a value name, and the other is part of the function. 
 
-This evolution of the method name follows the three key principles guiding the Grand Renaming:
+This evolution of this method name follows the three key principles guiding the Grand Renaming:
 
 1. **Clarity at the call site**: Method calls should read as much like English sentences as possible.
 2. **Assume common patterns and naming conventions**: As in the assumption that the `indexPath` variable would be so named.
@@ -100,15 +100,17 @@ timeMachine.engage(fluxCapacitor)
 
 When migrating your existing projects, you’ll have to decide if it’s worth the effort to Grandly Rename your own APIs. The bizarre and continuing lack of refactoring support for Swift in Xcode probably means that for most projects, you probably won’t bother. But for new code, you really should. 
 
-In addition to the three principles above, there are some more specific guidelines:
+In addition to the three principles above, there are some more specific guidelines to understand, regarding overloading and grammatical rules.
 
 ### Overloading
 
 If you remove the type name from the method name and don't use a label for the first argument, then you may end up in a situation where you have multiple methods with the same name, that differ only in the type of argument. You should only do this if the methods are doing semantically the same thing.
 
-For example, if you’re adding a single item or multiple items to a list, you could have two `add(_:)` methods, one which takes an array, and one which takes an individual item. Otherwise, you should use the argument label or rename the methods so that it is clear from the call site what is happening. 
+For example, if you’re adding a single item or multiple items to a list, you could have two `add(_:)` methods, one which takes an array, and one which takes an individual item. That's fine because they both do the same thing, just with different types.
 
-As an example, consider a `VideoLoader` class. This class could have `VideoRequest` objects which deal with getting video data from the internet, and `VideoOutputHandler` objects which deal with playing the video. 
+However, in cases where the methods perform different actions based on the type, you should use the argument label or rename the methods so that it is clear from the call site what is happening. 
+
+For example, consider a `VideoLoader` class. This class could have `VideoRequest` objects which deal with getting video data from the internet, and `VideoOutputHandler` objects which deal with playing the video. 
 
 It isn’t right to have two `add(_:)` methods, one for adding requests, and one for adding output handlers, because those methods are doing completely different things. You should have an `addLoader(_:)` and `addOutput(_:)` method in this case.
 
@@ -123,7 +125,7 @@ The first rule is that you shouldn’t name the first argument, unless it doesn'
 let word = wordList.word(1)
 
 // Reads like a sentence
-let word = wordList.word.(at: 1)
+let word = wordList.word(at: 1)
 
 // Function definition:
 func word(at index: Int) -> String {
@@ -211,6 +213,8 @@ In Swift 3, lots of Foundation classes are now wrapped in Swift value types. You
 What’s happening under the hood is quite interesting. You might be panicking about copies of objects being made all over the place and eating up all of your memory, but this doesn’t happen. These value type wrappers use a mechanism called _copy on write_. 
 
 Copy on write means that the underlying reference type is shared between everything that cares about it, _until something tries to change it_. At that point, a new copy is made, just for the thing that made the changes, with the new values applied. This optimization lets you get the benefits of value and reference types at the same time :]
+
+> **Note**: For more details on value vs. reference types in Swift, check out our free tutorial on the subject: [bit.ly/2eeZuNG](http://bit.ly/2eeZuNG)
 
 ## Working with C APIs
 
@@ -470,6 +474,8 @@ doSomething {
 
 ## Where to go from here? 
 
-There is a full and detailed explanation of the naming guidelines at [https://swift.org/documentation/api-design-guidelines/](https://swift.org/documentation/api-design-guidelines/), which is really worth reading. 
+I hope this chapter gave you a quick introduction to what's new in Swift 3 and helps make your code migration a little bit easier.
+
+The most important aspect of all of this is the Grand Renaming. There is a full and detailed explanation of the naming guidelines at [https://swift.org/documentation/api-design-guidelines/](https://swift.org/documentation/api-design-guidelines/), which is really worth reading, so that you ensure that your future code follows these guidelines. 
 
 Swift is an open source language! To review proposed and implemented changes to Swift, or to submit your own, visit [https://github.com/apple/swift-evolution](https://github.com/apple/swift-evolution). All of the changes discussed in this chapter are discussed in far greater detail on that repo. 
