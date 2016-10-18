@@ -20,11 +20,11 @@ Many of these changes are too small to warrant a chapter of their own, but a few
 
 This chapter is designed a bit differently than others. Each topic gets its own mini chapter, including a high-level introduction with a starter project so you’re ready to dive in. 
 
-This lets you go only as deep as you want on the topics that interest you. Feel free to:
+This lets you go only as deep as you want on the topics that interest you. Feel free to choose one of these three options:
 
-- Read from start to finish as you would any other chapter. Each topic works with the same sample project.
-- Skip to any section that interests you and complete it in tutorial fashion. Starter and completed projects are included for each section, so you don’t need to worry about getting up to speed.
-- Read just the introduction of each section to get a high level understanding of these three topics. You can always return later for a deeper dive of the section.
+1. **Start to finish**. The first option is to read from start to finish as you would any other chapter. Each topic works with the same sample project.
+2. **Skip ahead.** Alternatively you could skip to any section that interests you and complete it in tutorial fashion. Starter and completed projects are included for each section, so you don’t need to worry about getting up to speed.
+3. **Skim**. Finally you could read just the introduction of each section to get a high level understanding of these three topics. You can always return later for a deeper dive of the section.
 
 All sections work with an app called EmojiRater that consists of a collection view displaying various emojis. 
 
@@ -42,12 +42,12 @@ Data source prefetching provides a mechanism for preparing data before you need 
 
 A new data source protocol — **UICollectionViewDataSourcePrefetching** — is responsible for prefetching. The protocol defines only two methods:
 
-- **collectionView(_:prefetchItemsAt:)**: You call this with an array of index paths representing data based on current scroll direction and speed. The items are ordered from most urgent to least, based on when the collection view anticipates needing them. Data operations for the items in question should be kicked off here.
+- **collectionView(_:prefetchItemsAt:)**: This method is passed index paths for cells to prefetch, based on current scroll direction and speed. The items are ordered from most urgent to least, based on when the collection view anticipates needing them. Usually you will write code to kick off data operations for the items in question here.
 - **collectionView(_:cancelPrefetchingForItemsAt:)**: An optional method that triggers when you should cancel prefetch operations. It receives an array of index paths for items that the collection view once anticipated, but no longer needs. This might happen if the user changes scroll directions.
 
 For large data sources with content that is time consuming to prepare, implementing this protocol can have a dramatic impact on user experience. Of course, it isn’t magic — it simply takes advantage of down time and guesses what will be needed next. If a user starts scrolling very quickly, or resources become limited, prefetch requests will slow or stop.
 
->**Note**: Fret not, table view users! **UITableViewDataSourcePrefetching** works exactly like this, but for table view controllers. You can follow along here to learn how to use it, and then check out the API doc for table view syntax: [apple.co/2dkSDiw](http://apple.co/2dkSDiw)
+>**Note**: Fret not, table view users! If you are using a table view instead of a collection view, you can get similar behavior by implementing the **UITableViewDataSourcePrefetching** protocol. I recommend that you follow along here to learn the general idea behind prefetching, and then check out the API doc for table view specific syntax: [apple.co/2dkSDiw](http://apple.co/2dkSDiw)
 
 ### Implementing UICollectionViewDataSourcePrefetching
 
@@ -55,7 +55,7 @@ Take a quick peek at EmojiRater to familiarize yourself with the starter project
 
 The cells are configured in `collectionView(_:willDisplay:forItemAt:)`, where `loadingOperations` provide the content. `loadingOperations` is a dictionary keyed by `indexPath` with a `DataLoadOperation` value. This value is an `Operation` subclass that loads the emoji content and provides the result in `emojiRating`.
 
-When `collectionView(_:willDisplay:forItemAt:)` is triggered, `DataLoadOperation` objects enqueue with their associated `indexPath`. Notice `collectionView(_:willDisplay:forItemAt:)` attempts to check for an existing operation before kicking one off. Currently that situation won’t occur, because operations are only created here. [TODO: FPE: Unclear? Not sure what "operations are only created here" means.] You’ll soon change that.
+When `collectionView(_:willDisplay:forItemAt:)` is triggered, `DataLoadOperation` objects enqueue with their associated `indexPath`. Notice `collectionView(_:willDisplay:forItemAt:)` attempts to check for an existing operation before kicking one off. Currently that situation won’t occur, because currently the only method that creates operations is `collectionView(_:willDisplay:forItemAt:)`.
 
 Build and run, and scroll around the collection view at a brisk pace. You’ll see a lot of place holder views containing activity indicators as cells first appear.
 
@@ -96,7 +96,7 @@ Build and run and check the console output. Without touching anything in the col
 Prefetch: [[0, 8], [0, 9], [0, 10], [0, 11], [0, 12], [0, 13]]
 ```
 
-Cells 0 through 7 present on the initial load, since the iPhone 6s simulator fits 8 cells. The collection view is smart enough to know that the user is at the top of the list, so the only place to go is down. With that in mind, the collection view requests cells 8 through 13, hoping to preload 3 rows. [TODO: FPE: Just checking that the math here makes sense...why three rows?]
+Cells 0 through 7 present on the initial load, since the iPhone 6s simulator fits 8 cells. The collection view is smart enough to know that the user is at the top of the list, so the only place to go is down. With that in mind, the collection view requests cells 8 through 13, hoping to preload 3 rows. 
 
 Play around a bit, and you’ll notice patterns to the requests made to the prefetcher. Your scroll speed affects the number of cells requested; scrolling faster requests more cells. Your scroll direction, coupled with how close you are to the start or end of the collection, also help determine which cells to prefetch.
 
@@ -154,7 +154,7 @@ func collectionView(_ collectionView:
 
 If a loading operation exists for a passed `indexPath`, this code cancels it and then deletes it from `loadingOperations`.
 
-Build and run, then scroll around a bit. You won’t notice any difference in behavior, but rest assured any unneeded operations will be canceled. Keep in mind that the algorithm is fairly conservative, so a change in direction doesn’t guarantee operations will be removed — this depends on a number of factors. [TODO: FPE: Should we mention which factors?]
+Build and run, then scroll around a bit. You won’t notice any difference in behavior, but rest assured any unneeded operations will be canceled. Keep in mind that the algorithm is fairly conservative, so a change in direction doesn’t guarantee operations will be removed — this depends on a number of factors private to Apple's algorithm.
 
 The benefits of prefetching are evident even for a lightweight application like EmojiRater. You can imagine the impact for large collections that take a lot longer to load.
 
@@ -162,7 +162,9 @@ The folder titled **prefetch-final** contains the final project for this section
 
 ## UIPreviewInteraction
 
-iOS 9 introduced 3D Touch along with an interaction you know and love — Peek and Pop. The Peek (known as Preview to the API) provides a preview of a destination controller, while the Pop (Commit) navigates to the controller. While you can control the content and quick actions displayed with Peek and Pop, you can’t customize the look of the transition or how users interact with it.
+iOS 9 introduced 3D Touch along with an interaction you (hopefully) know and love — Peek and Pop. 
+
+The Peek (known as Preview to the API) provides a preview of a destination controller, while the Pop (Commit) navigates to the controller. While you can control the content and quick actions displayed with Peek and Pop, you can’t customize the look of the transition or how users interact with it.
 
 In iOS 10, the all new **UIPreviewInteraction** API lets you create custom preview interactions similar in concept to Peek and Pop. A preview interaction consists of up to two interface states that can be accessed by the steadily increasing pressure of a 3D Touch. Unique haptic feedback is provided to signal the end of each state to the user.  
 
@@ -179,7 +181,7 @@ To implement this, you need to configure an instance of `UIPreviewInteractionDel
 Here’s a brief overview of the protocol methods:
 
 - **previewInteractionShouldBegin(_:)**: Executes when 3D Touch kicks off a preview. This is where you would do anything required to present the preview, such as configuring an animator.
-- **previewInteraction(_:didUpdatePreviewTransition:ended:)**: Executes as the preview state progresses. It receives a value from 0.0 to 1.0, which representsthe user’s progress through the state. The `ended` boolean switches to `true` when the preview state completes and the value reaches 1.0.
+- **previewInteraction(_:didUpdatePreviewTransition:ended:)**: Executes as the preview state progresses. It receives a value from 0.0 to 1.0, which represents the user’s progress through the state. The `ended` boolean switches to `true` when the preview state completes and the value reaches 1.0.
 - **previewInteractionDidCancel(_:)**: Executes when the preview is canceled, either by the user removing their finger before the preview ends, or from an outside interruption like a phone call. The implementation must gracefully dismiss the preview when it receives this message.
 - **previewInteraction(_:didUpdateCommitTransition:ended:)**: Executes as the commit state progresses. It works identically to its preview counterpart and takes the same parameters. When this state ends, you must take action based on which control the user force-touched to commit.
 
@@ -201,7 +203,7 @@ var previewInteraction: UIPreviewInteraction?
 
 Find `viewDidLoad()` where you create `ratingOverlayView` and add it to the controller’s view. `ratingOverlayView` is responsible for the interaction interface; it creates a background blur and focuses on a single cell, which it then overlays with rating controls.
 
-Find the `if let` that unwraps `ratingOverlayView`, and add the following at the bottom:
+Find the `if let` that unwraps `ratingOverlayView`, and add the following underneath:
 
 ```swift
 if let collectionView = collectionView {
@@ -441,7 +443,12 @@ commitInteraction(previewInteraction, hitPoint: hitPoint)
 
 This calls the method you just created with the necessary parameters.
 
-Build and run, and commit some emoji ratings. You’ll be able to select a thumbs up or down, feel the tactile feedback when it commits, and see your vote show up on the cell.
+Build and run, and commit some emoji ratings by doing the following:
+
+1. Slowly press down on a cell until you see the rating view appear and feel the first tactile feedback.
+2. Select your rating, and press down harder to commit your choice until you feel the second tactile feedback.
+
+At this point, you will see your vote show up on the cell:
 
 ![width=75%](./images/working-commit.png) 
 
