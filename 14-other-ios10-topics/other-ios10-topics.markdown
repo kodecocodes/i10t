@@ -203,7 +203,7 @@ var previewInteraction: UIPreviewInteraction?
 
 Find `viewDidLoad()` where you create `ratingOverlayView` and add it to the controller’s view. `ratingOverlayView` is responsible for the interaction interface; it creates a background blur and focuses on a single cell, which it then overlays with rating controls.
 
-Find the `if let` that unwraps `ratingOverlayView`, and add the following underneath:
+Find the `if let` that unwraps `ratingOverlayView`, and add the following just above the closing bracket:
 
 ```swift
 if let collectionView = collectionView {
