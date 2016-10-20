@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PhotoMe" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SpE-lE-p4y" customClass="CameraPreviewView" customModule="PhotoMe" customModuleProvider="target">
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="SpE-lE-p4y" secondAttribute="height" multiplier="3:4" id="jxa-ij-NL4"/>
+                                </constraints>
+                            </view>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5xe-yI-T2o">
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="xw4-Sp-0pq">
+                                    <frame key="frameInset"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="rZt-Y3-Q1N" userLabel="Control Stack">
+                                            <subviews>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="capturing..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RVQ-sf-jRh">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                                    <color key="textColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tni-pK-tGF">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <state key="normal" title="Take Photo!"/>
+                                                    <connections>
+                                                        <action selector="handleShutterButtonTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0jr-pO-9tI"/>
+                                                    </connections>
+                                                </button>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Jp0-Zm-SSn" userLabel="Capture Stack">
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="oiu-yh-ddj" userLabel="Option Stack">
+                                                            <subviews>
+                                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="tF2-yI-RrF">
+                                                                    <subviews>
+                                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="8k1-IH-bqr"/>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Live Photo Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BYX-x5-sK3">
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                    </subviews>
+                                                                </stackView>
+                                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="xIX-bx-7NP" userLabel="Thumbnail Stack">
+                                                                    <subviews>
+                                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="424-fr-O8K"/>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Capture Thumbnail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfQ-gY-8B9">
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                    </subviews>
+                                                                </stackView>
+                                                            </subviews>
+                                                        </stackView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="KKT-ab-dXO" userLabel="Preview Stack">
+                                                            <subviews>
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TfU-Dx-Nly">
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="80" id="GqH-0Q-fsz"/>
+                                                                        <constraint firstAttribute="width" secondItem="TfU-Dx-Nly" secondAttribute="height" multiplier="1:1" id="sjP-O7-krh"/>
+                                                                    </constraints>
+                                                                </imageView>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n4n-px-TCh">
+                                                                    <state key="normal" title="Edit"/>
+                                                                    <connections>
+                                                                        <segue destination="C8x-Ay-aTq" kind="presentation" id="EFd-F5-Rdg"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="rZt-Y3-Q1N" secondAttribute="bottom" constant="20" id="UsK-P8-5Qc"/>
+                                        <constraint firstItem="rZt-Y3-Q1N" firstAttribute="top" secondItem="xw4-Sp-0pq" secondAttribute="top" constant="5" id="fTX-Kz-aE3"/>
+                                        <constraint firstItem="rZt-Y3-Q1N" firstAttribute="centerX" secondItem="xw4-Sp-0pq" secondAttribute="centerX" id="uq7-5q-scm"/>
+                                    </constraints>
+                                </view>
+                                <blurEffect style="dark"/>
+                            </visualEffectView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="SpE-lE-p4y" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Oyv-5u-Dhc"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="5xe-yI-T2o" secondAttribute="bottom" id="Zbn-3Y-LJX"/>
+                            <constraint firstAttribute="trailing" secondItem="SpE-lE-p4y" secondAttribute="trailing" id="bWT-ky-ky4"/>
+                            <constraint firstItem="5xe-yI-T2o" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ewg-O8-mc5"/>
+                            <constraint firstItem="SpE-lE-p4y" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="uH2-eO-yd0"/>
+                            <constraint firstAttribute="trailing" secondItem="5xe-yI-T2o" secondAttribute="trailing" id="yHJ-IO-d5Y"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cameraPreviewView" destination="SpE-lE-p4y" id="ZpY-mz-oTW"/>
+                        <outlet property="capturingLabel" destination="RVQ-sf-jRh" id="gkJ-qh-DEg"/>
+                        <outlet property="livePhotoSwitch" destination="8k1-IH-bqr" id="3eo-Ac-SRq"/>
+                        <outlet property="previewImageView" destination="TfU-Dx-Nly" id="di4-1X-nkP"/>
+                        <outlet property="shutterButton" destination="Tni-pK-tGF" id="v4B-z7-sDc"/>
+                        <outlet property="thumbnailSwitch" destination="424-fr-O8K" id="ttR-NQ-uFJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="117.59999999999999" y="123.68815592203899"/>
+        </scene>
+        <!--Photo Editing View Controller-->
+        <scene sceneID="xTt-mC-tj9">
+            <objects>
+                <viewController id="C8x-Ay-aTq" customClass="PhotoEditingViewController" customModule="PhotoMe" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cRc-MP-3lv"/>
+                        <viewControllerLayoutGuide type="bottom" id="zfR-hy-z0z"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ff4-jm-Ww2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="O3e-93-IXT">
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mV1-qj-VLj" customClass="PHLivePhotoView">
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="mV1-qj-VLj" secondAttribute="height" multiplier="3:4" id="eWo-FR-dME"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LcH-Vy-ur7">
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="Comicify"/>
+                                        <connections>
+                                            <action selector="handleComicifyTapped:" destination="C8x-Ay-aTq" eventType="touchUpInside" id="7Dx-A5-VN8"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xcc-5Z-5aj">
+                                        <state key="normal" title="Done"/>
+                                        <connections>
+                                            <action selector="handleDoneTapped:" destination="C8x-Ay-aTq" eventType="touchUpInside" id="B7s-0z-kGR"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="O3e-93-IXT" secondAttribute="trailing" id="Ach-8Z-EGn"/>
+                            <constraint firstItem="O3e-93-IXT" firstAttribute="top" secondItem="Ff4-jm-Ww2" secondAttribute="top" id="mhv-CV-V0v"/>
+                            <constraint firstItem="O3e-93-IXT" firstAttribute="leading" secondItem="Ff4-jm-Ww2" secondAttribute="leading" id="zgN-fE-Biw"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="livePhotoView" destination="mV1-qj-VLj" id="tF2-Kq-obo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zlZ-X3-dgw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="962.39999999999998" y="121.88905547226388"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+</document>
