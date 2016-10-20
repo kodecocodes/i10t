@@ -13,7 +13,7 @@ segments:
   - kind: chapter
     path: frontmatter/introduction.markdown
   - kind: chapter
-    path: placeholders/01-whats-new-in-swift-3.markdown
+    path: 01-whats-new-in-swift-3/whats-new-in-swift-3.markdown
   - kind: chapter
     path: 02-xcode-8-debugging-improvements/xcode-8-debugging-improvements.markdown
   - kind: chapter
@@ -35,10 +35,10 @@ segments:
   - kind: chapter
     path: 11-whats-new-with-core-data/whats-new-with-core-data.markdown
   - kind: chapter
-    path: placeholders/12-whats-new-with-photography.markdown
+    path: 12-whats-new-with-photography/whats-new-with-photography.markdown
   - kind: chapter
     path: 13-whats-new-with-search/whats-new-with-search.markdown
   - kind: chapter
-    path: placeholders/14-other-ios10-topics.markdown
+    path: 14-other-ios10-topics/other-ios10-topics.markdown
   - kind: chapter
     path: frontmatter/conclusion.markdown 

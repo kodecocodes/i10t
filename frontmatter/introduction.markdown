@@ -21,28 +21,6 @@ Get ready for your own private tour through the amazing new features of iOS 10. 
 
 Sit back, relax and prepare for some high quality tutorials!
 
-## Early access
-
-By purchasing this book early, you get early access to this book while it is in development.
-
-Since this book is still in early access, not all chapters are ready at this point. This second early access release has the 11/14 chapters ready (compatible with Xcode 8.0):
-
-* Chapter 2, Xcode 8 Debugging Improvements
-* Chapter 3, Xcode 8 Source Editor Extensions
-* Chapter 4, Beginning Message Apps
-* Chapter 5, Intermediate Message Apps
-* Chapter 6, SiriKit
-* Chapter 7, Speech Recognition
-* Chapter 8, User Notifications
-* Chapter 9, Property Animators
-* Chapter 10, Measurements and Units
-* Chapter 11, What's New with Core Data
-* Chapter 13, What's New with Search
-
-You may wish to wait until all chapters are ready before reading the book, to get an optimal reading experience, or check out the iOS 10 screencasts which we are releasing, which this book is based on.
-
-But if you want a head start or a sneak peek of what's coming, that's what this early access release is for - we hope you enjoy!
-
 ## What you need
 
 To follow along with the tutorials in this book, you'll need the following:
@@ -64,6 +42,81 @@ If you need one of these prerequisite books, you can find them on our store here
 * [www.raywenderlich.com/store](http://www.raywenderlich.com/store)
 
 As with raywenderlich.com, all the tutorials in this book are in Swift.
+
+## What's in store
+
+Here’s a quick summary of what you’ll find in each chapter:
+
+**1. Chapter 1, What's New in Swift 3**: Swift 3 represents the biggest change to the language since it was first introduced. Read this chapter for a quick overview of what's new!
+
+```swift
+// Swift 2 definition
+prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+// Swift 2 calling code
+viewController.prepareForSegue(segue, sender: something)
+
+// Swift 3 definition
+prepare(for segue: UIStoryboardSegue, sender: Any?)
+// Swift 3 calling code
+viewController.prepare(for: segue, sender: something)
+```
+
+**2. Chapter 2, Xcode 8 Debugging Improvements**: Learn about the powerful new debugging tools in Xcode 8, including the new Thread Sanitizer and Memory Graph Debugger.
+
+![width=50%](/images/malloc-example.png)
+
+**3. Chapter 3, Xcode 8 Source Editor Extensions**: Learn how to integrate your own text tools into the Xcode UI by creating a fun ASCII art extension.
+
+![width=70%](/images/successful-figlet-test.png)
+
+**4. Chapter 4, Beginning Message Apps**: Learn how to create your own sticker pack for Messages – with a custom user interface.
+
+![iphone bordered](/images/Chocoholic4.png)
+
+**5. Chapter 5, Intermediate Message Apps**: Learn how to create your own sticker pack for Messages – with a custom user interface.
+
+![iphone bordered](/images/MessageReady-281x500.png)
+
+**6. Chapter 6, SiriKit**: Learn how to integrate Siri into your app and process voice commands as you build a Uber clone for hot air balloons.
+
+![iphone](/images/CustomUI1-564x500.png)
+
+**7. Chapter 7, Speech Recognition**: Learn how to transcribe live or pre-recorded audio from over 50 languages and use that data in your app.
+
+![iphone-landscape bordered](/images/intro-teaser-image-650x366.png)
+
+**8. Chapter 8, User Notifications**: Learn how to use the new iOS 10 User Notifications framework, and create Notification Content extensions and Notification Service app extensions.
+
+![iphone bordered](/images/content-extension-presented.png)
+
+**9. Chapter 9, UIView Property Animator**: Learn about a new way of animating in iOS 10, which allows you to easily pause, reverse, and scrub through animations part-way through.
+
+![ipad-landscape](/images/Animalation3.png)
+
+**10. Chapter 10, Measurements and Units**: Learn about some new Foundation classes that help you work with measurements and units in an easy and type-safe way.
+
+```swift
+let cycleRide = Measurement(value: 25, unit: UnitLength.kilometers)
+let swim = Measurement(value: 3, unit: UnitLength.nauticalMiles)
+let marathon = Measurement(value: 26, unit: UnitLength.miles)
+    + Measurement(value: 385, unit: UnitLength.yards)
+```
+
+**11. Chapter 11, What's New with Core Data**: Learn how the new convenience methods, classes, code generation and other new features in Core Data will make your life easier.
+
+![width=50%](/images/OldStackHierarchy.png)
+
+**12. Chapter 12, What's New with Photography**: Learn how to capture and edit live photos, and make use of other photography advancements.
+
+![iphone bordered](/images/LivePhotoCapture.png)
+
+**13. Chapter 13, What’s New with Search**: Learn how to tie your app into the Core Search Spotlight API and perform deep searches using your app, and how to surface your app to respond to location-based searches as well.
+
+![width=80%](/images/location-feature-preview-650x316.png)
+
+**14. Chapter 14, Other iOS 10 Topics**: Make your apps more responsive with prefetching, make custom interactions with 3D touch, and add haptic feedback to your apps.
+
+![width=80%](/images/preview-interaction-example.png)
 
 ## How to use this book
 
