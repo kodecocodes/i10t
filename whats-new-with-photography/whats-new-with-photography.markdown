@@ -786,12 +786,12 @@ override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     if let asset = asset {
         PHImageManager.default().requestLivePhoto(for: asset,
-                                                  targetSize: livePhotoView.bounds.size,
-                                                  contentMode: .aspectFill,
-                                                  options: .none, resultHandler: { (livePhoto, info) in
-                                                    DispatchQueue.main.async {
-                                                        self.livePhotoView.livePhoto = livePhoto
-                                                    }
+            targetSize: livePhotoView.bounds.size,
+            contentMode: .aspectFill,
+            options: .none, resultHandler: { (livePhoto, info) in
+                DispatchQueue.main.async {
+                    self.livePhotoView.livePhoto = livePhoto
+            }
         })
     }
 }
