@@ -5,13 +5,13 @@ title: "Chapter 1: What’s New in Swift 3"
 ```
 # Chapter 1: What’s New in Swift 3
 
-Swift 3 brings a tremendous set of changes to the language. In fact, the changes are so big, that I hope this is the biggest set of changes we'll ever see; as developers, we can’t go through this kind of pain again! :]
+Swift 3 brings a tremendous set of changes to the language. In fact, the changes are so big, that I hope this is the biggest set of changes we’ll ever see; as developers, we can’t go through this kind of pain again! :]
 
-But on the bright side, the changes do leave you with _much_ nicer code. It finally feels like you're writing UIKit apps in Swift, rather than forcing a Swift peg into an Objective-C (or even just C) shaped hole. 
+But on the bright side, the changes do leave you with _much_ nicer code. It finally feels like you’re writing UIKit apps in Swift, rather than forcing a Swift peg into an Objective-C (or even just C) shaped hole. 
 
-If you take a reasonably-sized project written in Swift 2, and let Xcode migrate it to Swift 3, you're in for a shock. It's a big bang, and almost everything has changed.
+If you take a reasonably-sized project written in Swift 2, and let Xcode migrate it to Swift 3, you’re in for a shock. It’s a big bang, and almost everything has changed.
 
-The noisiest part of the upgrade is what Apple refers to as the Grand Renaming. This is a huge review of _all_ of the first-party frameworks, and redefines types and method signatures to match a set of solid naming guidelines. As third-party developers, we're also encouraged to follow these naming guidelines in our own code.
+The noisiest part of the upgrade is what Apple refers to as the Grand Renaming. This is a huge review of _all_ of the first-party frameworks, and redefines types and method signatures to match a set of solid naming guidelines. As third-party developers, we’re also encouraged to follow these naming guidelines in our own code.
 
 On top of this, lots of Foundation `NS` types have been swallowed up by more “Swifty” value types, making them clearer to work with and more accessible to non-Apple platforms. 
 
@@ -34,7 +34,7 @@ UITableViewCell *cell =
 
 Take a close look at this line of code, and look to see if you can find any words that are repeated.
 
-I count two “table views”, three “cells” and two “indexPaths”. Here's what this same line looks like in Swift 2:
+I count two “table views”, three “cells” and two “indexPaths”. Here’s what this same line looks like in Swift 2:
 
 ```swift
 let cell = tableView.cellForRowAtIndexPath(indexPath)
@@ -56,7 +56,7 @@ This evolution of this method name follows the three key principles guiding the 
 2. **Assume common patterns and naming conventions**: As in the assumption that the `indexPath` variable would be so named.
 3. **Avoid repeated words**: Allowing the “index path” to be removed from the parameter name.
 
-You'll find that many UIKit and Foundation methods have similarly shrunk. In particular, methods that would name the type of the first argument have had that part of the name removed:
+You’ll find that many UIKit and Foundation methods have similarly shrunk. In particular, methods that would name the type of the first argument have had that part of the name removed:
 
 ```swift
 // Swift 2 definition
@@ -104,9 +104,9 @@ In addition to the three principles above, there are some more specific guidelin
 
 ### Overloading
 
-If you remove the type name from the method name and don't use a label for the first argument, then you may end up in a situation where you have multiple methods with the same name, that differ only in the type of argument. You should only do this if the methods are doing semantically the same thing.
+If you remove the type name from the method name and don’t use a label for the first argument, then you may end up in a situation where you have multiple methods with the same name, that differ only in the type of argument. You should only do this if the methods are doing semantically the same thing.
 
-For example, if you’re adding a single item or multiple items to a list, you could have two `add(_:)` methods, one which takes an array, and one which takes an individual item. That's fine because they both do the same thing, just with different types.
+For example, if you’re adding a single item or multiple items to a list, you could have two `add(_:)` methods, one which takes an array, and one which takes an individual item. That’s fine because they both do the same thing, just with different types.
 
 However, in cases where the methods perform different actions based on the type, you should use the argument label or rename the methods so that it is clear from the call site what is happening. 
 
@@ -118,7 +118,7 @@ It isn’t right to have two `add(_:)` methods, one for adding requests, and one
 
 The examples in this section will all be methods on a made-up struct called `WordList`, which as you may have guessed, holds a list of words. 
 
-The first rule is that you shouldn’t name the first argument, unless it doesn't make sense at the call site without it. For example, to get a word at a specific index in the list:
+The first rule is that you shouldn’t name the first argument, unless it doesn’t make sense at the call site without it. For example, to get a word at a specific index in the list:
 
 ```swift
 // Doesn't read like a sentence
@@ -152,7 +152,7 @@ func sortedAlphabetically() -> WordList {
 }
 ``` 
 
-When “ed” doesn’t make sense, you can use “ing”. Here's another mutating / non-mutating pair: 
+When “ed” doesn’t make sense, you can use “ing”. Here’s another mutating / non-mutating pair: 
 
 ```swift
 // Remove is a verb
@@ -218,7 +218,7 @@ Copy on write means that the underlying reference type is shared between everyth
 
 ## Working with C APIs
 
-If you’ve spent much time developing iOS apps, there are two C APIs you've probably encountered: Grand Central Dispatch (GCD) and Core Graphics. Like all C APIs, they are notable by their use of free functions (meaning, top-level functions rather than methods defined on instances or classes).  
+If you’ve spent much time developing iOS apps, there are two C APIs you’ve probably encountered: Grand Central Dispatch (GCD) and Core Graphics. Like all C APIs, they are notable by their use of free functions (meaning, top-level functions rather than methods defined on instances or classes).  
 
 Free functions are no fun, because they are essentially all in a massive bucket. Autocomplete can do nothing to help you. To counter these problems, free functions all end up with long, wordy names that include identifying text (everything relating to a core graphics context begins with `CGContext`, for example), and you need to pass in the basic values you’re working with (like the graphics context) to every single operation. This results in code that is tedious to read and tedious to write.
 
@@ -244,7 +244,7 @@ queue.async {
 
 All of the `dispatch_whatever_whatever()` functions have now been beautifully gift-wrapped in the Dispatch framework, giving you a much nicer interface for dealing with GCD. It looks like native Swift code now, making it easier to read, write, and blend in with the rest of your codebase. 
 
-A common GCD use case is to send some work off to the main queue, for example when you’ve completed work on a background thread and want to update the UI. That's done like this: 
+A common GCD use case is to send some work off to the main queue, for example when you’ve completed work on a background thread and want to update the UI. That’s done like this: 
 
 ```swift
 DispatchQueue.main.async {
@@ -294,7 +294,7 @@ In addition to the naming style and rule changes you’ve learned about, there a
 
 ### Increment operators
 
-Increment operators are gone. No more `counter++` for you! Why is this? The main reason seems to be that they are ambiguous. What's the value of `currentCount` or `nextCount` in this sample?
+Increment operators are gone. No more `counter++` for you! Why is this? The main reason seems to be that they are ambiguous. What’s the value of `currentCount` or `nextCount` in this sample?
 
 ```swift
 var counter = 1
@@ -303,7 +303,7 @@ let nextCount = ++counter
 counter++ // Expression result is unused! 
 ```
 
-If, like me, you can never remember which order these things happen in, now you don’t have to. The most popular use of these operators was in “C-style for loops”, and you’ll never guess what's happened to them.
+If, like me, you can never remember which order these things happen in, now you don’t have to. The most popular use of these operators was in “C-style for loops”, and you’ll never guess what’s happened to them.
 
 ### C-Style for loops
 
@@ -326,13 +326,13 @@ Or, if you’re iterating through a collection, a `for...in` loop, which you rea
 
 ### Currying syntax
 
-If you’re one of the few people who actually understood the Swift currying syntax (or one of the even fewer people who actually used it) you might be upset by this one, and you’ve probably already followed the proposal and comments and know the new way of doing things. If you’ve never used it, congratulations, you don't have to unlearn anything! 
+If you’re one of the few people who actually understood the Swift currying syntax (or one of the even fewer people who actually used it) you might be upset by this one, and you’ve probably already followed the proposal and comments and know the new way of doing things. If you’ve never used it, congratulations, you don’t have to unlearn anything! 
 
 That’s all the main things that have gone from the language. Now, onto the new stuff, which is much more fun. 
 
 ### Key paths
 
-This is a super addition to the language. Key paths and key-value coding are somewhat frowned upon because they introduce what's called “stringly typed” code, where you use literal strings to access properties. However they can be extremely useful, for example when setting up key value observers or creating predicates.
+This is a super addition to the language. Key paths and key-value coding are somewhat frowned upon because they introduce what’s called “stringly typed” code, where you use literal strings to access properties. However they can be extremely useful, for example when setting up key value observers or creating predicates.
 
 Swift 3 offers a safe, compile-time verified way to get a key path. It works like this: 
 
@@ -364,7 +364,7 @@ Key-value coding doesn’t work on non-`NSObject` classes anyway, so key paths a
 
 Swift 2 had `public`, `internal` (the default, so you didn’t see that one often) and `private` modifiers that controlled the visibility of your code across files and modules. 
 
-In Swift 3 the meaning of `public` and `private` have changed, and there are two new access control keywords, `open` and `fileprivate`. Here's a quick summary:
+In Swift 3 the meaning of `public` and `private` have changed, and there are two new access control keywords, `open` and `fileprivate`. Here’s a quick summary:
 
 - `open`: The code is visible from anywhere, and `open` classes can be subclassed from anywhere.
 - `public`: The code is visible from anywhere, but classes can only be subclassed within the same module.
@@ -453,7 +453,7 @@ func doSomethingWith(_ this: Thing, then: @escaping (Thing) -> ()) {
 
 The migrator should either fix this for you, or offer it as a change. It tries to detect if additional references to the closure are made within the function body. 
 
-This also means that you don't have to put `self` in closure bodies by default anymore:
+This also means that you don’t have to put `self` in closure bodies by default anymore:
 
 ```swift
 func doSomething(_ then: () -> ()) {
@@ -474,7 +474,7 @@ doSomething {
 
 ## Where to go from here? 
 
-I hope this chapter gave you a quick introduction to what's new in Swift 3 and helps make your code migration a little bit easier.
+I hope this chapter gave you a quick introduction to what’s new in Swift 3 and helps make your code migration a little bit easier.
 
 The most important aspect of all of this is the Grand Renaming. There is a full and detailed explanation of the naming guidelines at [https://swift.org/documentation/api-design-guidelines/](https://swift.org/documentation/api-design-guidelines/), which is really worth reading, so that you ensure that your future code follows these guidelines. 
 
