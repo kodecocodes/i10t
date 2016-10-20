@@ -5,17 +5,26 @@ title: "Chapter 12: What’s New with Photography"
 ```
 # Chapter 12: What’s New with Photography
 
-iOS 10 introduced several improvements to taking and editing photos and videos. For the first time, your apps can take and edit live photos, and there is a new photo capture pipeline which allows you to give rich UI responses for various stages of image capture and processing. 
+iOS 10 introduced two major improvements to taking and editing photos and videos:
 
-In this chapter you’ll learn about the new photo capturing methods by creating a selfie-taking app. You’ll then level up by adding live photo capabilities, and finish off by editing live photos. You’ll be building the app from scratch, so you’ll also find out about lots of pre-existing `AVFoundation` goodies involved in photography. 
+  * For the first time, your apps can now take and edit live photos.
+  * Also, there is a new photo capture pipeline which allows you to give rich UI responses for various stages of image capture and processing. 
+
+In this chapter you’ll learn about the new photo capturing methods by creating a selfie-taking app. You’ll then level up by adding live photo capabilities, and finish off by editing live photos. 
+
+You’ll be building the app from scratch, so you’ll also find out about lots of pre-existing `AVFoundation` goodies involved in photography along the way. 
 
 ## Smile, you’re on camera! 
 
-For this project, you’ll need to run on a device with a front-facing camera — there's no camera on the simulator. raywenderlich.com readers are a good-looking bunch of people, so this app will only allow you to use the front camera — when you look this good, why would you want to take pictures in the other direction? For the later sections, you’ll also need a device that supports Live Photos. 
+For this project, you’ll need to run on a device with a front-facing camera — there's no camera on the simulator. raywenderlich.com readers are a good-looking bunch of people, so this app will only allow you to use the front camera — when you look this good, why would you want to take pictures in the other direction? :]
 
-Create a new Xcode project using the **Single View Application** template, named **PhotoMe**. Make it for **iPhone** only. Leave the Core Data, Unit Tests and UI Tests boxes unchecked. Choose your team in the **Signing** section in the target’s **General** settings tab to allow you to run on a device, and untick all of the **Device Orientation** options except **Portrait**. Using a single orientation keeps things simple for the demo.
+For the later sections, you’ll also need a device that supports Live Photos. 
 
-Right-click on **Info.plist** and choose **Open As > Source Code**. Paste the following values just above the final `</dict>` tag:
+Create a new Xcode project using the **Single View Application** template, named **PhotoMe**. Make it for **iPhone** only. Leave the Core Data, Unit Tests and UI Tests boxes unchecked, and save the projet somewhere.
+
+Choose your team in the **Signing** section in the target’s **General** settings tab to allow you to run on a device, and untick all of the **Device Orientation** options except **Portrait**. Using a single orientation keeps things simple for the demo.
+
+Right-click on **Info.plist** and choose **Open As > Source Code**. Add the following values just above the final `</dict>` tag:
 
 ```none
 <key>NSCameraUsageDescription</key>
@@ -159,14 +168,14 @@ private func prepareCaptureSession() {
 
 Here’s what’s happening above:
 
-1. `beginConfiguration()` tells the session that you’re about to add a series of configuration changes, which are committed at the end. There are a series of presets that can be applied. [TODO: FPE: Do we need to expand on these presets here?]
+1. `beginConfiguration()` tells the session that you’re about to add a series of configuration changes, which are committed at the end. Next you configure the session to use some preset values that are good for high quality photo output. There are other presets available for video output, at varying quality and resolutions.
 2. Create a device representing the front facing camera.
 3. Create a device input representing the data the device can capture.
 4. Add the input to the session, and store it in the property you declared earlier.
 5. Back on the main queue, tell the preview layer that you’ll be dealing with portrait only.
 6. If everything went OK, commit all of the changes to the session. 
 
-At the end of `viewDidLoad()`, call this new method on the session queue. This means it won’t get called until permission has been granted, and the main queue won’t be blocked while the configuration happens:
+At the end of `viewDidLoad()`, add this code to call the new method on the session queue:
 
 ```swift
 sessionQueue.async {
@@ -174,6 +183,8 @@ sessionQueue.async {
     self.prepareCaptureSession()
 }
 ```
+
+This means it won’t get called until permission has been granted, and the main queue won’t be blocked while the configuration happens.
 
 Finally, you need to start the session running. Add this `viewWillAppear(_:)` implementation:
 
@@ -188,7 +199,7 @@ override func viewWillAppear(_ animated: Bool) {
 
 `startRunning()` is a blocking call that can take some time to complete, so you call it on the dedicated queue created earlier. 
 
-Build and run, grant permission for the camera, and you should see your lovely face on the device! 
+Build and run on your device with a front-facing camera, grant permission for the camera, and you should see your lovely face on the device! 
 
 ![iPhone bordered](images/BuildAndRun1.png)
 
@@ -196,7 +207,9 @@ In this section you’ve created an **input**, which represents the front camera
 
 ## Taking a photo
 
-New to iOS 10 is the `AVCapturePhotoOutput` class. This replaces `AVCaptureStillImageOutput`, which is deprecated in iOS 10. Learning about the cool new features of this class takes up the next few sections of this chapter. Add a new property to **ViewController.swift** to hold an output object:
+New to iOS 10 is the `AVCapturePhotoOutput` class. This replaces `AVCaptureStillImageOutput`, which is deprecated in iOS 10. Learning about the cool new features of this class takes up the next few sections of this chapter. 
+
+Start by adding a new property to **ViewController.swift** to hold an output object:
 
 ```swift
 fileprivate let photoOutput = AVCapturePhotoOutput()
@@ -224,7 +237,7 @@ Now that an output object is created and configured, there are three more steps 
 
 First, you’ll take care of the UI. Open **Main.storyboard** and make things look a little more camera-like by setting the main view’s background color to black, and the **Global Tint** color to a tasteful orange using the File Inspector. Set the camera preview view's background color to black as well.
 
-Drag in a **Visual Effect View With Blur** and pin it to the left, bottom and right edges of the main view. Set the **Blur Style** to **Dark**.
+Drag in a **Visual Effect View With Blur** and pin it to the left, bottom and right edges of the main view (but **not** the top). Set the **Blur Style** to **Dark**.
 
 Drag a **button** into the visual effect view, and change the label to **Take Photo!**, with a font size of **20.0**. With the button selected, click the **Stack** button or choose **Editor > Embed In > Stack View** to create a vertical stack view. You’ll be adding more controls here as your camera gets more sophisticated, so a stack view is a good idea. 
 
@@ -273,9 +286,11 @@ This method creates the settings object mentioned earlier. Here’s the breakdow
 2. Again, all work relating to the actual capture is pushed off onto the session queue. First, an `AVCaptureConnection` is obtained from the `AVCapturePhotoOutput` object. A connection represents a stream of media coming from one of the inputs, through the session, to the output. You pass the orientation to the connection. 
 3. The photo settings is created and configured. For basic JPEG capture, there aren’t many things to configure.
 
-Add a call to `capturePhoto()` from `handleShutterButtonTap(_:)`. 
+Add a call to `capturePhoto()` from `handleShutterButtonTap(_:)`: 
 
-[TODO: FPE: Do we need a code block for the above action?]
+```
+capturePhoto()
+```
 
 The app isn’t ready to take a photo yet. First, a little bit of theory.
 
@@ -415,7 +430,7 @@ Note that the `cleanup(asset:)` method is called in all cases. Switch back to **
 
 ```swift
 fileprivate var photoCaptureDelegates = 
-[Int64 : PhotoCaptureDelegate]()
+    [Int64 : PhotoCaptureDelegate]()
 ```
 
 Now add the following code to the end of the closure that is performed on the session queue in `capturePhoto()`: 
@@ -537,6 +552,10 @@ Select the **Thumbnail Stack** and set the **Spacing** to **5**.
 
 Use the **Resolve Autolayout Issues** menu to update all of the frames if necessary.
 
+At this point, you should see something that looks like this:
+
+![bordered width=50%](images/ManyStacks.png)
+
 Open the assistant editor and make two new outlets from  **ViewController.swift** to the switch and image view:
 
 ```swift
@@ -580,7 +599,7 @@ What you’ve done so far is really a slightly nicer version of what you could a
 
 Open **Main.storyboard** and drag a new **Horizontal Stack View** into the **Option Stack**, above the **Thumbnail Stack**. Name the new stack view **Live Photo Stack** and set the **Spacing** to **5**. Drag in a switch and a label, set the label text to **Live Photo Mode** and the text color to white, and set the switch to **Off**. This will control your capture of live photos.
 
-Drag a label to the top of the **Control Stack**, set the text color to the same orange you’re using for the overall tint, and the font size to **35**. Set the new label to **Hidden**. This will tell the user if a live photo capture is still rolling. 
+Drag a label to the top of the **Control Stack**, set the text color to the same orange you’re using for the overall tint, the text to "capturing...", and the font size to **35**. Set the new label to **Hidden**. This will tell the user if a live photo capture is still rolling. 
 
 Open the assistant editor and create outlets to the new switch and the “capturing...” label:
 
@@ -607,7 +626,7 @@ do {
 }
 ```
 
-A live photo is a full-size photo with an accompanying video, which contains sound. This means you need to add another input to the  session. As with high-resolution capture, you need to configure the output object up front to support live photos, even if you’re not taking live photos by default. Add the following code after the line where you enable high-resolution capture: 
+A live photo is a full-size photo with an accompanying video, which contains sound. This means you need to add another input to the session. As with high-resolution capture, you need to configure the output object up front to support live photos, even if you’re not taking live photos by default. Add the following code after the line where you enable high-resolution capture: 
 
 ```swift
 photoOutput.isLivePhotoCaptureEnabled =
@@ -778,13 +797,19 @@ override func viewDidAppear(_ animated: Bool) {
 }
 ``` 
 
-Switch to **ViewController.swift** and add a new property to hold the last photo that was taken. Add `import Photos` to the top of the file first, then:
+Switch to **ViewController.swift** and add this import to the top of the file:
+
+```swift
+import Photos
+``` 
+
+Then add a new property to hold the last photo that was taken. Add `import Photos` to the top of the file first, then:
 
 ```swift
 fileprivate var lastAsset: PHAsset?
 ```
 
-Store the value by adding this to the completion closure you create when making the capture delegate in `capturePhoto()`:
+Store the value by adding this to the completion closure you create when making the capture delegate in `capturePhoto()`, right after the line `self.photoCaptureDelegates[uniqueID] = .none`:
 
 ```swift
 self.lastAsset = asset
@@ -897,6 +922,12 @@ The code is placed into that completion block because it needs to wait until the
 2. Despite the adjustment data property being optional, you _must_ set it, otherwise the photo can’t be saved. This information allows your edits to be reverted. 
 3. `saveLivePhoto(to: options:)` re-runs the editing context’s frame processor, but for the full-size video and still.
 4. Once rendering is complete, you save the changes to the photo library in the standard manner by creating requests inside a photo library’s changes block. 
+
+Remember to call this method from `handleComicifyTapped()`:
+
+```swift
+comicifyImage()
+```
 
 Build and run, go through the motions and now, when you hit Comicify, you'll get a system prompt asking for permission to modify the photo:
 
