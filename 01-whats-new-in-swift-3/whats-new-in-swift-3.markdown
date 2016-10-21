@@ -21,6 +21,8 @@ Finally, there have been some language-level changes to Swift itself, which will
 
 If you’re new to Swift, congratulations and welcome — it’s a great language. If you’ve got existing Swift code you want to keep working on, get yourself ready for a few days of grunt work. Let’s get started. 
 
+$[=s=]
+
 ## The Grand Renaming
 
 The Grand Renaming affects the methods provided by Foundation, UIKit and the other Apple frameworks. Remember that most of these frameworks are probably still written in Objective-C, and up until this point the Swift methods have looked very similar. 
@@ -101,6 +103,8 @@ timeMachine.engage(fluxCapacitor)
 When migrating your existing projects, you’ll have to decide if it’s worth the effort to Grandly Rename your own APIs. The bizarre and continuing lack of refactoring support for Swift in Xcode probably means that for most projects, you probably won’t bother. But for new code, you really should. 
 
 In addition to the three principles above, there are some more specific guidelines to understand, regarding overloading and grammatical rules.
+
+$[=s=]
 
 ### Overloading
 
@@ -215,6 +219,8 @@ What’s happening under the hood is quite interesting. You might be panicking a
 Copy on write means that the underlying reference type is shared between everything that cares about it, _until something tries to change it_. At that point, a new copy is made, just for the thing that made the changes, with the new values applied. This optimization lets you get the benefits of value and reference types at the same time :]
 
 > **Note**: For more details on value vs. reference types in Swift, check out our free tutorial on the subject: [bit.ly/2eeZuNG](http://bit.ly/2eeZuNG)
+
+$[=s=]
 
 ## Working with C APIs
 
@@ -345,6 +351,8 @@ let timeMachine = TimeMachine()
 timeMachine.value(forKey: #keyPath(TimeMachine.currentYear))
 // gives 2016
 ```
+
+$[=s=]
 
 This works with autocomplete as well. The `#keyPath` expression is converted into a `String`. Because of the way key-value coding works, this technique can only be used on classes, and furthermore only on those properties that are implemented using the Objective-C runtime. In practical terms, this means that any classes inheriting from `NSObject` are fine, and any “pure” swift classes must have the property marked as `dynamic`: 
 

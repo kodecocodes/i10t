@@ -127,6 +127,8 @@ Delete those intents and add in an **INRequestRideIntent** line:
 
 ![width=100% bordered](images/EditingPlist.png)
 
+$[=s=]
+
 There are a few more hoops to jump through before you can use Siri. First, you need to ask the user’s permission. Open **AppDelegate.swift** in the main **WenderLoon** group, and you’ll see a stub method called `requestAuthorisation()`.
 
 At the top of the file, import the `Intents` framework:
@@ -194,6 +196,8 @@ The information varies depending on the particular intent. For the ride request 
 - Payment method
 
 > **Note:** If your app isn’t interested in some of the parameters, such as if you only accept Apple Pay for payments, then you can ignore them. 
+
+$[=s=]
 
 Each parameter comes with a related method in the handler protocol. Remember that you’re using the `INRequestRideIntentHandling` for handling intents in this app. That protocol has methods for resolving each of the parameters above. Each one receives a ride request intent as a parameter and has a completion block, which you call when you’ve processed the intent. The completion block takes an `INIntentResolutionResult` subclass as a parameter.
 

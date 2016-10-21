@@ -44,6 +44,8 @@ Once the simulator has launched and Messages opens, you'll see an app button at 
 
 ![bordered iphone](images/MessagesAppButton.png)
 
+$[=s=]
+
 Tap the button and wait a second or so; it seems to take some time for the simulator to launch your app. You'll see your stickers are ready to go! Tap any sticker to send it, or tap and hold to "peel" it off and attach to another message:
 
 ![bordered iphone](images/StickersStuck.png)
@@ -98,6 +100,8 @@ In the object library, find a **Container View** and drag it into the scene. Wit
 
 When the frames are updated, the container view will fill the scene.
 
+$[=s=]
+
 Before you can assign a class to the embedded view controller, you need to create it. Make a new file and choose the **iOS\Source\Swift File** template. Name the file **CandyStickerBrowserViewController.swift**.
 
 Delete the contents of the file and replace them with the following:
@@ -130,7 +134,7 @@ let stickerNames = ["CandyCane", "Caramel", "ChocolateBar",
 
 These names all correspond to images that have been supplied for you in the starter materials for this chapter. Find the **candy** folder and drag it into the **MessagesExtension** group in Xcode:
 
-![bordered width=35%](images/CandyImageAdded.png)
+![bordered height=35%](images/CandyImageAdded.png)
 
 Add the following extension to **CandyStickerBrowserViewController.swift**, below the class declaration:
 
@@ -295,6 +299,8 @@ Drag a label into the section header, using the guides to position it in the cen
 ![bordered width=40%](images/Collection1.png)
 
 Drag in a **Visual Effect View with Blur** from the object library onto the section header. Using the **Pin** button at the bottom of the storyboard, add constraints to pin the view to all sides of the section header, with zero spacing.
+
+$[=s=]
 
 Before continuing, make sure the **Label** is displayed _on top of_ the **Visual Effect View**. If not, open the document outline on the left of Interface Builder and place it below the Visual Effect View.
 
@@ -461,6 +467,8 @@ extension StickerCollectionViewController {
 ```
 
 The two `.count` methods are simple, thanks to the `StickerGroup` struct you're using as a model object.
+
+$[=s=]
 
 The cell configuration method is also straightforward. Add the following code to the extension you just created:
 

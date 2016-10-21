@@ -46,6 +46,8 @@ Green Grocer already enables Spotlight search via Core Spotlight and NSUserActiv
 
 Enough talk — the future of Ray’s Fruit Emporium depends on you! Head on in to the next section to get started.
 
+$[=s=]
+
 ## Enabling search continuation
 
 Spotlight search helps users quickly find what they’re looking for. A user could enter the word *apple* into Spotlight and be one tap away from seeing the price on the Ray’s Fruit Emporium product page. Spotlight fits that model quite well.
@@ -66,7 +68,11 @@ Build and run, then background the app with the home button or **Shift+Command+H
 
 ![width=50%](./images/search-annotation.jpg)
 
-Tap **Search in App**, and Green Grocer will launch to the Products table — but it won’t kick off a search. This shouldn’t come as a surprise, considering you haven’t written any code to accept the query from Spotlight and act on it!
+Tap **Search in App**, and Green Grocer will launch to the Products table — but it won’t kick off a search. 
+
+$[=s=]
+
+This shouldn’t come as a surprise, considering you haven’t written any code to accept the query from Spotlight and act on it!
 
 You’ll take care of that next.
 
@@ -148,8 +154,6 @@ Background Green Grocer again and complete a Spotlight search for **fruit**. Onl
 
 ![width=85%](./images/mismatched-fruit-search.png)
 
-$[=s=]
-
 Green Grocer successfully launches and presents a search result for *fruit* — but where are all the matches?
 
 ![width=25%](./images/why-hide-produce.png)
@@ -161,6 +165,8 @@ filteredProducts = dataStore.products.filter { product in
   return product.name.lowercased().contains(searchText.lowercased())
 }
 ```
+
+$[=s=]
 
 `filteredProducts` acts as the data source when filtered results display. Here it’s set using a `filter` on the complete `dataStore.products` array. The filter does a case-insensitive compare to identify any product names that contain the search string.
 
@@ -213,6 +219,8 @@ title == "apple"wc
 ```
 
 Here the string is *apple*, with no wildcards. The `w` modifier says *apple* can appear anywhere in the title string, as long as it’s a standalone word. Core Spotlight indexing is optimized to handle this faster than a wildcard, and as a bonus it provides a more accurately refined result set.
+
+$[=s=]
 
 Numerics, especially dates, are quite common in search queries. It’s especially common to check that a value falls within a given range. For this reason, the query language provides a second query syntax for this purpose:
 
@@ -329,15 +337,19 @@ newQuery.completionHandler = { [weak self] (err) -> Void in
 
 You added the results to `filteredProducts` in the arbitrary order as returned by Core Spotlight. This code sorts them to match the order used by the unfiltered data. Code to reload the tableview is dispatched to the main queue, as this handler runs on a background thread.
 
-Build and run; test your the filter on the **Products** tab. The behavior will be identical to the previous implementation. The example below shows a partial match for *Ap* that includes _Apple_ and _Grapes_:
+Build and run; test your the filter on the **Products** tab. The behavior will be identical to the previous implementation. 
 
-![bordered iphone](./images/spotlight-search-implemented.png)
+$[=s=]
+
+The example below shows a partial match for *Ap* that includes _Apple_ and _Grapes_:
+
+![bordered iphone height=40%](./images/spotlight-search-implemented.png)
 
 This query filters products in a similar manner to Spotlight, but it has a major shortcoming: It only searches the product title, whereas Spotlight checks all of the metadata. 
 
 To prove this, do an in-app search for *fruit* as you did before implementing Core Spotlight Search.
 
-![bordered iphone](./images/empty-fruit-search.png)
+![bordered iphone height=40%](./images/empty-fruit-search.png)
 
 The title field doesn’t include _fruit_, but the `keywords` property does. Clearly, Spotlight searches more than just title. You’ll have to expand your query to match.
 
@@ -369,13 +381,11 @@ Adopting search makes it easy to implement other features that use NSUserActivit
 
 View the Store tab in Green Grocer; the content is related to a physical location: the address of Ray’s Fruit Emporium. 
 
-![bordered iphone](./images/store-tab.png)
+![bordered iphone height=35%](./images/store-tab.png)
 
-Wouldn’t it be great if the Emporium address appeared above recent locations when you switch to the Map view? Or what if if the address appeared as a QuickType option in Messages, so you could tell your friends where to pick up the freshest pears in town?
+Wouldn’t it be great if the Emporium address appeared above recent locations when you switch to the Map view? Or what if if the address appeared as a QuickType option in Messages, so you could tell your friends where to pick up the freshest pears in town? Proactive suggestions with location based activities make all of this possible, and more. Below are a few examples.
 
-Proactive suggestions with location based activities make all of this possible, and more. Below are a few examples.
-
-![width=100%](./images/location-feature-preview.png)
+![width=85%](./images/location-feature-preview.png)
 
 From a user’s perspective, this is one of the more exciting multitasking features iOS has introduced in a long time. From a developer’s perspective, it’s a great way to increase awareness of your app and your brand throughout iOS. As an added bonus, it’s extremely easy to implement for apps that already index NSUserActivity objects.
 
@@ -439,13 +449,15 @@ The suggested app differs based on what you have installed, but in the example b
 
 ![width=75%](./images/map-direction-fast-switcher.png)
 
-Now open Messages and start typing a message that includes the words **Meet me at** and you’ll see a QuickType suggestion including Ray’s store. As with other proactive suggestions, your app is getting some good press here with the *From GreenGrocer* tagline.
+$[=s=]
 
-![bordered iphone](./images/message-quicktype.png)
+Open Messages and start typing a message that includes the words **Meet me at** and you’ll see a QuickType suggestion including Ray’s store.As with other proactive suggestions, your app is getting some good press here with the *From GreenGrocer* tagline.
+
+![bordered iphone height=33%](./images/message-quicktype.png)
 
 Think back to the test in Spotlight search, where *Mulberry* pulled up zero results from Green Grocer. Repeat the search for **Mulberry**, and you’ll now see a result for Ray’s Fruit Emporium! This means the `MKMapItem` is successfully providing location information to the `CSSearchableItemAttributeSet`.
 
-![iphone](./images/mulberry-spotlight-search-working.png)
+![iphone height=33%](./images/mulberry-spotlight-search-working.png)
 
 These are just a handful of examples of proactive suggestions. It should be pretty clear at this point that adding location data to your NSUserActivity objects is quite powerful. Not only does it streamline common user workflows, it reinforces awareness of your app throughout iOS.
 

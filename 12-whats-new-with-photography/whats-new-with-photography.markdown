@@ -24,6 +24,8 @@ Create a new Xcode project using the **Single View Application** template, named
 
 Choose your team in the **Signing** section in the target’s **General** settings tab to allow you to run on a device, and untick all of the **Device Orientation** options except **Portrait**. Using a single orientation keeps things simple for the demo.
 
+$[=s=]
+
 Right-click on **Info.plist** and choose **Open As > Source Code**. Add the following values just above the final `</dict>` tag:
 
 ```none
@@ -70,6 +72,9 @@ class CameraPreviewView: UIView {
 Here’s the breakdown:
 
 1. Views have a `layerClass` class property which can specify a specific `CALayer` subclass to use for the main layer. Here, you specify `AVCaptureVideoPreviewLayer`. 
+
+$[=s=]
+
 2. This is a convenience method to give you a typed property for the view’s layer. 
 3. The capture preview layer needs have an `AVCaptureSession` to show input from the camera, so this property passes through a session to the underlying layer.
 
@@ -737,6 +742,8 @@ This increments or decrements the property and hides the label as necessary. Bui
 
 ![iPhone](images/LivePhotoCapture.png)
 
+$[=s=]
+
 ## Editing Live Photos
 
 Previously, when you edited Live Photos they lost the accompanying video and became, well, Dead Photos. In iOS 10 you can apply the same range of edits to a Live Photo as you can to any photo; those edits are applied to every frame of the video as well. What’s even better is that you can do this in your own apps. You’re going to apply a cool core image filter to live photos taken in PhotoMe. 
@@ -916,7 +923,11 @@ editingContext?.saveLivePhoto(to: output, options: nil) {
 }
 ```
 
-The code is placed into that completion block because it needs to wait until the preview is rendered, otherwise saving the photo cancels the preview rendering. In a full app you’d have a separate save button for the user once they were happy with the preview. Here’s the breakdown:
+The code is placed into that completion block because it needs to wait until the preview is rendered, otherwise saving the photo cancels the preview rendering. 
+
+$[=s=]
+
+In a full app you’d have a separate save button for the user once they were happy with the preview. Here’s the breakdown:
 
 1. The content editing output acts as a destination for the editing operation. For live photos, it’s configured using the content editing input object you requested earlier. 
 2. Despite the adjustment data property being optional, you _must_ set it, otherwise the photo can’t be saved. This information allows your edits to be reverted. 
@@ -934,6 +945,8 @@ Build and run, go through the motions and now, when you hit Comicify, you'll get
 ![iPhone](images/PermissionToEdit.png)
 
 If you don’t hit that Modify button after all this work, you and I can’t be friends any more. 
+
+$[=s=]
 
 ## Where to go from here?
 

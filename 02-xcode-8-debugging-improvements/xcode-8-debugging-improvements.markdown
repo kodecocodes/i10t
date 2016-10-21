@@ -58,6 +58,8 @@ With the project still running, open the Debug navigator and select **Memory** t
 
 ![width=90% bordered](./images/memory-usage-growth.png)
 
+$[=s=]
+
 Some of this could definitely be duplicate labels — but the rate at which it’s climbing implies there might be more going on. Right now, you’re going with the suspicion of duplicate labels and a likely memory leak. What a perfect opportunity to check out Memory Graph Debugging!
 
 ## Memory Graph debugging
@@ -75,6 +77,8 @@ After you find an object that shouldn’t exist, the next step is to understand 
 Below is an example of a root analysis graph focused on the `ColojiDataStore`. Among other things, you can easily see that `ColojiTableViewController` retains the `ColojiDataStore` via a reference named `colojiStore`. This matches up with what you may have seen when reviewing the source.
 
 ![width=100%](./images/colojiDataStore-memory-graph.png)
+
+$[=s=]
 
 On top of this, the tool also flags occurrences of potential leaks and displays them in a manner similar to compiler warnings. The warnings can take you straight to the associated memory graph as well as a backtrace. Finding leaks has never been this easy!
 
@@ -244,6 +248,8 @@ if label.superview == .none {
 
 Rather than initializing a new label every time here, you use the `label` property instead, and simply update its displayed coloji. To avoid the label being added to the cell repeatedly, you wrap that bit of code in a check that ensures it only adds the label the first time through.
 
+$[=s=]
+
 Build and run, scroll the table a bit, and tap a few cells. You should no longer see a flicker of some other `ColojiLabel` when a cell is selected.
 
 Enter the Memory Debugger and return to the Debug navigator. Now you’ll only see one `ColojiLabel` on the heap per cell, confirming this bug has been exterminated!
@@ -258,7 +264,7 @@ Well, something went wrong. Open **Coloji.xcodeproj** in the **thread-sanitizer-
 
 Build and run, and while the memory issues were resolved, you’re now seeing something new. There’s missing data, and you’re only seeing a random sample of cells. Each time you run, different cells may appear, but here’s a look at one attempt:
 
-![iPhone bordered](./images/coloji-race-condition.png)
+![iPhone bordered height=39%](./images/coloji-race-condition.png)
 
 Only three cells loaded, and they appear to be a random selection. Open **ColojiTableViewController.swift** and take a look up top at the properties that drive the data source:
 
@@ -306,13 +312,14 @@ The code above does the following:
 
 1. `group` is a dispatch group created to manage the order of tasks added to it.
 2. For each color and emoji in the arrays you just reviewed, this code kicks off an asynchronous operation on a `background` thread. Inside, the operation creates a `coloji` from the color or emoji and then appends it to the store. These are all queued up together in the same `group` so that they can complete together.
+
+$[=s=]
+
 3. The `notify` kicks off when all the asynchronous `group` operations complete. When this is done, the table reloads to display the new colojis.
 
 It looks like Ray was trying to improve efficiency by letting the coloji data store operations run concurrently. Concurrent code, coupled with random results, is a strong indicator a race condition is at play.
 
 Fortunately, the new Thread Sanitizer makes it easy to track down race conditions. Like the Memory Graph and View Debuggers, it provides runtime feedback right in the Issue navigator.
-
-$[=s=]
 
 Here’s an example of what it looks like (note this will not appear for you yet):
 
@@ -394,7 +401,7 @@ You’ve wrapped each data access call in a queue operation to ensure no operati
 
 Build and run, and you should see all your colojis appear:
 
-![iPhone bordered](./images/coloji-threading-issue-fixed-screenshot.png)
+![iPhone bordered height=35%](./images/coloji-threading-issue-fixed-screenshot.png)
 
 The order can vary since your data requests run asynchronously, but all the cells make it to the data source. Looks like you may have solved the issue.
 
@@ -411,6 +418,8 @@ According to your Apple Watch, your pulse has climbed to 120 beats per minute af
 Build and run, then navigate around a bit. It’s tough to tell if the threading issue was fixed because the cells are now completely blank! There are functional color detail views, but the emojis are way at the top, obstructed by the navigation bar. Sigh.
 
 ![width=70%](./images/empty-view.png)
+
+$[=s=]
 
 The View Debugger is a great tool to investigate each of these issues. You’ll start with the blank cells.
 
@@ -437,6 +446,8 @@ Since you don’t see the `ColojiLabel`, the only view that should be in the cel
 Build and run, and stay on the blank table view. Now select the **Debug View Hierarchy** button in the Debug bar.
 
 ![width=50% bordered](./images/view-debugger-debug-bar.png)
+
+$[=s=]
 
 In the Debug navigator, enter **ColojiLabel** in the filter. This will show the view hierarchy leading to each label. Here you’re able to confirm that the `ColojiLabel` is inside the content view (`UITableViewCellContentView`) of the cell (`ColojiTableViewCell`).
 
@@ -494,6 +505,8 @@ Build and run, check out the table view, and you’ll see you’re back in busin
 Unfortunately, this still hasn’t solved your issue with emoji detail views. Take another look, and you’ll see they appear to be centered horizontally, but not vertically:
 
 ![iPhone bordered](./images/emoji-vertically-off-center.png)
+
+$[=s=]
 
 ### Runtime constraint debugging
 

@@ -16,6 +16,8 @@ Many of these changes are too small to warrant a chapter of their own, but a few
 - **UIPreviewInteraction**: A new protocol that allows for custom interactions via 3D Touch.
 - **Haptic Feedback**: An all-new feature tied to new hardware in the iPhone 7 and 7 Plus. The API provides the ability to produce several unique types of feedback.
 
+$[=s=]
+
 ## Getting started
 
 This chapter is designed a bit differently than others. Each topic gets its own mini chapter, including a high-level introduction with a starter project so you’re ready to dive in. 
@@ -129,7 +131,7 @@ You’re now kicking off loaders as the prefetcher requests them. When a cell is
 
 Build and run, and let the initial cells load. Now slowly scroll the collection view and you’ll notice the majority of cells load immediately:
 
-![bordered iphone](./images/prefetched-cells.png)
+![bordered iphone height=35%](./images/prefetched-cells.png)
 
 Usability is much better, thanks to prefetching.
 
@@ -164,7 +166,11 @@ The folder titled **prefetch-final** contains the final project for this section
 
 iOS 9 introduced 3D Touch along with an interaction you (hopefully) know and love — Peek and Pop. 
 
-The Peek (known as Preview to the API) provides a preview of a destination controller, while the Pop (Commit) navigates to the controller. While you can control the content and quick actions displayed with Peek and Pop, you can’t customize the look of the transition or how users interact with it.
+The Peek (known as Preview to the API) provides a preview of a destination controller, while the Pop (Commit) navigates to the controller. 
+
+$[=s=]
+
+While you can control the content and quick actions displayed with Peek and Pop, you can’t customize the look of the transition or how users interact with it.
 
 In iOS 10, the all new **UIPreviewInteraction** API lets you create custom preview interactions similar in concept to Peek and Pop. A preview interaction consists of up to two interface states that can be accessed by the steadily increasing pressure of a 3D Touch. Unique haptic feedback is provided to signal the end of each state to the user.  
 
@@ -177,6 +183,8 @@ Below is an example of the two states followed by the outcome you’ll implement
 The preview state slowly fades out the background, focuses on the selected cell and finally places voting controls over the emoji. In the commit state, moving your finger will toggle selection between the two thumbs. Press deeper to commit the rating; the interaction will fade away and the the cell will display the new rating.
 
 To implement this, you need to configure an instance of `UIPreviewInteractionDelegate`; this is an object that receives messages from progress and state transitions.
+
+$[=s=]
 
 Here’s a brief overview of the protocol methods:
 
@@ -300,6 +308,8 @@ Commit: 1.0, ended: true
 
 The `Preview should begin` line indicates `previewInteractionShouldBegin(_:)` triggered as soon as the touch started. Preview progresses as before, followed by a commit in a similar fashion. When complete, the commit progress will be 1.0 and its `ended` property will become `true`.
 
+$[=s=]
+
 ### Implementing a custom interaction 
 
 Now that you have a better feel for the flow of these delegate calls, you’re just about ready to set up the custom interaction.
@@ -391,6 +401,8 @@ if ended {
 }
 ```
 
+$[=s=]
+
 This determines where the user is touching `ratingOverlayView`, and stores that touch location in `hitPoint`. You’ll use this to determine how the user is interacting with the control.
 
 If the commit has ended, you need to commit the new rating and dismiss the preview. You’ve added a `TODO` for this action, which you’ll circle back to shortly. 
@@ -429,7 +441,11 @@ func commitInteraction(_ previewInteraction:
 }
 ```
 
-`commitInteraction(_:hitPoint:)` locates the EmojiRating associated with the item at `hitPoint` and updates it with the selected rating. Taking a closer look at this code:
+`commitInteraction(_:hitPoint:)` locates the EmojiRating associated with the item at `hitPoint` and updates it with the selected rating. 
+
+$[=s=]
+
+Taking a closer look at this code:
 
 1. `completeCommit(at:)` identifies which rating appears on `ratingOverlayView` at the passed `hitPoint` and passes it back as a string (👍 or 👎). In addition, this method animates away the preview interface using the same code that `previewInteractionDidCancel(_:)` does.
 2. You get `oldEmojiRating` from the `cell` identified using `cellFor(previewInteraction:)`; if it can’t be found, the guard returns early.
@@ -481,7 +497,11 @@ Here you create a `UIImpactFeedbackGenerator` with a `heavy` feedback style. The
 
 In this section, you’ll trigger each of the feedback generators when the collection view in EmojiRater scrolls to the top. To experience it, you’ll need an iPhone 7 or 7 Plus, and about five minutes! :]
 
-If you completed the section on preview interactions, you can continue with that project. If not, the folder titled **haptic-starter** contains the starter project for this section. Open **EmojiRater.xcodeproj**, set your development team for the EmojiRater target, and you’re already halfway done!
+If you completed the section on preview interactions, you can continue with that project. If not, the folder titled **haptic-starter** contains the starter project for this section. 
+
+$[=s=]
+
+Open **EmojiRater.xcodeproj**, set your development team for the EmojiRater target, and you’re already halfway done!
 
 ### Implementing UIFeedbackGenerator
 
@@ -531,6 +551,8 @@ Test it out, make a mental note of the feel. This should be familiar if you’ve
 >**Note**: Keep in mind that haptic feedback is only available on the iPhone 7 and 7 Plus. Even on those devices, feedback may not occur depending on battery levels, user’s settings, and app status. Haptic feedback is designed to supplement visual indicators, not replace them.
 
 The folder titled **haptic-final** contains the final project for this section. A feedback generator is enabled by default, but the other styles are provided in comments. For more details on `UIFeedbackGenerator`, including best practices, check out the API Reference here: [apple.co/2cVBAW7](http://apple.co/2cVBAW7)
+
+$[=s=]
 
 ## Where to go from here?
 

@@ -21,6 +21,8 @@ The fine control over animation timing alone would make a Property Animator an i
 
 For example, if you’re animating something in response to user gestures, or if you want the user to be able to grab an animating object and do something else with it, then Property Animators are your new best friend.
 
+$[=s=]
+
 ## Getting started
 
 Open the **Animalation** project in the starter materials for this chapter. This is a demonstration app which you’ll modify to add extra animation capabilities. There are two view controllers, some animated transition support files, and some utility files. Build and run the project:
@@ -52,7 +54,11 @@ At any given second, how far along the line is the view? The answer to this ques
 
 ![width=40%](images/LinearNoPoints.png)
 
-This doesn’t lead to very fluid or natural-looking animations; in real life, things don’t go from not moving at all to moving at a constant rate, and then suddenly stopping when they get to the end. For that reason, the `UIView` animation API uses an **ease-in, ease-out** timing curve. On a graph, that looks more like this:
+This doesn’t lead to very fluid or natural-looking animations; in real life, things don’t go from not moving at all to moving at a constant rate, and then suddenly stopping when they get to the end. 
+
+$[=s=]
+
+For that reason, the `UIView` animation API uses an **ease-in, ease-out** timing curve. On a graph, that looks more like this:
 
 ![width=40%](images/EasingNoPoints.png)
 
@@ -68,13 +74,19 @@ Your own cubic _what_ now?
 
 Don’t panic. You’ve been looking at these types of curves already. A cubic Bézier curve goes from point A to point D, while also doing its very best to get near points B and C on the way, like a dog running across the park, being distracted by interesting trees.
 
-Let's review the examples from earlier. In both examples above, point A is in the bottom left and point D is in the top right. With the linear curve, points B and C happen to be in an exact straight line: 
+Let's review the examples from earlier. In both examples above, point A is in the bottom left and point D is in the top right. 
+
+$[=s=]
+
+With the linear curve, points B and C happen to be in an exact straight line: 
 
 ![width=40%](images/Linear.png)
 
 With ease-in-ease-out, point B is directly to the right of point A, and point C is directly to the left of point D. You can imagine the line being pulled from A towards B, then C takes over, then D: 
 
 ![width=40%](images/Easing.png)
+
+$[=s=]
 
 Finally, here's what the ease-in and ease-out curves look like. With the ease-in curve, point C is directly under point D, and with the ease-out curve, B is under A:
 
@@ -147,6 +159,9 @@ Apple has provided an implementation of `UITimingCurveProvider` to create timing
 
 - The **mass** of the object attached to the spring.
 - The **stiffness** of the spring.
+
+$[=s=]
+
 - The **damping**; these are any factors that would act to slow down the movement of the system, like friction or air resistance.
 
 The amount of damping applied will give you one of three outcomes: the system can be **under-damped**, meaning it will bounce around for a while before it settles; **critically damped**, meaning it will settle as quickly as possible without bouncing at all; or **over-damped**, meaning it will settle without bouncing, but not quite as quickly.
@@ -317,6 +332,8 @@ Next, add in the implementation for `handleProgressSliderChanged(_:)`:
 imageMoveAnimator?.fractionComplete = CGFloat(sender.value)
 ```
 
+$[=s=]
+
 This is the reverse of what you did when pausing the animation — the value of the slider is used to set the `.fractionComplete` property of the animator.
 
 Build and run the app and try to tap the frog while it’s moving:
@@ -329,7 +346,11 @@ It’s important to note here that _pausing_ an animation isn’t the same as _s
 
 ## Stopping
 
-When a Property Animator stops, it ends all animation at the current point and, more importantly, updates the properties of the animated views to match those at the current point. If you’ve ever tried to get in-flight values out of an interrupted `UIView` animation so that you can seamlessly stop it, you’ll be quite excited to read this.
+When a Property Animator stops, it ends all animation at the current point and, more importantly, updates the properties of the animated views to match those at the current point. 
+
+$[=s=]
+
+If you’ve ever tried to get in-flight values out of an interrupted `UIView` animation so that you can seamlessly stop it, you’ll be quite excited to read this.
 
 Inside `handleTapOnImage(_:)`, add the following line at the end of the method:
 
@@ -373,6 +394,8 @@ Build and run the project, then do the following:
 
 If you’re feeling a little confused at this point, don’t worry. A Property Animator can be paused, stopped or finished, and those all mean different things:
 
+$[=s=]
+
 ### Paused
 
 State: `.active`
@@ -403,7 +426,11 @@ We haven’t yet discussed completion blocks for Property Animators. They’re a
 
 ## Reversing
 
-You might be thinking “Why would I ever want to run an animation in reverse?” A good use case is when you’re working with gesture-driven interfaces. Imagine using something like a swipe gesture to dismiss a presented view, where, during the dismiss animation, the user decides not to dismiss it, and swipes back slightly in the other direction. A Property Animator can take all of this into account and run the animation back to the start point, without having to store or recalculate anything.
+You might be thinking “Why would I ever want to run an animation in reverse?” A good use case is when you’re working with gesture-driven interfaces. Imagine using something like a swipe gesture to dismiss a presented view, where, during the dismiss animation, the user decides not to dismiss it, and swipes back slightly in the other direction.
+
+$[=s=]
+
+A Property Animator can take all of this into account and run the animation back to the start point, without having to store or recalculate anything.
 
 To demonstrate this in the sample app, you’re going to change the function of the **Animate** button. If you tap it while an animation is running, it’s going to reverse the animation.
 
@@ -440,6 +467,7 @@ imageMoveAnimator?.addCompletion { position in
 The completion block takes a `UIViewAnimatingPosition` enum as its argument, which tells you what state the Animator was in when it finished.
 
 Build and run the project and try to obtain all three completion block printouts by ending the animation at the end, start or somewhere in the middle.  
+
 For a more practical demonstration of the various states of a completion block, you’re going to add a second animation and run the two of them together.
 
 ## Multiple animators
@@ -607,7 +635,11 @@ To dismiss the controller interactively, pull down:
 
 ![width=80% bordered](images/Animals2.png)
 
-Once you’ve let go, the animation will either return to the top or complete. If you try and grab the screen as it’s disappearing (the transition is super slow to help you with this!), nothing will happen.
+Once you’ve let go, the animation will either return to the top or complete. 
+
+$[=s=]
+
+If you try and grab the screen as it’s disappearing (the transition is super slow to help you with this!), nothing will happen.
 
 To make an interactive transition super-duper interruptibly interactive, there’s a new method to implement on your `UIViewControllerAnimatedTransitioning` object. Open **DropDownDismissAnimator.swift**. This is a standard transition Animator object. Add the following new method:
 

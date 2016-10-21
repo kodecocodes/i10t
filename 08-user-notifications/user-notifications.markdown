@@ -245,7 +245,9 @@ This code queries for notification settings and updates the table datasource obj
 
 1. You create `notificationCenter` to reference the shared notification center more concisely. Then you create a `DispatchQueue` to prevent concurrency issues when updating the table view data source.
 2. You then enter a dispatch group to ensure all data fetch calls have completed before you refresh the table. Note the project already refreshes in a `group.notify(callback:)` closure for this reason.
-3. You call `getNotificationSettings(callback:)` to fetch current notification settings from Notification Center. You pass the results of the query to the callback closure via `settings`, which in turn you use to initialize a `SettingTableSectionProvider`. `SettingTableSectionProvider` is from the starter project; it extracts interesting information from the provided `UNNotificationSettings` for presentation in a table view cell.
+3. You call `getNotificationSettings(callback:)` to fetch current notification settings from Notification Center. You pass the results of the query to the callback closure via `settings`, which in turn you use to initialize a `SettingTableSectionProvider`.
+    
+    `SettingTableSectionProvider` is from the starter project; it extracts interesting information from the provided `UNNotificationSettings` for presentation in a table view cell.
 4. Using the `dataSaveQueue`, you asynchronously update the settings section of `tableSectionProviders` with the newly created `settingsProvider`. The table management is all provided by the starter project; all you need to do is set the provider so as to provide the data to the table view. Finally, you leave `group` to release your hold on the dispatch group.
 
 Build and run, and you'll see a **Notification Settings** section in the table view that represents the current status of notification settings for cuddlePix.
@@ -448,6 +450,8 @@ The extension is all set. But when a notification triggers for cuddlePix, how is
 
 Gnomes are a good guess, but they're notoriously unreliable. :] Instead, the user notification center relies on a key defined in the extension's plist to identify the types of notifications it should handle.
 
+$[=s=]
+
 Open **Info.plist** in the **ContentExtension** group and expand `NSExtension`, then `NSExtensionAttributes`, to reveal **UNNotificationExtensionCategory**. This key takes a string (or array of strings) identifying the notifications it should handle. Enter **newCuddlePix** here, which you'll later use in the content of your notification requests.
 
 ![width=80% bordered](./images/content-extension-plist.png)
@@ -466,6 +470,8 @@ content.categoryIdentifier = newCuddlePixCategoryName
 
 The `UNNotificationRequest` created in this method will now use `newCuddlePixCategoryName` as a `categoryIdentifier` for its content. `newCuddlePixCategoryName` is a string constant defined in the starter that matches the one you placed in the extension plist: "newCuddlePix".
 
+$[=s=]
+
 When the system prepares to deliver a notification, it will check the notification's category identifier and try to find an extension registered to handle it. In this case, that is the extension you just created.
 
 > **Note**: For a remote notification to invoke your Notification Content extension, you'd need to add this same category identifier as the value for the `category` key in the payload dictionary.
@@ -476,7 +482,7 @@ Make sure you have the **CuddlePix** scheme selected, then build and run. Next, 
 
 In cuddlePix, generate a new notification with **Cuddle me now!**. When the banner appears, expand it either by force touching on a compatible device, or selecting the notification and dragging down in the simulator. You'll now see the new custom view from your extension:
 
-![iphone bordered](./images/content-extension-presented.png)
+![iphone bordered height=33%](./images/content-extension-presented.png)
 
 > **Note**: You'll notice that the custom UI you designed is presented _above_ the default banner content. In this case, that's what you want, as your custom view didn't implement any of this text.
 >
@@ -566,6 +572,8 @@ internal func didReceive(_ response: UNNotificationResponse,
 }
 ```
 
+$[=s=]
+
 `didReceive(_:completionHandler:)` is called with the action response and a completion closure. The closure must be called when you're done with the action, and it requires a parameter indicating what should happen next. Here's what's going on in more detail:
 
 1. When you set up `UNNotificationAction`, you gave the star action an identifier of `star`, which you check here to catch responses of this type. Inside, you have a `TODO` for implementing the star animation that you'll soon revisit. You let the animation continue for two seconds via `DispatchQueue.main.asyncAfter` before calling the completion closure.
@@ -584,6 +592,8 @@ Back in **NotificationViewController.swift**, replace `// TODO Show Stars` with 
 ```swift
 imageView.showStars()
 ```
+
+$[=s=]
 
 This uses a `UIImageView` extension defined in the **StarAnimator.swift** file you just added to the target. `showStars()` uses Core Animation to create a shower of stars over the image view.
 
@@ -643,6 +653,8 @@ You'll also need a way to send test pushes. For this, you'll use a popular open 
 Pusher's readme also has a **Getting Started** section that guides you through creating the required SSL certificate; follow this to create a Development certificate. You may also find the section titled *Creating an SSL Certificate and PEM file* in *Push Notifications Tutorial: Getting Started* useful. You can find it here - [raywenderlich.com/123862](http://raywenderlich.com/123862).
 
 With your `p12` file in hand, go back to Pusher and select it in the **Select Push Certificate** dropdown. You may need to choose **Import PCKS #12 file (.p12)** and manually select it if it doesn't appear here.
+
+$[=s=]
 
 Pusher requires a push token so it can tell APNS where to send the notification.
 
@@ -783,6 +795,9 @@ Here's what this does:
 1. This gets the string value for `attachment-url` found in `userInfo` of the request content copy. It then creates a URL from this string and saves it in `attachmentUrl`. If this guard isn't successful, it bails out early with a return.
 2. `session` is an instance of `URLSession` used when creating a `downloadTask` to get the image at `attachmentUrl`. In the completion handler, an error is printed on failure.
 3. On success, a `UNNotificationAttachment` is created using the `attachmentString` as a unique identifier and the local `url` as the content. `UNNotificationAttachmentOptionsTypeHintKey` provides a hint as to the file type; in this case, `kUTTypePNG` is used as the file is known to be a PNG. The resulting attachment is set on `bestAttemptContent`.
+
+$[=s=]
+
 4. The `completionHandler` is called, passing over the modified notification content. This signifies the extension's work is done, and sends back the updated notification. This must be done whether or not the attempt was successful. If unsuccessful, the original request is sent back.
 5. Once the `downloadTask` is defined, it kicks off with `resume()`. This leads to the `attachmentDownloadTask` `completionHandler` executing on completion, which in turn calls the `contentHandler` to complete processing.
 

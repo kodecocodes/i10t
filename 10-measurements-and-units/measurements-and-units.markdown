@@ -30,6 +30,8 @@ If this is a familiar story, you’re in luck. The Foundation framework has some
 
 Another exciting addition to Foundation this year is the date interval — a period from one `Date` to another. 
 
+$[=s=]
+
 Again, this represents a problem that is commonly solved by having to write a lot of code that you probably don’t test (admit it), and you almost certainly don’t test for international users. Date intervals and the associated date interval formatter will make your life easier when you need to work with dates. 
 
 As I'm sure you can agree, dates are hard, so all help is welcome!
@@ -96,6 +98,8 @@ Here you define the length of the cycle and swim using the new `Measurement` cla
 But what about the half marathon?
 
 A marathon is 26 miles, 385 yards. This awkward number comes from the 1908 London Olympics, where the organizers planned a course of 26 miles, then had to add an extra bit so that the race would finish neatly in front of the Royal Box. Do you know what 26 miles, 385 yards is in “Decimal miles”? I don’t, and now, I don’t have to.
+
+$[=s=]
 
 To create a measurement of a marathon, add the following to the playground:
 
@@ -266,6 +270,8 @@ In the results sidebar in the playground, the numbers are often displayed with l
 
 > **Note:** Unlike date and number formatters, measurement formatters are one-way. You can’t use them to take a string like "1 kWh" and turn it into a `Measurement`.
 
+$[=s=]
+
 ### It’s getting hot in here
 
 Open a new playground to start exploring measurement formatters.
@@ -413,6 +419,8 @@ extension UnitLength {
   }
 }
 ```
+
+$[=s=]
 
 You can then use this unit just like any other. A cricket pitch is one chain from wicket to wicket:
 

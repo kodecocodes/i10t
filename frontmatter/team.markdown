@@ -4,7 +4,7 @@ $[#tb]
 
 ![portrait](images/Sam.jpg)
 
-**Sam Davies** is a strange mashup of developer, writer and trainer. By day you'll find him recording videos for Razeware, writing tutorials, attending conferences and generally being a good guy. By night he's likely to be out entertaining people, armed with his trombone and killer dance moves. He'd like it very much if you were to follow him on twitter at @iwantmyrealname.
+**Sam Davies** is a strange mashup of developer, writer and trainer. By day you'll find him recording videos for Razeware, writing tutorials, attending conferences and generally being a good guy. By night he's likely to be out entertaining people, armed with his trombone and killer dance moves. He'd like it very much if you were to follow him on twitter at [@iwantmyrealname](https://twitter.com/iwantmyrealname).
 
 $[tb#]
 
@@ -30,11 +30,9 @@ $[#tb]
 
 ![portrait](images/Zolo.jpg)
 
-**Zoltán Matók** is a tech editor of this book. Zoltán is an iOS and OS X developer from Hungary. While he is not working or fiddling with new stuff, he likes to read insightful articles from around the development world. https://medium.com/@quinnnorton ftw.
+**Zoltán Matók** is a tech editor of this book. Zoltán is an iOS and OS X developer from Hungary. While he is not working or fiddling with new stuff, he likes to read insightful articles from around the development world. [https://medium.com/@quinnnorton](https://medium.com/@quinnnorton) ftw.
 
 $[tb#]
-
-$[br]
 
 $[#tb]
 
