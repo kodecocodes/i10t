@@ -314,13 +314,15 @@ class PhotoCaptureDelegate: NSObject {
   // 1
   var photoCaptureBegins: (() -> ())? = .none
   var photoCaptured: (() -> ())? = .none
-  fileprivate let completionHandler: (PhotoCaptureDelegate, PHAsset?) -> ()
+  fileprivate let completionHandler: 
+    (PhotoCaptureDelegate, PHAsset?) -> ()
   
   // 2
   fileprivate var photoData: Data? = .none
   
   // 3
-  init(completionHandler: @escaping (PhotoCaptureDelegate, PHAsset?) -> ()) {
+  init(completionHandler: @escaping 
+    (PhotoCaptureDelegate, PHAsset?) -> ()) {
     self.completionHandler = completionHandler
   }
   
@@ -526,7 +528,8 @@ Then add this code to the end of the `...didFinishProcessingPhotoSampleBuffer...
 ```swift
 if let thumbnailCaptured = thumbnailCaptured,
   let previewPhotoSampleBuffer = previewPhotoSampleBuffer,
-  let cvImageBuffer = CMSampleBufferGetImageBuffer(previewPhotoSampleBuffer) {
+  let cvImageBuffer = 
+    CMSampleBufferGetImageBuffer(previewPhotoSampleBuffer) {
   
   let ciThumbnail = CIImage(cvImageBuffer: cvImageBuffer)
   let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
@@ -616,8 +619,10 @@ Open **ViewController.swift** and add the following code to `prepareCaptureSessi
 
 ```swift
 do {
-  let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
-  let audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
+  let audioDevice = AVCaptureDevice.defaultDevice(
+    withMediaType: AVMediaTypeAudio)
+  let audioDeviceInput = try AVCaptureDeviceInput(
+    device: audioDevice)
   if session.canAddInput(audioDeviceInput) {
     session.addInput(audioDeviceInput)
   } else {
@@ -825,7 +830,8 @@ Finally, pass the asset along by adding this implementation of `prepare(for: sen
 
 ```swift
 override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-  if let editor = segue.destination as? PhotoEditingViewController {
+  if let editor = segue.destination 
+    as? PhotoEditingViewController {
     editor.asset = lastAsset
   }
 }
