@@ -20,7 +20,7 @@ For this project, you’ll need to run on a device with a front-facing camera �
 
 For the later sections, you’ll also need a device that supports Live Photos. 
 
-Create a new Xcode project using the **Single View Application** template, named **PhotoMe**. Make it for **iPhone** only. Leave the Core Data, Unit Tests and UI Tests boxes unchecked, and save the projet somewhere.
+Create a new Xcode project using the **Single View Application** template, named **PhotoMe**. Make it for **iPhone** only. Leave the Core Data, Unit Tests and UI Tests boxes unchecked, and save the project somewhere.
 
 Choose your team in the **Signing** section in the target’s **General** settings tab to allow you to run on a device, and untick all of the **Device Orientation** options except **Portrait**. Using a single orientation keeps things simple for the demo.
 
@@ -49,29 +49,29 @@ import AVFoundation
 import Photos
 
 class CameraPreviewView: UIView {
-    //1
-    override static var layerClass: AnyClass {
-        return AVCaptureVideoPreviewLayer.self
+  //1
+  override static var layerClass: AnyClass {
+    return AVCaptureVideoPreviewLayer.self
+  }
+  //2
+  var cameraPreviewLayer: AVCaptureVideoPreviewLayer {
+    return layer as! AVCaptureVideoPreviewLayer
+  }
+  //3
+  var session: AVCaptureSession? {
+    get {
+      return cameraPreviewLayer.session
     }
-    //2
-    var cameraPreviewLayer: AVCaptureVideoPreviewLayer {
-        return layer as! AVCaptureVideoPreviewLayer
+    set {
+      cameraPreviewLayer.session = newValue
     }
-    //3
-    var session: AVCaptureSession? {
-        get {
-            return cameraPreviewLayer.session
-        }
-        set {
-            cameraPreviewLayer.session = newValue
-        }
-    }
+  }
 }
 ```
 
 Here’s the breakdown:
 
-1. Views have a `layerClass` class property which can specify a specific `CALayer` subclass to use for the main layer. Here, you specify `AVCaptureVideoPreviewLayer`. 
+1. Views have a `layerClass` class property which can specify a `CALayer` subclass to use for the main layer. Here, you specify `AVCaptureVideoPreviewLayer`. 
 
 $[=s=]
 
@@ -112,13 +112,13 @@ cameraPreviewView.session = session
 sessionQueue.suspend()
 //3
 AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) {
-    success in
-    if !success {
-        print("Come on, it's a camera app!")
-        return
-    }
-    //4
-    self.sessionQueue.resume()
+  success in
+  if !success {
+    print("Come on, it's a camera app!")
+    return
+  }
+  //4
+  self.sessionQueue.resume()
 }
 ```
 
@@ -133,41 +133,41 @@ You’re almost ready to get your face on the screen. First, you need to configu
 
 ```swift
 private func prepareCaptureSession() {
-    // 1
-    session.beginConfiguration()
-    session.sessionPreset = AVCaptureSessionPresetPhoto
+  // 1
+  session.beginConfiguration()
+  session.sessionPreset = AVCaptureSessionPresetPhoto
+  
+  do {
+    // 2
+    let videoDevice = AVCaptureDevice.defaultDevice(
+      withDeviceType: .builtInWideAngleCamera,
+      mediaType: AVMediaTypeVideo,
+      position: .front)
+    // 3
+    let videoDeviceInput = try
+      AVCaptureDeviceInput(device: videoDevice)
     
-    do {
-        // 2
-        let videoDevice = AVCaptureDevice.defaultDevice(
-            withDeviceType: .builtInWideAngleCamera,
-            mediaType: AVMediaTypeVideo,
-            position: .front)
-        // 3
-        let videoDeviceInput = try
-            AVCaptureDeviceInput(device: videoDevice)
+    // 4
+    if session.canAddInput(videoDeviceInput) {
+      session.addInput(videoDeviceInput)
+      self.videoDeviceInput = videoDeviceInput
         
-        // 4
-        if session.canAddInput(videoDeviceInput) {
-            session.addInput(videoDeviceInput)
-            self.videoDeviceInput = videoDeviceInput
-            
-            // 5
-            DispatchQueue.main.async {
-                self.cameraPreviewView.cameraPreviewLayer
-                    .connection.videoOrientation = .portrait
-            }
-        } else {
-            print("Couldn't add device to the session")
-            return
-        }
-    } catch {
-        print("Couldn't create video device input: \(error)")
-        return
+      // 5
+      DispatchQueue.main.async {
+        self.cameraPreviewView.cameraPreviewLayer
+          .connection.videoOrientation = .portrait
+      }
+    } else {
+      print("Couldn't add device to the session")
+      return
     }
-    
-    // 6
-    session.commitConfiguration()
+  } catch {
+    print("Couldn't create video device input: \(error)")
+    return
+  }
+  
+  // 6
+  session.commitConfiguration()
 }
 ``` 
 
@@ -184,8 +184,8 @@ At the end of `viewDidLoad()`, add this code to call the new method on the sessi
 
 ```swift
 sessionQueue.async {
-    [unowned self] in
-    self.prepareCaptureSession()
+  [unowned self] in
+  self.prepareCaptureSession()
 }
 ```
 
@@ -195,10 +195,10 @@ Finally, you need to start the session running. Add this `viewWillAppear(_:)` im
 
 ```swift
 override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    sessionQueue.async {
-        self.session.startRunning()
-    }
+  super.viewWillAppear(animated)
+  sessionQueue.async {
+    self.session.startRunning()
+  }
 }
 ```
 
@@ -224,11 +224,11 @@ The output has to be configured and added to the capture session. In `prepareCap
 
 ```swift
 if session.canAddOutput(photoOutput) {
-    session.addOutput(photoOutput)
-    photoOutput.isHighResolutionCaptureEnabled = true
+  session.addOutput(photoOutput)
+  photoOutput.isHighResolutionCaptureEnabled = true
 } else {
-    print("Unable to add photo output")
-    return
+  print("Unable to add photo output")
+  return
 }
 ```
 
@@ -262,26 +262,25 @@ The action is going to call a separate method, `capturePhoto()`. Add this in a n
 
 ```swift
 extension ViewController {
-    fileprivate func capturePhoto() {
-        // 1
-        let cameraPreviewLayerOrientation = cameraPreviewView
-            .cameraPreviewLayer.connection.videoOrientation
+  fileprivate func capturePhoto() {
+    // 1
+    let cameraPreviewLayerOrientation = cameraPreviewView
+      .cameraPreviewLayer.connection.videoOrientation
+    
+    // 2
+    sessionQueue.async {
+      if let connection = self.photoOutput
+        .connection(withMediaType: AVMediaTypeVideo) {
+        connection.videoOrientation =
+          cameraPreviewLayerOrientation
+      }
         
-        // 2
-        sessionQueue.async {
-            if let connection = self.photoOutput
-                .connection(withMediaType: AVMediaTypeVideo) {
-                connection.videoOrientation =
-                cameraPreviewLayerOrientation
-            }
-            
-            // 3
-            let photoSettings = AVCapturePhotoSettings()
-            photoSettings.flashMode = .off
-            photoSettings.isHighResolutionPhotoEnabled = true
-            
-        }
+      // 3
+      let photoSettings = AVCapturePhotoSettings()
+      photoSettings.flashMode = .off
+      photoSettings.isHighResolutionPhotoEnabled = true  
     }
+  }
 }
 ```
 
@@ -312,23 +311,23 @@ import AVFoundation
 import Photos
 
 class PhotoCaptureDelegate: NSObject {
-    // 1
-    var photoCaptureBegins: (() -> ())? = .none
-    var photoCaptured: (() -> ())? = .none
-    fileprivate let completionHandler: (PhotoCaptureDelegate, PHAsset?) -> ()
-    
-    // 2
-    fileprivate var photoData: Data? = .none
-    
-    // 3
-    init(completionHandler: @escaping (PhotoCaptureDelegate, PHAsset?) -> ()) {
-        self.completionHandler = completionHandler
-    }
-    
-    // 4
-    fileprivate func cleanup(asset: PHAsset? = .none) {
-        completionHandler(self, asset)
-    }
+  // 1
+  var photoCaptureBegins: (() -> ())? = .none
+  var photoCaptured: (() -> ())? = .none
+  fileprivate let completionHandler: (PhotoCaptureDelegate, PHAsset?) -> ()
+  
+  // 2
+  fileprivate var photoData: Data? = .none
+  
+  // 3
+  init(completionHandler: @escaping (PhotoCaptureDelegate, PHAsset?) -> ()) {
+    self.completionHandler = completionHandler
+  }
+  
+  // 4
+  fileprivate func cleanup(asset: PHAsset? = .none) {
+    completionHandler(self, asset)
+  }
 }
 ```
 
@@ -349,24 +348,24 @@ Add the following extension:
 
 ```swift
 extension PhotoCaptureDelegate: AVCapturePhotoCaptureDelegate {
-    // Process data completed
-    func capture(_ captureOutput: AVCapturePhotoOutput,
-                 didFinishProcessingPhotoSampleBuffer
-        photoSampleBuffer: CMSampleBuffer?,
-                 previewPhotoSampleBuffer: CMSampleBuffer?,
-                 resolvedSettings: AVCaptureResolvedPhotoSettings,
-                 bracketSettings: AVCaptureBracketedStillImageSettings?,
-                 error: Error?) {
-        
-        guard let photoSampleBuffer = photoSampleBuffer else {
-            print("Error capturing photo \(error)")
-            return
-        }
-        photoData = AVCapturePhotoOutput
-            .jpegPhotoDataRepresentation(
-                forJPEGSampleBuffer: photoSampleBuffer,
-                previewPhotoSampleBuffer: previewPhotoSampleBuffer)
+  // Process data completed
+  func capture(_ captureOutput: AVCapturePhotoOutput,
+    didFinishProcessingPhotoSampleBuffer
+    photoSampleBuffer: CMSampleBuffer?,
+    previewPhotoSampleBuffer: CMSampleBuffer?,
+    resolvedSettings: AVCaptureResolvedPhotoSettings,
+    bracketSettings: AVCaptureBracketedStillImageSettings?,
+    error: Error?) {
+      
+    guard let photoSampleBuffer = photoSampleBuffer else {
+      print("Error capturing photo \(error)")
+      return
     }
+    photoData = AVCapturePhotoOutput
+      .jpegPhotoDataRepresentation(
+        forJPEGSampleBuffer: photoSampleBuffer,
+        previewPhotoSampleBuffer: previewPhotoSampleBuffer)
+  }
 }
 ```
 
@@ -375,52 +374,52 @@ See? That’s quite the method name. This one is called when the sensor data fro
 ```swift  
 // Entire process completed
 func capture(_ captureOutput: AVCapturePhotoOutput,
-             didFinishCaptureForResolvedSettings
-    resolvedSettings: AVCaptureResolvedPhotoSettings,
-             error: Error?) {
+  didFinishCaptureForResolvedSettings
+  resolvedSettings: AVCaptureResolvedPhotoSettings,
+  error: Error?) {
     
-    // 1
-    guard error == nil, let photoData = photoData else {
-        print("Error \(error) or no data")
-        cleanup()
-        return
+  // 1
+  guard error == nil, let photoData = photoData else {
+    print("Error \(error) or no data")
+    cleanup()
+    return
+  }
+  
+  // 2
+  PHPhotoLibrary.requestAuthorization {
+    [unowned self]
+    (status) in
+    // 3
+    guard status == .authorized  else {
+      print("Need authorisation to write to the photo library")
+      self.cleanup()
+      return
     }
-    
-    // 2
-    PHPhotoLibrary.requestAuthorization {
-        [unowned self]
-        (status) in
-        // 3
-        guard status == .authorized  else {
-            print("Need authorisation to write to the photo library")
-            self.cleanup()
-            return
+    // 4
+    var assetIdentifier: String?
+    PHPhotoLibrary.shared().performChanges({
+      let creationRequest = PHAssetCreationRequest.forAsset()
+      let placeholder = creationRequest
+        .placeholderForCreatedAsset
+          
+      creationRequest.addResource(with: .photo,
+        data: photoData, options: .none)
+          
+      assetIdentifier = placeholder?.localIdentifier
+          
+      }, completionHandler: { (success, error) in
+        if let error = error {
+          print("Error saving to the photo library: \(error)")
         }
-        // 4
-        var assetIdentifier: String?
-        PHPhotoLibrary.shared().performChanges({
-            let creationRequest = PHAssetCreationRequest.forAsset()
-            let placeholder = creationRequest
-                .placeholderForCreatedAsset
-            
-            creationRequest.addResource(with: .photo,
-                                        data: photoData, options: .none)
-            
-            assetIdentifier = placeholder?.localIdentifier
-            
-            }, completionHandler: { (success, error) in
-                if let error = error {
-                    print("Error saving to the photo library: \(error)")
-                }
-                var asset: PHAsset? = .none
-                if let assetIdentifier = assetIdentifier {
-                    asset = PHAsset.fetchAssets(
-                        withLocalIdentifiers: [assetIdentifier], 
-                        options: .none).firstObject
-                }
-                self.cleanup(asset: asset)
-        })
-    }
+        var asset: PHAsset? = .none
+        if let assetIdentifier = assetIdentifier {
+          asset = PHAsset.fetchAssets(
+            withLocalIdentifiers: [assetIdentifier], 
+            options: .none).firstObject
+        }
+        self.cleanup(asset: asset)
+    })
+  }
 }
 ```
 
@@ -435,7 +434,7 @@ Note that the `cleanup(asset:)` method is called in all cases. Switch back to **
 
 ```swift
 fileprivate var photoCaptureDelegates = 
-    [Int64 : PhotoCaptureDelegate]()
+  [Int64 : PhotoCaptureDelegate]()
 ```
 
 Now add the following code to the end of the closure that is performed on the session queue in `capturePhoto()`: 
@@ -444,10 +443,10 @@ Now add the following code to the end of the closure that is performed on the se
 // 1
 let uniqueID = photoSettings.uniqueID
 let photoCaptureDelegate = PhotoCaptureDelegate() {
-    [unowned self] (photoCaptureDelegate, asset) in
-    self.sessionQueue.async { [unowned self] in
-        self.photoCaptureDelegates[uniqueID] = .none
-    }
+  [unowned self] (photoCaptureDelegate, asset) in
+  self.sessionQueue.async { [unowned self] in
+    self.photoCaptureDelegates[uniqueID] = .none
+  }
 }
 
 // 2
@@ -455,7 +454,7 @@ self.photoCaptureDelegates[uniqueID] = photoCaptureDelegate
 
 // 3
 self.photoOutput.capturePhoto(
-    with: photoSettings, delegate: photoCaptureDelegate)
+  with: photoSettings, delegate: photoCaptureDelegate)
 ```
 
 This code kicks off the capture process:
@@ -476,19 +475,19 @@ You get a shutter noise for free, but it would be nice to see something on the s
 
 ```swift
 photoCaptureDelegate.photoCaptureBegins = { [unowned self] in
-    DispatchQueue.main.async {
-        self.shutterButton.isEnabled = false
-        self.cameraPreviewView.cameraPreviewLayer.opacity = 0
-        UIView.animate(withDuration: 0.2) {
-            self.cameraPreviewView.cameraPreviewLayer.opacity = 1
-        }
+  DispatchQueue.main.async {
+    self.shutterButton.isEnabled = false
+    self.cameraPreviewView.cameraPreviewLayer.opacity = 0
+    UIView.animate(withDuration: 0.2) {
+      self.cameraPreviewView.cameraPreviewLayer.opacity = 1
     }
+  }
 }
 
 photoCaptureDelegate.photoCaptured = { [unowned self] in
-    DispatchQueue.main.async {
-        self.shutterButton.isEnabled = true
-    }
+  DispatchQueue.main.async {
+    self.shutterButton.isEnabled = true
+  }
 }
 ```
 
@@ -498,15 +497,15 @@ Open **PhotoCaptureDelegate.swift** and add the following to the `AVCapturePhoto
 
 ```swift
 func capture(_ captureOutput: AVCapturePhotoOutput,
-             willCapturePhotoForResolvedSettings
-    resolvedSettings: AVCaptureResolvedPhotoSettings) {
-    photoCaptureBegins?()
+  willCapturePhotoForResolvedSettings
+  resolvedSettings: AVCaptureResolvedPhotoSettings) {
+  photoCaptureBegins?()
 }
 
 func capture(_ captureOutput: AVCapturePhotoOutput,
-             didCapturePhotoForResolvedSettings
-    resolvedSettings: AVCaptureResolvedPhotoSettings) {
-    photoCaptured?()
+  didCapturePhotoForResolvedSettings
+  resolvedSettings: AVCaptureResolvedPhotoSettings) {
+  photoCaptured?()
 }
 ```
 
@@ -526,14 +525,14 @@ Then add this code to the end of the `...didFinishProcessingPhotoSampleBuffer...
 
 ```swift
 if let thumbnailCaptured = thumbnailCaptured,
-    let previewPhotoSampleBuffer = previewPhotoSampleBuffer,
-    let cvImageBuffer = CMSampleBufferGetImageBuffer(previewPhotoSampleBuffer) {
-    
-    let ciThumbnail = CIImage(cvImageBuffer: cvImageBuffer)
-    let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-    let thumbnail = UIImage(cgImage: context.createCGImage(ciThumbnail, from: ciThumbnail.extent)!, scale: 2.0, orientation: .right)
-    
-    thumbnailCaptured(thumbnail)
+  let previewPhotoSampleBuffer = previewPhotoSampleBuffer,
+  let cvImageBuffer = CMSampleBufferGetImageBuffer(previewPhotoSampleBuffer) {
+  
+  let ciThumbnail = CIImage(cvImageBuffer: cvImageBuffer)
+  let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+  let thumbnail = UIImage(cgImage: context.createCGImage(ciThumbnail, from: ciThumbnail.extent)!, scale: 2.0, orientation: .right)
+  
+  thumbnailCaptured(thumbnail)
 }
 ```
 
@@ -572,15 +571,15 @@ If the user has turned the thumbnail switch on, you need to add a preview format
 
 ```swift
 if self.thumbnailSwitch.isOn
-    && photoSettings.availablePreviewPhotoPixelFormatTypes
-        .count > 0 {
-    photoSettings.previewPhotoFormat = [
-        kCVPixelBufferPixelFormatTypeKey as String :
-            photoSettings
-                .availablePreviewPhotoPixelFormatTypes.first!,
-        kCVPixelBufferWidthKey as String : 160,
-        kCVPixelBufferHeightKey as String : 160
-    ]
+  && photoSettings.availablePreviewPhotoPixelFormatTypes
+    .count > 0 {
+  photoSettings.previewPhotoFormat = [
+    kCVPixelBufferPixelFormatTypeKey as String :
+    photoSettings
+      .availablePreviewPhotoPixelFormatTypes.first!,
+    kCVPixelBufferWidthKey as String : 160,
+    kCVPixelBufferHeightKey as String : 160
+  ]
 }
 ```
 
@@ -588,9 +587,9 @@ This tells the photo settings that you want to create a 160x160 preview image, i
 
 ```swift
 photoCaptureDelegate.thumbnailCaptured = { [unowned self] image in
-    DispatchQueue.main.async {
-        self.previewImageView.image = image
-    }
+  DispatchQueue.main.async {
+    self.previewImageView.image = image
+  }
 }
 ```
 
@@ -617,17 +616,17 @@ Open **ViewController.swift** and add the following code to `prepareCaptureSessi
 
 ```swift
 do {
-    let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
-    let audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
-    if session.canAddInput(audioDeviceInput) {
-        session.addInput(audioDeviceInput)
-    } else {
-        print("Couldn't add audio device to the session")
-        return
-    }
-} catch {
-    print("Unable to create audio device input: \(error)")
+  let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
+  let audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
+  if session.canAddInput(audioDeviceInput) {
+    session.addInput(audioDeviceInput)
+  } else {
+    print("Couldn't add audio device to the session")
     return
+  }
+} catch {
+  print("Unable to create audio device input: \(error)")
+  return
 }
 ```
 
@@ -635,10 +634,10 @@ A live photo is a full-size photo with an accompanying video, which contains sou
 
 ```swift
 photoOutput.isLivePhotoCaptureEnabled =
-    photoOutput.isLivePhotoCaptureSupported
+  photoOutput.isLivePhotoCaptureSupported
 DispatchQueue.main.async {
-    self.livePhotoSwitch.isEnabled =
-        self.photoOutput.isLivePhotoCaptureSupported
+  self.livePhotoSwitch.isEnabled =
+    self.photoOutput.isLivePhotoCaptureSupported
 }
 ```
 
@@ -648,11 +647,11 @@ Move to `capturePhoto()` and perform the additional configuration needed to supp
 
 ```swift
 if self.livePhotoSwitch.isOn {
-    let movieFileName = UUID().uuidString
-    let moviePath = (NSTemporaryDirectory() as NSString)
-        .appendingPathComponent("\(movieFileName).mov")
-    photoSettings.livePhotoMovieFileURL = URL(
-        fileURLWithPath: moviePath)
+  let movieFileName = UUID().uuidString
+  let moviePath = (NSTemporaryDirectory() as NSString)
+    .appendingPathComponent("\(movieFileName).mov")
+  photoSettings.livePhotoMovieFileURL = URL(
+    fileURLWithPath: moviePath)
 }
 ```
 
@@ -671,8 +670,8 @@ In the `AVCapturePhotoCaptureDelegate` extension, add the following to `...willC
 
 ```swift
 if resolvedSettings.livePhotoMovieDimensions.width > 0
-    && resolvedSettings.livePhotoMovieDimensions.height > 0 {
-    capturingLivePhoto?(true)
+  && resolvedSettings.livePhotoMovieDimensions.height > 0 {
+  capturingLivePhoto?(true)
 }
 ```
 
@@ -680,10 +679,10 @@ This will call the closure, saying that another live photo capture session will 
 
 ```swift
 func capture(_ captureOutput: AVCapturePhotoOutput,
-             didFinishRecordingLivePhotoMovieForEventualFileAt
-    outputFileURL: URL,
-             resolvedSettings: AVCaptureResolvedPhotoSettings) {
-    capturingLivePhoto?(false)
+  didFinishRecordingLivePhotoMovieForEventualFileAt
+  outputFileURL: URL,
+  resolvedSettings: AVCaptureResolvedPhotoSettings) {
+  capturingLivePhoto?(false)
 }
 ```
 
@@ -691,16 +690,16 @@ This delegate method is called when the video capture is complete. As with photo
 
 ```swift
 func capture(_ captureOutput: AVCapturePhotoOutput,
-             didFinishProcessingLivePhotoToMovieFileAt outputFileURL: URL,
-             duration: CMTime,
-             photoDisplay photoDisplayTime: CMTime,
-             resolvedSettings: AVCaptureResolvedPhotoSettings,
-             error: Error?) {
-    if let error = error {
-        print("Error creating live photo video: \(error)")
-        return
-    }
-    livePhotoMovieURL = outputFileURL
+  didFinishProcessingLivePhotoToMovieFileAt outputFileURL: URL,
+  duration: CMTime,
+  photoDisplay photoDisplayTime: CMTime,
+  resolvedSettings: AVCaptureResolvedPhotoSettings,
+  error: Error?) {
+  if let error = error {
+    print("Error creating live photo video: \(error)")
+    return
+  }
+  livePhotoMovieURL = outputFileURL
 }
 ```
 
@@ -708,10 +707,10 @@ Add the following code to `capture(_: didFinishCaptureForResolvedSettings:error:
 
 ```swift
 if let livePhotoMovieURL = self.livePhotoMovieURL {
-    let movieResourceOptions = PHAssetResourceCreationOptions()
-    movieResourceOptions.shouldMoveFile = true
-    creationRequest.addResource(with: .pairedVideo,
-                                fileURL: livePhotoMovieURL, options: movieResourceOptions)
+  let movieResourceOptions = PHAssetResourceCreationOptions()
+  movieResourceOptions.shouldMoveFile = true
+  creationRequest.addResource(with: .pairedVideo,
+    fileURL: livePhotoMovieURL, options: movieResourceOptions)
 }
 ```
 
@@ -728,13 +727,13 @@ Then in `capturePhoto()`, where you assign all the other closures, add this new 
 ```swift
 // Live photo UI updates
 photoCaptureDelegate.capturingLivePhoto = { (currentlyCapturing) in
-    DispatchQueue.main.async { [unowned self] in
-        self.currentLivePhotoCaptures += currentlyCapturing ? 1 : -1
-        UIView.animate(withDuration: 0.2) {
-            self.capturingLabel.isHidden =
-                self.currentLivePhotoCaptures == 0
-        }
+  DispatchQueue.main.async { [unowned self] in
+    self.currentLivePhotoCaptures += currentlyCapturing ? 1 : -1
+    UIView.animate(withDuration: 0.2) {
+    self.capturingLabel.isHidden =
+      self.currentLivePhotoCaptures == 0
     }
+  }
 }
 ```
 
@@ -776,7 +775,7 @@ Switch back to **Main.storyboard** and change the class of the new view controll
 }
 
 @IBAction func handleDoneTapped(_ sender: UIButton) {
-    dismiss(animated: true)
+  dismiss(animated: true)
 }
 ```
 
@@ -790,17 +789,17 @@ And code to load and display the live photo:
 
 ```swift
 override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    if let asset = asset {
-        PHImageManager.default().requestLivePhoto(for: asset,
-            targetSize: livePhotoView.bounds.size,
-            contentMode: .aspectFill,
-            options: .none, resultHandler: { (livePhoto, info) in
-                DispatchQueue.main.async {
-                    self.livePhotoView.livePhoto = livePhoto
-            }
-        })
-    }
+  super.viewDidAppear(animated)
+  if let asset = asset {
+    PHImageManager.default().requestLivePhoto(for: asset,
+      targetSize: livePhotoView.bounds.size,
+      contentMode: .aspectFill,
+      options: .none, resultHandler: { (livePhoto, info) in
+        DispatchQueue.main.async {
+          self.livePhotoView.livePhoto = livePhoto
+        }
+    })
+  }
 }
 ``` 
 
@@ -826,9 +825,9 @@ Finally, pass the asset along by adding this implementation of `prepare(for: sen
 
 ```swift
 override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if let editor = segue.destination as? PhotoEditingViewController {
-        editor.asset = lastAsset
-    }
+  if let editor = segue.destination as? PhotoEditingViewController {
+    editor.asset = lastAsset
+  }
 }
 ```
 
@@ -840,47 +839,47 @@ In **PhotoEditingViewController.swift** add the following method:
 
 ```swift
 fileprivate func comicifyImage() {
-    guard let asset = asset else { return }
-    
-    // 1
-    asset.requestContentEditingInput(with: .none) {
-        [unowned self] (input, info) in
-        guard let input = input else {
-            print("error: \(info)")
-            return
-        }
-        
-        // 2
-        guard input.mediaType == .image,
-            input.mediaSubtypes.contains(.photoLive) else {
-                print("This isn't a live photo")
-                return
-        }
-        
-        // 3
-        let editingContext =
-            PHLivePhotoEditingContext(livePhotoEditingInput: input)
-        editingContext?.frameProcessor = {
-            (frame, error) in
-            // 4
-            var image = frame.image
-            image = image.applyingFilter("CIComicEffect",
-                                         withInputParameters: .none)
-            return image
-        }
-        
-        // 5
-        editingContext?.prepareLivePhotoForPlayback(
-            withTargetSize: self.livePhotoView.bounds.size, 
-            options: .none) { 
-                (livePhoto, error) in
-                guard let livePhoto = livePhoto else { 
-                    print("Preparation error: \(error)")
-                    return
-                }
-                self.livePhotoView.livePhoto = livePhoto
-        }
+  guard let asset = asset else { return }
+  
+  // 1
+  asset.requestContentEditingInput(with: .none) {
+    [unowned self] (input, info) in
+    guard let input = input else {
+      print("error: \(info)")
+      return
     }
+    
+    // 2
+    guard input.mediaType == .image,
+      input.mediaSubtypes.contains(.photoLive) else {
+      print("This isn't a live photo")
+      return
+    }
+    
+    // 3
+    let editingContext =
+      PHLivePhotoEditingContext(livePhotoEditingInput: input)
+    editingContext?.frameProcessor = {
+      (frame, error) in
+      // 4
+      var image = frame.image
+      image = image.applyingFilter("CIComicEffect",
+        withInputParameters: .none)
+      return image
+    }
+    
+    // 5
+    editingContext?.prepareLivePhotoForPlayback(
+      withTargetSize: self.livePhotoView.bounds.size, 
+      options: .none) { 
+        (livePhoto, error) in
+        guard let livePhoto = livePhoto else { 
+        print("Preparation error: \(error)")
+        return
+      }
+      self.livePhotoView.livePhoto = livePhoto
+    }
+  }
 }
 ```
 
@@ -903,23 +902,23 @@ Build and run, take a live photo and hit that Comicify button. See, I told you i
 let output = PHContentEditingOutput(contentEditingInput: input)
 // 2
 output.adjustmentData = PHAdjustmentData(
-    formatIdentifier: "PhotoMe",
-    formatVersion: "1.0",
-    data: "Comicify".data(using: .utf8)!)
+  formatIdentifier: "PhotoMe",
+  formatVersion: "1.0",
+  data: "Comicify".data(using: .utf8)!)
 // 3
 editingContext?.saveLivePhoto(to: output, options: nil) {
-    success, error in
-    if !success {
-        print("Rendering error \(error)")
-        return
-    }
-    // 4
-    PHPhotoLibrary.shared().performChanges({
-        let request = PHAssetChangeRequest(for: asset)
-        request.contentEditingOutput = output
-        }, completionHandler: { (success, error) in
-            print("Saved \(success), error \(error)")
-    })
+  success, error in
+  if !success {
+    print("Rendering error \(error)")
+    return
+  }
+  // 4
+  PHPhotoLibrary.shared().performChanges({
+    let request = PHAssetChangeRequest(for: asset)
+    request.contentEditingOutput = output
+    }, completionHandler: { (success, error) in
+      print("Saved \(success), error \(error)")
+  })
 }
 ```
 
